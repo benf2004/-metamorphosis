@@ -2,6 +2,7 @@ require("Base")
 require("worm.StandardWorm")
 
 FoodTruck  = Base:new()
+local contents = {}
 
 function FoodTruck:initialize( physics )
 	self.physics = physics
@@ -14,4 +15,18 @@ function FoodTruck:makeDelivery(event)
 	food:initialize( self.physics )
 	food.sprite.x = x
 	food.sprite.y = y
+	table.insert(contents, food)
+end
+
+function FoodTruck:consumeFood(food)
+	contents.remove(food)
+end
+
+function FoodTruck:empty()
+	for i, food in pairs(contents) do
+		if food.sprite ~= nil and food.sprite.removeSelf ~= nil then
+			food.sprite:removeSelf( )
+		end
+	end
+	contents = {}
 end

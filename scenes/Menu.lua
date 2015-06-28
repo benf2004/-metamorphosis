@@ -17,7 +17,7 @@ local buttons = {}
 
 local function pressAButton(event)
 	currentScene = require( "scenes.Level001")
-	composer.gotoScene( "scenes.Transition", "fade", 50 )
+	composer.gotoScene( "scenes.BaseScene", "fade", 250 )
 	return true	
 end
 
@@ -72,7 +72,7 @@ function scene:show( event )
 	local phase = event.phase
 	
 	if phase == "will" then
-		-- Called when the scene is still off screen and is about to move on screen
+		composer.removeScene( "scenes.BaseScene", false )
 	elseif phase == "did" then
 		-- Called when the scene is now on screen
 		-- 

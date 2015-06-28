@@ -16,12 +16,15 @@ require "worm.HeadWorm"
 require "worm.StandardWorm"
 require "game.FoodTruck"
 require "game.Colors"
+require "game.Button"
 
 --------------------------------------------
 
 -- forward declarations and other locals
 local screenW, screenH, halfW = display.contentWidth, display.contentHeight, display.contentWidth*0.5
-local head = HeadWorm:new()
+local head = nil
+local foodTruckTimer = nil
+local foodTruck = nil
 
 local function touchListener( event )
 	if ( event.phase == "moved" ) then
@@ -30,15 +33,28 @@ local function touchListener( event )
 end
 
 function scene:create( event )
+	
+end
+
+function scene:initialize()
 	local sceneGroup = self.view
 
 	self:initializeBackground(sceneGroup)
-	self:initializeHud(sceneGroup)
 	self:initializeWorm()
+	self:initializeHud(sceneGroup)
 	self:initializeGravity()
 	self:initializeFoodTruck()
 
 	sceneGroup:addEventListener( "touch", touchListener )
+end
+
+function scene:reset()
+	timer.cancel( foodTruckTimer )
+	head:destroy()
+	foodTruck:empty()	
+	
+	local sceneGroup = self.view
+	sceneGroup:removeEventListener( "touch", touchListener )	
 end
 
 function scene:initializeBackground(sceneGroup)
@@ -51,10 +67,10 @@ function scene:initializeBackground(sceneGroup)
 end
 
 function scene:initializeFoodTruck()
-	local foodTruck = FoodTruck:new()
+	foodTruck = FoodTruck:new()
 	foodTruck:initialize(physics)
 	local closure = function() foodTruck:makeDelivery() end
-	timer.performWithDelay( 1000, closure, -1 )
+	foodTruckTimer = timer.performWithDelay( 1000, closure, -1 )
 end
 
 function scene:initializeGravity()
@@ -62,29 +78,20 @@ function scene:initializeGravity()
 end
 
 function scene:initializeWorm()
+	head = HeadWorm:new()
 	local x, y = currentScene.worm.x, currentScene.worm.y
 	head:initialize(x, y, physics)
 end
 
 function scene:initializeHud(sceneGroup)
 	local restartClosure = function() self:restart() end
-	local button = widget.newButton
-		{
-		    label = "Restart",
-		    labelColor = { default = colors.black },
-		    emboss = true,
-		    shape="roundedRect", --defect??
-		    width = 100,
-		    height = 50,
-		    x = screenW - 50,
-		    y = 25,
-		    cornerRadius = 10,
-		    fillColor = { default = colors.brown },
-		    strokeColor = { default = colors.black },
-		    strokeWidth = 4,
-		    onRelease = restartClosure
-		}
-	sceneGroup:insert(button)
+	local reset = button("Reset", (screenW - 50), 25, restartClosure)
+	sceneGroup:insert(reset)
+
+	local menuClosure = function() self:menu() end
+	local menu = button("Menu", (screenW - 160), 25, menuClosure
+		)
+	sceneGroup:insert(menu)
 end
 
 function scene:show( event )
@@ -92,7 +99,7 @@ function scene:show( event )
 	local phase = event.phase
 	
 	if phase == "will" then
-		--
+		self:initialize( )
 	elseif phase == "did" then
 		-- Called when the scene is now on screen
 		-- 
@@ -133,7 +140,14 @@ end
 
 function scene:restart()
 	-- need to research how to restart a lua scene
-	composer.gotoScene( "scenes.Transition", "fade", 50 )
+	self:reset()
+	self:initialize()
+	--composer.gotoScene( "scenes.BaseScene", "fade", 250 )
+end
+
+function scene:menu()
+	self:reset()
+	composer.gotoScene( "scenes.Menu", "fade", 250 )
 end
 
 ---------------------------------------------------------------------------------

@@ -100,6 +100,16 @@ function BaseWorm:die()
 	self.dead = true
 end
 
+function BaseWorm:destroy()
+	if self.trailing ~= nil then
+		self.trailing:destroy()
+	end
+	self:detachFromLeading()
+	self:detachFromTrailing()
+	self.sprite:removeSelf( )
+	self.dead = true
+end
+
 function BaseWorm:activate()
 end
 
