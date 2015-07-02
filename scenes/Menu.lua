@@ -16,7 +16,8 @@ local buttons = {}
 --------------------------------------------
 
 local function pressAButton(event)
-	currentScene = require( "scenes.Level001")
+	local level = event.target:getLabel()
+	currentScene = require( "scenes.Level" .. level)
 	composer.gotoScene( "scenes.BaseScene", "fade", 250 )
 	return true	
 end
@@ -32,8 +33,8 @@ function scene:create( event )
 
 	sceneGroup:insert( background )
 
-	local columns = 10
-	local rows = 6
+	local columns = 2
+	local rows = 1
 	local spacing = 10
 
 	local width = ((display.contentWidth - (spacing * (columns+1))) / columns)
@@ -51,12 +52,12 @@ function scene:create( event )
 				    label = label,
 				    labelColor = { default = colors.black },
 				    emboss = true,
-				    --shape="roundedRect", --defect??
+				    shape="roundedRect",
 				    width = width,
 				    height = height,
 				    cornerRadius = 10,
-				    fillColor = { default = colors.brown },
-				    strokeColor = { default = colors.black },
+				    fillColor = { default = colors.brown, over = colors.brown },
+				    strokeColor = { default = colors.black, over = colors.black },
 				    strokeWidth = 4,
 				    onRelease = pressAButton
 				}

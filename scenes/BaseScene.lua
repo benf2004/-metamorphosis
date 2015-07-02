@@ -16,15 +16,18 @@ require "worm.HeadWorm"
 require "worm.StandardWorm"
 require "game.FoodTruck"
 require "game.Colors"
-require "game.Button"
+require "game.UI"
 
 --------------------------------------------
 
 -- forward declarations and other locals
 local screenW, screenH, halfW = display.contentWidth, display.contentHeight, display.contentWidth*0.5
+local labelGroup = nil
 local head = nil
 local foodTruckTimer = nil
 local foodTruck = nil
+local hudTimer = nil
+local statistics = {}
 
 local function touchListener( event )
 	if ( event.phase == "moved" ) then
@@ -46,15 +49,25 @@ function scene:initialize()
 	self:initializeFoodTruck()
 
 	sceneGroup:addEventListener( "touch", touchListener )
+
+	physics.start()
+end
+
+function scene:pause()
+	timer.cancel( foodTruckTimer )
+	timer.cancel( hudTimer )
+	physics.pause( )
+
+	local sceneGroup = self.view
+	sceneGroup:removeEventListener( "touch", touchListener )
 end
 
 function scene:reset()
-	timer.cancel( foodTruckTimer )
+	self:pause()
 	head:destroy()
 	foodTruck:empty()	
-	
-	local sceneGroup = self.view
-	sceneGroup:removeEventListener( "touch", touchListener )	
+	labelGroup:removeSelf( )
+	labelGroup = nil	
 end
 
 function scene:initializeBackground(sceneGroup)
@@ -70,7 +83,7 @@ function scene:initializeFoodTruck()
 	foodTruck = FoodTruck:new()
 	foodTruck:initialize(physics)
 	local closure = function() foodTruck:makeDelivery() end
-	foodTruckTimer = timer.performWithDelay( 1000, closure, -1 )
+	foodTruckTimer = timer.performWithDelay( 750, closure, -1 )
 end
 
 function scene:initializeGravity()
@@ -84,14 +97,44 @@ function scene:initializeWorm()
 end
 
 function scene:initializeHud(sceneGroup)
+	labelGroup = display.newGroup( )
 	local restartClosure = function() self:restart() end
 	local reset = button("Reset", (screenW - 50), 25, restartClosure)
 	sceneGroup:insert(reset)
 
 	local menuClosure = function() self:menu() end
-	local menu = button("Menu", (screenW - 160), 25, menuClosure
-		)
+	local menu = button("Menu", (screenW - 160), 25, menuClosure)
 	sceneGroup:insert(menu)
+
+	statistics.wormLength = head:lengthToEnd()
+	statistics.timeRemaining = currentScene.secondsAllowed
+
+	local lengthLabel = label(tostring(statistics.wormLength), 50, 25, 18, self.view)
+	labelGroup:insert(lengthLabel)
+	local timerLabel = label(tostring(statistics.timeRemaining), 160, 25, 18, self.view)
+	labelGroup:insert(timerLabel)
+
+	local updateHud = function ()
+		statistics.timeRemaining = statistics.timeRemaining - 1
+		statistics.wormLength = head:lengthToEnd()
+		lengthLabel.text = statistics.wormLength
+		timerLabel.text = statistics.timeRemaining
+
+		local statusLabel = nil
+		if statistics.wormLength >= currentScene.lengthObjective then
+			statusLabel = "You Win!"
+			self:pause()
+		elseif statistics.timeRemaining <= 0 then
+			statusLabel = "You Lose!"
+			self:pause()
+		end
+
+		if statusLabel ~= nil then
+			local resultLabel = label(statusLabel, screenW/2, screenH/2, 72, self.view)
+			labelGroup:insert(resultLabel)
+		end
+	end
+	hudTimer = timer.performWithDelay( 1000, updateHud, -1)
 end
 
 function scene:show( event )
@@ -105,7 +148,6 @@ function scene:show( event )
 		-- 
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
-		physics.start()
 	end
 end
 
@@ -139,10 +181,8 @@ function scene:destroy( event )
 end
 
 function scene:restart()
-	-- need to research how to restart a lua scene
 	self:reset()
 	self:initialize()
-	--composer.gotoScene( "scenes.BaseScene", "fade", 250 )
 end
 
 function scene:menu()

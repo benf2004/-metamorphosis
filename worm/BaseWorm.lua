@@ -110,6 +110,14 @@ function BaseWorm:destroy()
 	self.dead = true
 end
 
+function BaseWorm:lengthToEnd()
+	if self.trailing ~= nil then
+		return self.trailing:lengthToEnd() + 1
+	else
+		return 1
+	end
+end
+
 function BaseWorm:activate()
 end
 
