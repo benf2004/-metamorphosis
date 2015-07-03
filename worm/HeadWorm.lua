@@ -22,7 +22,7 @@ HeadWorm = BaseWorm:new()
 
 local neckLength = 3
 
-function HeadWorm:initialize(x, y, physics)
+function HeadWorm:initialize(x, y, physics, foodTruck)
 	self:initializeSprite("wormhead")
 	self.sprite.x, self.sprite.y = x, y
 	self.type = "head"

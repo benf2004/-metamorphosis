@@ -5,14 +5,24 @@ require("worm.GravityWorm")
 FoodTruck  = Base:new()
 local contents = {}
 
-function FoodTruck:initialize( physics )
+function FoodTruck:initialize( physics, level )
 	self.physics = physics
+	self.level = level
 end
 
 function FoodTruck:makeDelivery(event)
 	local x = math.random(0, display.contentWidth)
 	local y = math.random(0, display.contentHeight)
-	local food = GravityWorm:new()
+	local kind = math.random(1, 100)
+	print(kind)
+	local food = nil
+	if kind <= (self.level.foodTruck.standardWorm or 0) then
+		food = StandardWorm:new()
+	elseif kind <= (self.level.foodTruck.gravityWorm or 0) then
+		food = GravityWorm:new()
+	else
+		food = StandardWorm:new()
+	end
 	food:initialize( self.physics )
 	food.sprite.x = x
 	food.sprite.y = y

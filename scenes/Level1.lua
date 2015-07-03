@@ -3,7 +3,10 @@ local level001 = {
 		x = 100,
 		y = 374
 	},
-	secondsAllowed = 50,
+	foodTruck = {
+		standardWorm = 100
+	},
+	secondsAllowed = 60,
 	lengthObjective = 50
 }
 

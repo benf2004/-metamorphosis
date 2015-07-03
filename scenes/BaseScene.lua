@@ -81,7 +81,7 @@ end
 
 function scene:initializeFoodTruck()
 	foodTruck = FoodTruck:new()
-	foodTruck:initialize(physics)
+	foodTruck:initialize(physics, currentScene)
 	local closure = function() foodTruck:makeDelivery() end
 	foodTruckTimer = timer.performWithDelay( 750, closure, -1 )
 end

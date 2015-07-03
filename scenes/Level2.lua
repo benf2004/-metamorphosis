@@ -3,6 +3,9 @@ local level002 = {
 		x = 100,
 		y = 374
 	},
+	foodTruck = {
+		gravityWorm = 100
+	},
 	secondsAllowed = 60,
 	lengthObjective = 75
 }
