@@ -1,5 +1,6 @@
 require("Base")
 require("worm.StandardWorm")
+require("worm.GravityWorm")
 
 FoodTruck  = Base:new()
 local contents = {}
@@ -11,7 +12,7 @@ end
 function FoodTruck:makeDelivery(event)
 	local x = math.random(0, display.contentWidth)
 	local y = math.random(0, display.contentHeight)
-	local food = StandardWorm:new()
+	local food = GravityWorm:new()
 	food:initialize( self.physics )
 	food.sprite.x = x
 	food.sprite.y = y
