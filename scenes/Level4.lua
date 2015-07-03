@@ -11,7 +11,7 @@ local level4 = {
 		{793, 384, 426, 100}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 75
+	lengthObjective = 65
 }
 
 return level4
