@@ -4,7 +4,7 @@ local level002 = {
 		y = 374
 	},
 	foodTruck = {
-		gravityWorm = 100
+		standardWorm = 100
 	},
 	secondsAllowed = 60,
 	lengthObjective = 75
