@@ -53,7 +53,11 @@ function BaseWorm:attach(next, displayGroup)
 		if next.sprite == nil then
 			next:initialize( self.physics )
 		end
-		next:affectedByGravity(false)
+		if next.sprite.name ~= "gravityworm" then
+			next:affectedByGravity(false)
+		else
+			next:affectedByGravity(true)
+		end
 		next.sprite.x = self.sprite.x - next.sprite.width / 2
 		next.sprite.y = self.sprite.y
 		local joint = self.physics.newJoint( "pivot", self.sprite, next.sprite, next.sprite.x, next.sprite.y )
