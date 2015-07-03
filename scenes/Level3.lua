@@ -1,4 +1,4 @@
-local level2 = {
+local level3 = {
 	worm = {
 		x = 100,
 		y = 374
@@ -6,8 +6,11 @@ local level2 = {
 	foodTruck = {
 		standardWorm = 100
 	},
+	walls = {
+		{512, 384, 400, 100}
+	},
 	secondsAllowed = 60,
 	lengthObjective = 75
 }
 
-return level2
+return level3

@@ -34,7 +34,7 @@ function scene:create( event )
 	sceneGroup:insert( background )
 
 	local columns = 2
-	local rows = 1
+	local rows = 2
 	local spacing = 10
 
 	local width = ((display.contentWidth - (spacing * (columns+1))) / columns)

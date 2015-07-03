@@ -14,7 +14,6 @@ function FoodTruck:makeDelivery(event)
 	local x = math.random(0, display.contentWidth)
 	local y = math.random(0, display.contentHeight)
 	local kind = math.random(1, 100)
-	print(kind)
 	local food = nil
 	if kind <= (self.level.foodTruck.standardWorm or 0) then
 		food = StandardWorm:new()

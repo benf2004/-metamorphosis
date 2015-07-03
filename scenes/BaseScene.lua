@@ -14,6 +14,7 @@ physics.start(); physics.pause()
 
 require "worm.HeadWorm"
 require "worm.StandardWorm"
+require "obstacles.Wall"
 require "game.FoodTruck"
 require "game.Colors"
 require "game.UI"
@@ -44,6 +45,7 @@ function scene:initialize()
 
 	self:initializeBackground(sceneGroup)
 	self:initializeWorm()
+	self:initializeWalls(sceneGroup)
 	self:initializeHud(sceneGroup)
 	self:initializeGravity()
 	self:initializeFoodTruck()
@@ -94,6 +96,20 @@ function scene:initializeWorm()
 	head = HeadWorm:new()
 	local x, y = currentScene.worm.x, currentScene.worm.y
 	head:initialize(x, y, physics)
+end
+
+function scene:initializeWalls(sceneGroup)
+	local walls = currentScene.walls or {}
+	for i, wallDefinition in ipairs(walls) do
+  		local wall = Wall:new()
+  		wall:initializeSprite(
+  			wallDefinition[1],
+ 			wallDefinition[2],
+ 			wallDefinition[3],
+ 			wallDefinition[4], "grass")
+  		wall:initializePhysics(physics)	
+  		sceneGroup:insert(wall.sprite)
+	end
 end
 
 function scene:initializeHud(sceneGroup)
