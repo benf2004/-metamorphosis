@@ -1,16 +1,31 @@
 require("Base")
+require("game.Colors")
 
 Wall  = Base:new()
 
-function Wall:initializeSprite(x, y, width, height, textureName)
-	self.sprite = display.newImageRect( "images/"..textureName..".png", width, height )
-	self.sprite.x, self.sprite.y = x, y
-	self.sprite.obj = self
-end
+function Wall:initialize(x, y, width, height, physics, sceneGroup)
+	if width >= height then
+		local capRadius = height / 2
+		width = width - height
+		x = x + capRadius
+		local leftCapCenterX, leftCapCenterY = x, y + capRadius
+		local rightCapCenterX, rightCapCenterY = x + width, y + capRadius
+		local boxCenterX, boxCenterY = x + (width / 2), y + (height / 2)
 
-function Wall:initializePhysics(physics)
-	physics.addBody( self.sprite, "static", { density=1000, friction=0, bounce=0})
-	self.physics = physics
-	self.sprite.gravityScale = 0
-	self.sprite.name = "wall"
+		local box = display.newRect( boxCenterX, boxCenterY, width, height )
+		local leftCap = display.newCircle( leftCapCenterX, leftCapCenterY, capRadius )
+		local rightCap = display.newCircle( rightCapCenterX, rightCapCenterY, capRadius )
+
+		box.fill = colors.brown
+		leftCap.fill = colors.brown
+		rightCap.fill = colors.brown
+
+		physics.addBody(box, "static", { friction = 0.0, bounce = 0.0 } )
+		physics.addBody(leftCap, "static", { radius=capRadius, friction=0.0, bounce=0.0 } )
+		physics.addBody(rightCap, "static", { radius=capRadius, friction=0.0, bounce=0.0 } )
+
+		sceneGroup:insert(box)
+		sceneGroup:insert(leftCap)
+		sceneGroup:insert(rightCap)
+	end
 end

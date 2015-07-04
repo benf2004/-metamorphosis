@@ -21,6 +21,7 @@ end
 HeadWorm = BaseWorm:new()
 
 local neckLength = 3
+local targetJoint = nil
 
 function HeadWorm:initialize(x, y, physics, foodTruck)
 	self:initializeSprite("wormhead")
@@ -32,8 +33,17 @@ function HeadWorm:initialize(x, y, physics, foodTruck)
 	self:initializePhysics(physics)
 	self:initializeNeck()
 
+	targetJoint = physics.newJoint( "touch", self.sprite, x, y )
+	targetJoint.dampingRatio = 1
+	targetJoint.freqency = 1
+	targetJoint.maxForce = 3000
+
 	self.sprite.collision = onLocalCollision
 	self.sprite:addEventListener( "collision", self.sprite )
+end
+
+function HeadWorm:moveToLocation(x, y)
+	targetJoint:setTarget( x, y )
 end
 
 function HeadWorm:initializeNeck( )
@@ -57,9 +67,6 @@ function HeadWorm:consume( wormNode )
 	wormNode.sprite = nil
 
 	self:digest(wormNode, self.displayGroup)
-
-	--if prev then prev:moveToLocation(self.sprite.x, self.sprite.y) end
-	--if next then next:moveToLocation(self.sprite.x, self.sprite.y) end
 end
 
 NeckWorm = BaseWorm:new()

@@ -9,7 +9,7 @@ function button(label, x, y, action)
 		    label = label,
 		    labelColor = { default = colors.black },
 		    emboss = true,
-		    shape="roundedRect", --defect??
+		    shape="roundedRect",
 		    width = width,
 		    height = height,
 		    x = x,

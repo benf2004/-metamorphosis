@@ -90,6 +90,7 @@ end
 
 function scene:initializeGravity()
 	physics.setGravity( 0, -19.6 )
+	physics.setTimeStep( 0 )
 end
 
 function scene:initializeWorm()
@@ -102,13 +103,12 @@ function scene:initializeWalls(sceneGroup)
 	local walls = currentScene.walls or {}
 	for i, wallDefinition in ipairs(walls) do
   		local wall = Wall:new()
-  		wall:initializeSprite(
+  		wall:initialize(
   			wallDefinition[1],
  			wallDefinition[2],
  			wallDefinition[3],
- 			wallDefinition[4], "grass")
-  		wall:initializePhysics(physics)	
-  		sceneGroup:insert(wall.sprite)
+ 			wallDefinition[4], 
+ 			physics, sceneGroup)
 	end
 end
 

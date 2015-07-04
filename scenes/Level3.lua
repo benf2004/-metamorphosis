@@ -7,7 +7,7 @@ local level3 = {
 		standardWorm = 100
 	},
 	walls = {
-		{512, 384, 400, 100}
+		{312, 359, 400, 50}
 	},
 	secondsAllowed = 60,
 	lengthObjective = 60

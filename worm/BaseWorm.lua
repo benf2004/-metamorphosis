@@ -5,16 +5,21 @@ BaseWorm  = Base:new({diameter=32})
 
 function BaseWorm:initializeSprite(textureName)
 	self.sprite = display.newImageRect( "images/"..textureName..".png", self.diameter, self.diameter )
+	self.density = 1
 	self.sprite.obj = self
 end
 
 function BaseWorm:initializePhysics(physics)
-	physics.addBody( self.sprite, { radius = (self.diameter / 2), density=1000, friction=0.3, bounce=0.3})
+	physics.addBody( self.sprite, { radius = (self.diameter / 2), density=self.density, friction=0.0, bounce=0.0})
 	self.physics = physics
 	self.sprite.gravityScale = 0
 	self.sprite.linearDamping = 4
 	self.sprite.angularDamping = 2
 	self.sprite.name = "baseworm"
+	self:postInitializePhysics(physics)
+end
+
+function BaseWorm:postInitializePhysics(physics)
 end
 
 function BaseWorm:moveToLocation(x, y)
@@ -60,6 +65,9 @@ function BaseWorm:attach(next, displayGroup)
 		end
 		next.sprite.x = self.sprite.x - next.sprite.width / 2
 		next.sprite.y = self.sprite.y
+		next.density = self.density * 0.9
+		physics.removeBody( next.sprite )
+		next:initializePhysics(physics)
 		local joint = self.physics.newJoint( "pivot", self.sprite, next.sprite, next.sprite.x, next.sprite.y )
 		self.rearwardJoint = joint
 		next.forwardJoint = joint

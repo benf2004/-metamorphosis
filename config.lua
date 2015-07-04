@@ -6,7 +6,7 @@ application =
 		width = 768,
 		height = 1024, 
 		scale = "zoomStretch",
-		fps = 30,
+		fps = 60,
 		
 		--[[
 		imageSuffix =

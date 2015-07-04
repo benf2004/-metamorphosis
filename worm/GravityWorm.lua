@@ -5,9 +5,11 @@ function GravityWorm:initialize( physics )
 	self.type = "body"
 
 	self:initializePhysics( physics )
-	self.sprite.gravityScale = 1
 	self.sprite.name = "gravityworm"
+end
 
+function GravityWorm:postInitializePhysics( physics )
+	self.sprite.gravityScale = 1
 end
 
 function GravityWorm:activate()

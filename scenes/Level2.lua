@@ -7,7 +7,7 @@ local level2 = {
 		standardWorm = 100
 	},
 	secondsAllowed = 60,
-	lengthObjective = 75
+	lengthObjective = 65
 }
 
 return level2
