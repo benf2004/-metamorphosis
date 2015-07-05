@@ -137,7 +137,7 @@ end
 function BaseWorm:digest(wormNode, displayGroup)
 	local eat = function()
 		if self.trailing == nil then
-			if self.sprite.x == nil then
+			if self.sprite == nil or self.sprite.x == nil then
 				timer.performWithDelay( 5, eat )
 			else 
 				self:attach(wormNode, displayGroup)
@@ -147,14 +147,14 @@ function BaseWorm:digest(wormNode, displayGroup)
 		end
 	end
 	local shrink = function()
-		if self.sprite then 
+		if self.sprite ~= nil then 
 			self.sprite.width = self.diameter
 			self.sprite.height = self.diameter
 			timer.performWithDelay (5, eat)
 		end
 	end
 	local grow = function()
-		if self.sprite then
+		if self.sprite ~= nil then
 			self.sprite.width = self.diameter * 1.3
 			self.sprite.height = self.diameter * 1.3
 			timer.performWithDelay( 50, shrink )

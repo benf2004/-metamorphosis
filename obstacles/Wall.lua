@@ -25,19 +25,19 @@ function Wall:initialize(x, y, width, height, physics, sceneGroup)
 		boxCenterX, boxCenterY = x + (width / 2), y + (height / 2)
 	end
 
-	local box = display.newRect( boxCenterX, boxCenterY, width, height )
-	local leftCap = display.newCircle( leftCapCenterX, leftCapCenterY, capRadius )
-	local rightCap = display.newCircle( rightCapCenterX, rightCapCenterY, capRadius )
+	self.box = display.newRect( boxCenterX, boxCenterY, width, height )
+	self.leftCap = display.newCircle( leftCapCenterX, leftCapCenterY, capRadius )
+	self.rightCap = display.newCircle( rightCapCenterX, rightCapCenterY, capRadius )
 
-	box.fill = colors.brown
-	leftCap.fill = colors.brown
-	rightCap.fill = colors.brown
+	self.box.fill = colors.brown
+	self.leftCap.fill = colors.brown
+	self.rightCap.fill = colors.brown
 
-	physics.addBody(box, "static", { friction = 0.0, bounce = 0.0 } )
-	physics.addBody(leftCap, "static", { radius=capRadius, friction=0.0, bounce=0.0 } )
-	physics.addBody(rightCap, "static", { radius=capRadius, friction=0.0, bounce=0.0 } )
+	physics.addBody(self.box, "kinematic", { friction = 0.0, bounce = 0.0 } )
+	physics.addBody(self.leftCap, "kinematic", { radius=capRadius, friction=0.0, bounce=0.0 } )
+	physics.addBody(self.rightCap, "kinematic", { radius=capRadius, friction=0.0, bounce=0.0 } )
 
-	sceneGroup:insert(box)
-	sceneGroup:insert(leftCap)
-	sceneGroup:insert(rightCap)
+	sceneGroup:insert(self.box)
+	sceneGroup:insert(self.leftCap)
+	sceneGroup:insert(self.rightCap)
 end

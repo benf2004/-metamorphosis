@@ -15,6 +15,7 @@ physics.start(); physics.pause()
 require "worm.HeadWorm"
 require "worm.StandardWorm"
 require "obstacles.Wall"
+require "obstacles.DriftingWall"
 require "game.FoodTruck"
 require "game.Colors"
 require "game.UI"
@@ -27,6 +28,8 @@ local labelGroup = nil
 local head = nil
 local foodTruckTimer = nil
 local foodTruck = nil
+local driftingWallTruck = nil
+local driftingWallTruckTimer = nil
 local hudTimer = nil
 local statistics = {}
 
@@ -46,6 +49,7 @@ function scene:initialize()
 	self:initializeBackground(sceneGroup)
 	self:initializeWorm()
 	self:initializeWalls(sceneGroup)
+	self:initializeDriftingWallTruck(sceneGroup)
 	self:initializeHud(sceneGroup)
 	self:initializeGravity()
 	self:initializeFoodTruck()
@@ -58,6 +62,7 @@ end
 function scene:pause()
 	timer.cancel( foodTruckTimer )
 	timer.cancel( hudTimer )
+	timer.cancel( driftingWallTruckTimer )
 	physics.pause( )
 
 	local sceneGroup = self.view
@@ -109,6 +114,20 @@ function scene:initializeWalls(sceneGroup)
  			wallDefinition[3],
  			wallDefinition[4], 
  			physics, sceneGroup)
+	end
+end
+
+function scene:initializeDriftingWallTruck(sceneGroup)
+	if currentScene.driftingWalls ~= nil then
+		local interval = currentScene.driftingWalls.interval or 5000
+		local minWidth = currentScene.driftingWalls.minWidth or 100
+		local maxWidth = currentScene.driftingWalls.maxWidth or 750
+		local velocity = currentScene.driftingWalls.velocity or 25
+		driftingWallTruck = DriftingWallTruck:new()
+		driftingWallTruck:initialize(physics, velocity, minWidth, maxWidth, screenW, screenH, sceneGroup)
+
+		local closure = function() driftingWallTruck:makeDelivery() end
+		driftingWallTruckTimer = timer.performWithDelay( interval, closure, -1 )
 	end
 end
 
