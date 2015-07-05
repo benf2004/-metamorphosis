@@ -55,8 +55,12 @@ end
 
 function BaseWorm:attach(next, displayGroup)
 	if self:isTail() and self ~= next then
+		next.density = self.density * 0.9
 		if next.sprite == nil then
 			next:initialize( self.physics )
+		else
+			physics.removeBody( next.sprite )
+			next:initializePhysics(self.physics)
 		end
 		if next.sprite.name ~= "gravityworm" then
 			next:affectedByGravity(false)
@@ -65,9 +69,6 @@ function BaseWorm:attach(next, displayGroup)
 		end
 		next.sprite.x = self.sprite.x - next.sprite.width / 2
 		next.sprite.y = self.sprite.y
-		next.density = self.density * 0.9
-		physics.removeBody( next.sprite )
-		next:initializePhysics(physics)
 		local joint = self.physics.newJoint( "pivot", self.sprite, next.sprite, next.sprite.x, next.sprite.y )
 		self.rearwardJoint = joint
 		next.forwardJoint = joint

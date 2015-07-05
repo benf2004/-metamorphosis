@@ -133,7 +133,7 @@ function scene:initializeHud(sceneGroup)
 	local updateHud = function ()
 		statistics.timeRemaining = statistics.timeRemaining - 1
 		statistics.wormLength = head:lengthToEnd()
-		lengthLabel.text = statistics.wormLength
+		lengthLabel.text = statistics.wormLength.." / "..currentScene.lengthObjective
 		timerLabel.text = statistics.timeRemaining
 
 		local statusLabel = nil

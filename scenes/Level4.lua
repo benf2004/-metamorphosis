@@ -1,14 +1,16 @@
 local level4 = {
 	worm = {
-		x = 512,
+		x = 410,
 		y = 200
 	},
 	foodTruck = {
 		standardWorm = 100
 	},
 	walls = {
-		{231, 384, 426, 100},
-		{793, 384, 426, 100}
+		{56, 359, 400, 50},
+		{568, 359, 400, 50},
+		{487, 72, 50, 200},
+		{487, 496, 50, 200}
 	},
 	secondsAllowed = 60,
 	lengthObjective = 65

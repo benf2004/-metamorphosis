@@ -63,8 +63,10 @@ function HeadWorm:consume( wormNode )
 	wormNode:detachFromTrailing()
 
 	--move the node offscreen so that it is hidden during digestion
-	wormNode.sprite:removeSelf( )
-	wormNode.sprite = nil
+	if wormNode.sprite ~= nil then
+		wormNode.sprite:removeSelf( )
+		wormNode.sprite = nil
+	end
 
 	self:digest(wormNode, self.displayGroup)
 end
