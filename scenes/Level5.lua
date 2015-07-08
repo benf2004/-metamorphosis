@@ -7,13 +7,12 @@ local level5 = {
 		standardWorm = 100
 	},
 	driftingWalls = {
-		interval = 5000,
+		interval = 5,
 		minWidth = 300,
-		maxWidth = 900,
-		velocity = 150
+		maxWidth = 900
 	},
 	secondsAllowed = 60,
-	lengthObjective = 60
+	lengthObjective = 50
 }
 
 return level5

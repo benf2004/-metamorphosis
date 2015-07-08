@@ -41,3 +41,9 @@ function Wall:initialize(x, y, width, height, physics, sceneGroup)
 	sceneGroup:insert(self.leftCap)
 	sceneGroup:insert(self.rightCap)
 end
+
+function Wall:removeSelf()
+	if self.box.removeSelf then self.box:removeSelf( ) end
+	if self.leftCap.removeSelf then self.leftCap:removeSelf() end
+	if self.rightCap.removeSelf then self.rightCap:removeSelf() end
+end

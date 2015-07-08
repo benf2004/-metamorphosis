@@ -29,7 +29,6 @@ local head = nil
 local foodTruckTimer = nil
 local foodTruck = nil
 local driftingWallTruck = nil
-local driftingWallTruckTimer = nil
 local hudTimer = nil
 local statistics = {}
 
@@ -62,8 +61,8 @@ end
 function scene:pause()
 	timer.cancel( foodTruckTimer )
 	timer.cancel( hudTimer )
-	timer.cancel( driftingWallTruckTimer )
 	physics.pause( )
+	driftingWallTruck:pause()
 
 	local sceneGroup = self.view
 	sceneGroup:removeEventListener( "touch", touchListener )
@@ -72,7 +71,10 @@ end
 function scene:reset()
 	self:pause()
 	head:destroy()
-	foodTruck:empty()	
+	foodTruck:empty()
+	if driftingWallTruck ~= nil then
+		driftingWallTruck:empty()	
+	end
 	labelGroup:removeSelf( )
 	labelGroup = nil	
 end
@@ -96,6 +98,7 @@ end
 function scene:initializeGravity()
 	physics.setGravity( 0, -19.6 )
 	physics.setTimeStep( 0 )
+	physics.setDrawMode( "hybrid" )
 end
 
 function scene:initializeWorm()
@@ -119,15 +122,14 @@ end
 
 function scene:initializeDriftingWallTruck(sceneGroup)
 	if currentScene.driftingWalls ~= nil then
-		local interval = currentScene.driftingWalls.interval or 5000
+		local interval = currentScene.driftingWalls.interval or 5
+		local step = currentScene.driftingWalls.step or 0.3
 		local minWidth = currentScene.driftingWalls.minWidth or 100
 		local maxWidth = currentScene.driftingWalls.maxWidth or 750
-		local velocity = currentScene.driftingWalls.velocity or 25
 		driftingWallTruck = DriftingWallTruck:new()
-		driftingWallTruck:initialize(physics, velocity, minWidth, maxWidth, screenW, screenH, sceneGroup)
+		driftingWallTruck:initialize(physics, interval, step, minWidth, maxWidth, screenW, screenH, sceneGroup)
 
-		local closure = function() driftingWallTruck:makeDelivery() end
-		driftingWallTruckTimer = timer.performWithDelay( interval, closure, -1 )
+		driftingWallTruck:makeDelivery()
 	end
 end
 
@@ -160,6 +162,9 @@ function scene:initializeHud(sceneGroup)
 			statusLabel = "You Win!"
 			self:pause()
 		elseif statistics.timeRemaining <= 0 then
+			statusLabel = "You Lose!"
+			self:pause()
+		elseif head.sprite.y <= -250 then
 			statusLabel = "You Lose!"
 			self:pause()
 		end
