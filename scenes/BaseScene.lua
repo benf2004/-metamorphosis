@@ -62,7 +62,9 @@ function scene:pause()
 	timer.cancel( foodTruckTimer )
 	timer.cancel( hudTimer )
 	physics.pause( )
-	driftingWallTruck:pause()
+	if driftingWallTruck ~= nil then
+		driftingWallTruck:pause()
+	end
 
 	local sceneGroup = self.view
 	sceneGroup:removeEventListener( "touch", touchListener )
@@ -98,7 +100,6 @@ end
 function scene:initializeGravity()
 	physics.setGravity( 0, -19.6 )
 	physics.setTimeStep( 0 )
-	physics.setDrawMode( "hybrid" )
 end
 
 function scene:initializeWorm()
