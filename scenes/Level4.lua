@@ -12,6 +12,9 @@ local level4 = {
 		{487, 72, 50, 200},
 		{487, 496, 50, 200}
 	},
+	activators = {
+		{512, 384}
+	},
 	secondsAllowed = 60,
 	lengthObjective = 65
 }

@@ -16,6 +16,7 @@ require "worm.HeadWorm"
 require "worm.StandardWorm"
 require "obstacles.Wall"
 require "obstacles.DriftingWall"
+require "obstacles.Activator"
 require "game.FoodTruck"
 require "game.Colors"
 require "game.UI"
@@ -47,6 +48,7 @@ function scene:initialize()
 
 	self:initializeBackground(sceneGroup)
 	self:initializeWorm()
+	self:initializeActivators(sceneGroup)
 	self:initializeWalls(sceneGroup)
 	self:initializeDriftingWallTruck(sceneGroup)
 	self:initializeHud(sceneGroup)
@@ -105,6 +107,16 @@ function scene:initializeWorm()
 	head = HeadWorm:new()
 	local x, y = currentScene.worm.x, currentScene.worm.y
 	head:initialize(x, y, physics)
+end
+
+function scene:initializeActivators(sceneGroup)
+	local activators = currentScene.activators or {}
+	for i, activatorDefinition in ipairs(activators) do
+		local activator = Activator:new()
+		activator:initializeSprite(activatorDefinition[1], activatorDefinition[2])
+		activator:initializePhysics(physics)
+		sceneGroup:insert(activator.sprite)
+	end
 end
 
 function scene:initializeWalls(sceneGroup)
