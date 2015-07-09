@@ -42,8 +42,25 @@ function HeadWorm:initialize(x, y, physics, foodTruck)
 	self.sprite:addEventListener( "collision", self.sprite )
 end
 
+function HeadWorm:destroy()
+	targetJoint:removeSelf( )
+	targetJoint = nil
+
+	if self.trailing ~= nil then
+		self.trailing:destroy()
+	end
+	self:detachFromLeading()
+	self:detachFromTrailing()
+	self.sprite:removeSelf( )
+	self.dead = true
+end
+
 function HeadWorm:moveToLocation(x, y)
 	targetJoint:setTarget( x, y )
+	-- local dt = 2.0 / display.fps
+	-- local dx = x - self.sprite.x
+	-- local dy = y - self.sprite.y
+	-- self.sprite:setLinearVelocity( dx/dt, dy/dt )
 end
 
 function HeadWorm:initializeNeck( )
