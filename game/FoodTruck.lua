@@ -26,10 +26,24 @@ function FoodTruck:makeDelivery(event)
 	food.sprite.x = x
 	food.sprite.y = y
 	table.insert(contents, food)
+	self:randomFood()
+end
+
+function FoodTruck:randomFood()
+	if #contents > 1 then 
+		local random = math.random(1, #contents)
+		return contents[random]
+	else
+		return nil
+	end
 end
 
 function FoodTruck:consumeFood(food)
-	contents.remove(food)
+	for i=#contents, 1, -1 do
+		if contents[i] == food then
+			table.remove(contents, i)
+		end
+	end
 end
 
 function FoodTruck:empty()

@@ -85,7 +85,9 @@ end
 
 function BaseWorm:detachFromLeading()
 	if self.leading ~= nil then
-		self.forwardJoint:removeSelf( )
+		if self.forwardJoint.removeSelf ~= nil then
+			self.forwardJoint:removeSelf( )
+		end
 		self.forwardJoint = nil
 		self.leading.rearwardJoint = nil
 		self.leading.trailing = nil
@@ -96,7 +98,9 @@ end
 
 function BaseWorm:detachFromTrailing() 
 	if self.trailing ~= nil then
-		self.rearwardJoint:removeSelf( )
+		if self.rearwardJoint.removeSelf ~= nil then 
+			self.rearwardJoint:removeSelf( )
+		end
 		self.rearwardJoint = nil
 		self.trailing.forwardJoint = nil
 		self.trailing.leading = nil
@@ -109,7 +113,9 @@ function BaseWorm:die()
 	self:detachFromTrailing()
 	local locationx, locationy = self.sprite.x, self.sprite.y
 	explode(locationx, locationy)
-	self.sprite:removeSelf( )
+	if self.sprite.removeSelf then
+		self.sprite:removeSelf( )
+	end 
 	self.dead = true
 end
 
@@ -119,7 +125,9 @@ function BaseWorm:destroy()
 	end
 	self:detachFromLeading()
 	self:detachFromTrailing()
-	self.sprite:removeSelf( )
+	if self.sprite.removeSelf ~= nil then
+		self.sprite:removeSelf( )
+	end
 	self.dead = true
 end
 
@@ -164,12 +172,14 @@ function BaseWorm:digest(wormNode, displayGroup)
 end
 
 function BaseWorm:affectedByGravity(affected)
-	if affected then
-		self.sprite.gravityScale = 1.0
-	else
-		self.sprite.gravityScale = 0.0
-	end
-	if self.trailing ~= nil then
-		self.trailing:affectedByGravity(affected)
+	if self.sprite ~= nil then 
+		if affected then
+			self.sprite.gravityScale = 1.0
+		else
+			self.sprite.gravityScale = 0.0
+		end
+		if self.trailing ~= nil then
+			self.trailing:affectedByGravity(affected)
+		end
 	end
 end

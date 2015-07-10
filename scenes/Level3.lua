@@ -8,9 +8,9 @@ local level3 = {
 	},
 	walls = {
 		{312, 359, 400, 50}
-	},
+	},	
 	secondsAllowed = 60,
-	lengthObjective = 60
+	lengthObjective = 40
 }
 
 return level3

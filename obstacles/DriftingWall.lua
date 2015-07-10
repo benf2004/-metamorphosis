@@ -12,6 +12,7 @@ end
 
 DriftingWallTruck  = Base:new()
 local contents = {}
+local deliveryTimer = nil
 
 function DriftingWallTruck:initialize(physics, interval, ramp, minWidth, maxWidth, screenW, screenH, sceneGroup)
 	self.physics = physics
@@ -28,10 +29,7 @@ end
 function DriftingWallTruck:adjustVelocity()
 	if self.interval > 1 then 
 		self.interval = self.interval - self.ramp 
-		self.velocity = -150 / self.interval 
-
-		print(self.interval)
-		print(self.velocity)
+		self.velocity = -200 / self.interval 
 
 		for i, driftingWall in pairs(contents) do 
 			driftingWall.velocity = self.velocity
@@ -41,36 +39,48 @@ function DriftingWallTruck:adjustVelocity()
 end
 
 function DriftingWallTruck:makeDelivery()
-	local split = math.random( self.minWidth, self.maxWidth)
+	local s1 = math.random( 100, self.maxWidth / 2)
+	local s2 = math.random( s1 + 200, self.maxWidth - 100 )
 	local height = 50
-	local x1 = 0
-	local x2 = x1 + split + 25
+	local x1 = -25
+	local x2 = s1 + 25
+	local x3 = s2 + 25
 	local y = self.screenH + 75
-	local width1 = x1 + split - 25
-	local width2 = self.screenW - x2
+	local width1 = s1
+	local width2 = s2 - s1 - 50
+	local width3 = self.screenW - s2
 
 	local driftingWall1 = DriftingWall:new()
-	driftingWall1:initialize(x1-50, y, width1, height, self.physics, self.sceneGroup)
+	driftingWall1:initialize(x1, y, width1, height, self.physics, self.sceneGroup)
 	driftingWall1.velocity = self.velocity
 	driftingWall1:adjustVelocity()
 	table.insert(contents, driftingWall1)
 
 	local driftingWall2 = DriftingWall:new()
-	driftingWall2:initialize(x2, y, width2 + 50, height, self.physics, self.sceneGroup)
+	driftingWall2:initialize(x2, y, width2, height, self.physics, self.sceneGroup)
 	driftingWall2.velocity = self.velocity
 	driftingWall2:adjustVelocity()
 	table.insert(contents, driftingWall2)
+
+	local driftingWall3 = DriftingWall:new()
+	driftingWall3:initialize(x3, y, width3, height, self.physics, self.sceneGroup)
+	driftingWall3.velocity = self.velocity
+	driftingWall3:adjustVelocity()
+	table.insert(contents, driftingWall3)	
 
 	self:adjustVelocity()
 
 	if not self.paused then
 		local closure = function() self:makeDelivery() end
-		timer.performWithDelay( self.interval * 1000, closure)
+		deliveryTimer = timer.performWithDelay( self.interval * 1000, closure)
 	end
 end
 
 function DriftingWallTruck:pause()
 	self.paused = true
+	if deliveryTimer ~= nil then
+		timer.cancel( deliveryTimer )
+	end
 end
 
 function DriftingWallTruck:empty()

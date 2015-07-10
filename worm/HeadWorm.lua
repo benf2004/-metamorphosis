@@ -29,17 +29,20 @@ function HeadWorm:initialize(x, y, physics, foodTruck)
 	self.type = "head"
 	self.displayGroup = display.newGroup( )
 	self.displayGroup:insert( self.sprite )
+	self.foodTruck = foodTruck
 
 	self:initializePhysics(physics)
 	self:initializeNeck()
 
-	targetJoint = physics.newJoint( "touch", self.sprite, x, y )
+	self.sprite.collision = onLocalCollision
+	self.sprite:addEventListener( "collision", self.sprite )
+end
+
+function HeadWorm:initializeMotion()
+	targetJoint = physics.newJoint( "touch", self.sprite, self.sprite.x, self.sprite.y )
 	targetJoint.dampingRatio = 1
 	targetJoint.freqency = 1
 	targetJoint.maxForce = 3000
-
-	self.sprite.collision = onLocalCollision
-	self.sprite:addEventListener( "collision", self.sprite )
 end
 
 function HeadWorm:destroy()
@@ -57,10 +60,6 @@ end
 
 function HeadWorm:moveToLocation(x, y)
 	targetJoint:setTarget( x, y )
-	-- local dt = 2.0 / display.fps
-	-- local dx = x - self.sprite.x
-	-- local dy = y - self.sprite.y
-	-- self.sprite:setLinearVelocity( dx/dt, dy/dt )
 end
 
 function HeadWorm:initializeNeck( )
@@ -84,6 +83,8 @@ function HeadWorm:consume( wormNode )
 		wormNode.sprite:removeSelf( )
 		wormNode.sprite = nil
 	end
+
+	self.foodTruck:consumeFood(wormNode)
 
 	self:digest(wormNode, self.displayGroup)
 end

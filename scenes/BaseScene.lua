@@ -14,6 +14,7 @@ physics.start(); physics.pause()
 
 require "worm.HeadWorm"
 require "worm.StandardWorm"
+require "worm.HungryWorm"
 require "obstacles.Wall"
 require "obstacles.DriftingWall"
 require "obstacles.Activator"
@@ -31,6 +32,7 @@ local foodTruckTimer = nil
 local foodTruck = nil
 local driftingWallTruck = nil
 local hudTimer = nil
+local hungryWorms = {}
 local statistics = {}
 
 local function touchListener( event )
@@ -47,13 +49,14 @@ function scene:initialize()
 	local sceneGroup = self.view
 
 	self:initializeBackground(sceneGroup)
+	self:initializeFoodTruck()
 	self:initializeWorm()
+	self:initializeHungryWorms()
 	self:initializeActivators(sceneGroup)
 	self:initializeWalls(sceneGroup)
 	self:initializeDriftingWallTruck(sceneGroup)
 	self:initializeHud(sceneGroup)
 	self:initializeGravity()
-	self:initializeFoodTruck()
 
 	sceneGroup:addEventListener( "touch", touchListener )
 
@@ -68,6 +71,10 @@ function scene:pause()
 		driftingWallTruck:pause()
 	end
 
+	for i, hungryWorm in ipairs(hungryWorms) do
+		hungryWorm:endHunger()
+	end
+
 	local sceneGroup = self.view
 	sceneGroup:removeEventListener( "touch", touchListener )
 end
@@ -80,7 +87,11 @@ function scene:reset()
 		driftingWallTruck:empty()	
 	end
 	labelGroup:removeSelf( )
-	labelGroup = nil	
+	labelGroup = nil
+
+	for i, hungryWorm in ipairs(hungryWorms) do
+		hungryWorm:destroy()
+	end
 end
 
 function scene:initializeBackground(sceneGroup)
@@ -102,12 +113,25 @@ end
 function scene:initializeGravity()
 	physics.setGravity( 0, -19.6 )
 	physics.setTimeStep( 0 )
+	-- physics.setDrawMode( "hybrid" )
 end
 
 function scene:initializeWorm()
 	head = HeadWorm:new()
 	local x, y = currentScene.worm.x, currentScene.worm.y
-	head:initialize(x, y, physics)
+	head:initialize(x, y, physics, foodTruck)
+	head:initializeMotion()
+end
+
+function scene:initializeHungryWorms()
+	local hungryWormsDefinitions = currentScene.hungryWorms or {}
+	for i, hungryWormDefinition in ipairs(hungryWormsDefinitions) do
+		local hungryWorm = HungryWorm:new()
+		local x, y = hungryWormDefinition[1], hungryWormDefinition[2]
+		hungryWorm:initialize(x, y, physics, foodTruck)
+		hungryWorm:initializeMotion()
+		table.insert(hungryWorms, hungryWorm)
+	end
 end
 
 function scene:initializeActivators(sceneGroup)
