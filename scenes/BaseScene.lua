@@ -15,6 +15,7 @@ physics.start(); physics.pause()
 require "worm.HeadWorm"
 require "worm.StandardWorm"
 require "worm.HungryWorm"
+require "worm.AngryWorm"
 require "obstacles.Wall"
 require "obstacles.DriftingWall"
 require "obstacles.Activator"
@@ -86,7 +87,9 @@ function scene:reset()
 	if driftingWallTruck ~= nil then
 		driftingWallTruck:empty()	
 	end
-	labelGroup:removeSelf( )
+	if labelGroup ~= nil and labelGroup.removeSelf ~= nil then
+		labelGroup:removeSelf( )
+	end
 	labelGroup = nil
 
 	for i, hungryWorm in ipairs(hungryWorms) do

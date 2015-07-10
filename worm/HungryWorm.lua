@@ -28,9 +28,7 @@ function HungryWorm:destroy()
 	end
 	self:detachFromLeading()
 	self:detachFromTrailing()
-	if self.sprite.removeSelf then
-		self.sprite:removeSelf( )
-	end
+	self:removeSelf( )
 	self.dead = true
 end
 

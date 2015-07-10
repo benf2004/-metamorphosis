@@ -7,14 +7,10 @@ local level2 = {
 		standardWorm = 100
 	},
 	hungryWorms = {
-		{950, 284},
-		{950, 344},
-		{950, 404},
-		{950, 464},
-		{950, 524}
+		{950, 384}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 15
+	lengthObjective = 50
 }
 
 return level2

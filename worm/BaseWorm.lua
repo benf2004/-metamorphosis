@@ -59,8 +59,8 @@ function BaseWorm:attach(next, displayGroup)
 		if next.sprite == nil then
 			next:initialize( self.physics )
 		else
-			physics.removeBody( next.sprite )
-			next:initializePhysics(self.physics)
+			-- physics.removeBody( next.sprite )
+			-- next:initializePhysics(self.physics)
 		end
 		if next.sprite.name ~= "gravityworm" then
 			next:affectedByGravity(false)
@@ -93,6 +93,7 @@ function BaseWorm:detachFromLeading()
 		self.leading.trailing = nil
 		self.leading = nil
 		self:affectedByGravity(true)
+		self:putMeInFoodTruck()
 	end
 end
 
@@ -108,14 +109,24 @@ function BaseWorm:detachFromTrailing()
 	end
 end
 
+function BaseWorm:putMeInFoodTruck()
+	if self.foodTruck ~= nil then
+		self.foodTruck:addFreeBody(self)
+	end
+	if self.trailing ~= nil then
+		self.trailing:putMeInFoodTruck()
+	end
+end
+
+
 function BaseWorm:die()
 	self:detachFromLeading()
 	self:detachFromTrailing()
-	local locationx, locationy = self.sprite.x, self.sprite.y
-	explode(locationx, locationy)
-	if self.sprite.removeSelf then
-		self.sprite:removeSelf( )
-	end 
+	if self.sprite ~= nil then
+		local locationx, locationy = self.sprite.x, self.sprite.y
+		explode(locationx, locationy)
+		self:removeSelf( ) 
+	end
 	self.dead = true
 end
 
@@ -125,9 +136,7 @@ function BaseWorm:destroy()
 	end
 	self:detachFromLeading()
 	self:detachFromTrailing()
-	if self.sprite.removeSelf ~= nil then
-		self.sprite:removeSelf( )
-	end
+	self:removeSelf()
 	self.dead = true
 end
 
@@ -140,6 +149,12 @@ function BaseWorm:lengthToEnd()
 end
 
 function BaseWorm:activate()
+end
+
+function BaseWorm:removeSelf()
+	if self.sprite ~= nil and self.sprite.removeSelf ~= nil then
+		self.sprite:removeSelf()
+	end
 end
 
 function BaseWorm:digest(wormNode, displayGroup)

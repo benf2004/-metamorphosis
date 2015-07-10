@@ -25,8 +25,8 @@ function FoodTruck:makeDelivery(event)
 	food:initialize( self.physics )
 	food.sprite.x = x
 	food.sprite.y = y
+	food.foodTruck = self
 	table.insert(contents, food)
-	self:randomFood()
 end
 
 function FoodTruck:randomFood()
@@ -36,6 +36,10 @@ function FoodTruck:randomFood()
 	else
 		return nil
 	end
+end
+
+function FoodTruck:addFreeBody(food)
+	table.insert(contents, food)
 end
 
 function FoodTruck:consumeFood(food)
@@ -48,9 +52,7 @@ end
 
 function FoodTruck:empty()
 	for i, food in pairs(contents) do
-		if food.sprite ~= nil and food.sprite.removeSelf ~= nil then
-			food.sprite:removeSelf( )
-		end
+		food:removeSelf()
 	end
 	contents = {}
 end
