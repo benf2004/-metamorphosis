@@ -4,6 +4,7 @@ local level6 = {
 		y = 374
 	},
 	foodTruck = {
+<<<<<<< HEAD
 		standardWorm = 30,
 		gravityWorm = 70
 		},
@@ -13,8 +14,11 @@ driftingWalls = {
 		minWidth = 300,
 		maxWidth = 900	
 	
+=======
+		gravityWorm = 100
+>>>>>>> 4c314709456d64e88e1ab72f0404698ffa773da0
 	},
-	secondsAllowed = 70,
+	secondsAllowed = 60,
 	lengthObjective = 50
 }
 

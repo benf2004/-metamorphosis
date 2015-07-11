@@ -46,7 +46,9 @@ function HeadWorm:initializeMotion()
 end
 
 function HeadWorm:destroy()
-	targetJoint:removeSelf( )
+	if targetJoint ~= nil and targetJoint.removeSelf ~= nil then
+		targetJoint:removeSelf( )
+	end
 	targetJoint = nil
 
 	if self.trailing ~= nil then
@@ -54,7 +56,8 @@ function HeadWorm:destroy()
 	end
 	self:detachFromLeading()
 	self:detachFromTrailing()
-	self.sprite:removeSelf( )
+	self:removeSelf( )
+	self.displayGroup:removeSelf()
 	self.dead = true
 end
 
@@ -80,13 +83,13 @@ function HeadWorm:consume( wormNode )
 
 	--move the node offscreen so that it is hidden during digestion
 	if wormNode.sprite ~= nil then
-		wormNode.sprite:removeSelf( )
+		wormNode:removeSelf( )
 		wormNode.sprite = nil
 	end
 
 	self.foodTruck:consumeFood(wormNode)
 
-	self:digest(wormNode, self.displayGroup)
+	self:digest(wormNode, self.displayGroup, self.foodTruck)
 end
 
 NeckWorm = BaseWorm:new()

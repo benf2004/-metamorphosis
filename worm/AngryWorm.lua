@@ -1,8 +1,9 @@
 require("worm.HeadWorm")
 
-HungryWorm = HeadWorm:new()
+AngryWorm = HeadWorm:new()
 
-function HungryWorm:initializeMotion(speed)
+function AngryWorm:initializeMotion(speed, targetWorm)
+	self.targetWorm = targetWorm
 	if speed > 29 then speed = 29 end
 	if speed < 0 then speed = 0 end
 	self.speed = (30 - speed)
@@ -12,7 +13,7 @@ function HungryWorm:initializeMotion(speed)
 	self.moveTimer = nil
 
 	local target = function() 
-		self.targetFood = self.foodTruck:randomFood() 
+		self.targetFood = self.targetWorm:tail() 
 	end
 
 	local move = function()
@@ -26,7 +27,7 @@ function HungryWorm:initializeMotion(speed)
 	self.moveTimer = timer.performWithDelay( 100, move, -1 )
 end
 
-function HungryWorm:destroy()
+function AngryWorm:destroy()
 	if self.trailing ~= nil then
 		self.trailing:destroy()
 	end
@@ -36,7 +37,7 @@ function HungryWorm:destroy()
 	self.dead = true
 end
 
-function HungryWorm:moveToLocation(x, y)
+function AngryWorm:moveToLocation(x, y)
 	if (x ~= nil and y ~= nil and self.sprite ~= nil and self.sprite.x ~= nil and self.sprite.y ~= nil) then 
 		local dt = self.speed / display.fps
 		local dx = x - self.sprite.x
@@ -45,7 +46,7 @@ function HungryWorm:moveToLocation(x, y)
 	end
 end
 
-function HungryWorm:endHunger()
+function AngryWorm:endAnger()
 	if self.targetTimer ~= nil then
 		timer.cancel( self.targetTimer )
 	end 

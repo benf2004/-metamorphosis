@@ -26,16 +26,26 @@ function FoodTruck:makeDelivery(event)
 	food.sprite.x = x
 	food.sprite.y = y
 	table.insert(contents, food)
-	self:randomFood()
 end
 
-function FoodTruck:randomFood()
+function FoodTruck:randomFood(attempt)
+	if attempt == nil then attempt = 1 end
+	if attempt > 5 then return nil end
 	if #contents > 1 then 
 		local random = math.random(1, #contents)
-		return contents[random]
+		local food = contents[random]
+		if food:onScreen() then 
+			return contents[random]
+		else
+			return self:randomFood(attempt + 1)
+		end
 	else
 		return nil
 	end
+end
+
+function FoodTruck:addFreeBody(food)
+	table.insert(contents, food)
 end
 
 function FoodTruck:consumeFood(food)
@@ -48,9 +58,7 @@ end
 
 function FoodTruck:empty()
 	for i, food in pairs(contents) do
-		if food.sprite ~= nil and food.sprite.removeSelf ~= nil then
-			food.sprite:removeSelf( )
-		end
+		food:removeSelf()
 	end
 	contents = {}
 end

@@ -6,6 +6,10 @@ function explode(x, y)
 	emitter.x = x
 	emitter.y = y
 
-	local remove = function() emitter:removeSelf( ) end
+	local remove = function() 
+		if emitter.removeSelf ~= nil then 
+			emitter:removeSelf( ) 
+		end
+	end
 	timer.performWithDelay( 1000, remove )
 end

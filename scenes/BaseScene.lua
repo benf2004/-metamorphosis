@@ -15,6 +15,7 @@ physics.start(); physics.pause()
 require "worm.HeadWorm"
 require "worm.StandardWorm"
 require "worm.HungryWorm"
+require "worm.AngryWorm"
 require "obstacles.Wall"
 require "obstacles.DriftingWall"
 require "obstacles.Activator"
@@ -33,6 +34,7 @@ local foodTruck = nil
 local driftingWallTruck = nil
 local hudTimer = nil
 local hungryWorms = {}
+local angryWorms = {}
 local statistics = {}
 
 local function touchListener( event )
@@ -52,6 +54,7 @@ function scene:initialize()
 	self:initializeFoodTruck()
 	self:initializeWorm()
 	self:initializeHungryWorms()
+	self:initializeAngryWorms()
 	self:initializeActivators(sceneGroup)
 	self:initializeWalls(sceneGroup)
 	self:initializeDriftingWallTruck(sceneGroup)
@@ -75,6 +78,10 @@ function scene:pause()
 		hungryWorm:endHunger()
 	end
 
+	for i, angryWorm in ipairs(angryWorms) do
+		angryWorm:endAnger()
+	end
+
 	local sceneGroup = self.view
 	sceneGroup:removeEventListener( "touch", touchListener )
 end
@@ -86,11 +93,17 @@ function scene:reset()
 	if driftingWallTruck ~= nil then
 		driftingWallTruck:empty()	
 	end
-	labelGroup:removeSelf( )
+	if labelGroup ~= nil and labelGroup.removeSelf ~= nil then
+		labelGroup:removeSelf( )
+	end
 	labelGroup = nil
 
 	for i, hungryWorm in ipairs(hungryWorms) do
 		hungryWorm:destroy()
+	end
+
+	for i, angryWorm in ipairs(angryWorms) do
+		angryWorm:destroy()
 	end
 end
 
@@ -125,12 +138,25 @@ end
 
 function scene:initializeHungryWorms()
 	local hungryWormsDefinitions = currentScene.hungryWorms or {}
+	local speed = currentScene.hungryWormSpeed or 20
 	for i, hungryWormDefinition in ipairs(hungryWormsDefinitions) do
 		local hungryWorm = HungryWorm:new()
 		local x, y = hungryWormDefinition[1], hungryWormDefinition[2]
 		hungryWorm:initialize(x, y, physics, foodTruck)
-		hungryWorm:initializeMotion()
+		hungryWorm:initializeMotion(speed)
 		table.insert(hungryWorms, hungryWorm)
+	end
+end
+
+function scene:initializeAngryWorms()
+	local angryWormsDefinitions = currentScene.angryWorms or {}
+	local speed = currentScene.angryWormSpeed or 20
+	for i, angryWormDefinition in ipairs(angryWormsDefinitions) do
+		local angryWorm = AngryWorm:new()
+		local x, y = angryWormDefinition[1], angryWormDefinition[2]
+		angryWorm:initialize(x, y, physics, foodTruck)
+		angryWorm:initializeMotion(speed, head)
+		table.insert(angryWorms, angryWorm)
 	end
 end
 
