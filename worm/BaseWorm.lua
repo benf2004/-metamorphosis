@@ -140,6 +140,16 @@ end
 function BaseWorm:activate()
 end
 
+function BaseWorm:onScreen()
+	if self.sprite ~= nil then
+		if self.sprite.x <= 1024 and self.sprite.x > 0 and self.sprite.y <= 768 and self.sprite.y > 0 then
+			return true
+		else
+			return false
+		end
+	end
+end
+
 function BaseWorm:removeSelf()
 	if self.sprite ~= nil and self.sprite.removeSelf ~= nil then
 		self.sprite:removeSelf()

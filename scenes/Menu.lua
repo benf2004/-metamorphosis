@@ -33,7 +33,7 @@ function scene:create( event )
 
 	sceneGroup:insert( background )
 
-	local columns = 2
+	local columns = 3
 	local rows = 3
 	local spacing = 10
 

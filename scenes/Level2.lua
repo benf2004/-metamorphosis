@@ -1,4 +1,4 @@
-local level2 = {
+local level8 = {
 	worm = {
 		x = 100,
 		y = 374
@@ -11,7 +11,7 @@ local level2 = {
 		{950, 384}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 50
+	lengthObjective = 30
 }
 
-return level2
+return level8
