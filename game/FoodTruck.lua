@@ -25,7 +25,6 @@ function FoodTruck:makeDelivery(event)
 	food:initialize( self.physics )
 	food.sprite.x = x
 	food.sprite.y = y
-	food.foodTruck = self
 	table.insert(contents, food)
 end
 

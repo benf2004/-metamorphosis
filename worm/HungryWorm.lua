@@ -2,7 +2,11 @@ require("worm.HeadWorm")
 
 HungryWorm = HeadWorm:new()
 
-function HungryWorm:initializeMotion()
+function HungryWorm:initializeMotion(speed)
+	if speed > 29 then speed = 29 end
+	if speed < 0 then speed = 0 end
+	self.speed = (30 - speed)
+
 	self.targetFood = nil
 	self.targetTimer = nil
 	self.moveTimer = nil
@@ -34,7 +38,7 @@ end
 
 function HungryWorm:moveToLocation(x, y)
 	if (x ~= nil and y ~= nil and self.sprite ~= nil and self.sprite.x ~= nil and self.sprite.y ~= nil) then 
-		local dt = 15.0 / display.fps
+		local dt = self.speed / display.fps
 		local dx = x - self.sprite.x
 		local dy = y - self.sprite.y
 		self.sprite:setLinearVelocity( dx/dt, dy/dt )

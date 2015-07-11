@@ -57,6 +57,7 @@ function HeadWorm:destroy()
 	self:detachFromLeading()
 	self:detachFromTrailing()
 	self:removeSelf( )
+	self.displayGroup:removeSelf()
 	self.dead = true
 end
 

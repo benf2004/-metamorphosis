@@ -93,7 +93,6 @@ function BaseWorm:detachFromLeading()
 		self.leading.trailing = nil
 		self.leading = nil
 		self:affectedByGravity(true)
-		self:putMeInFoodTruck()
 	end
 end
 
@@ -108,16 +107,6 @@ function BaseWorm:detachFromTrailing()
 		self.trailing = nil
 	end
 end
-
-function BaseWorm:putMeInFoodTruck()
-	if self.foodTruck ~= nil then
-		self.foodTruck:addFreeBody(self)
-	end
-	if self.trailing ~= nil then
-		self.trailing:putMeInFoodTruck()
-	end
-end
-
 
 function BaseWorm:die()
 	self:detachFromLeading()

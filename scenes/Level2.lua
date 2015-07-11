@@ -6,6 +6,7 @@ local level2 = {
 	foodTruck = {
 		standardWorm = 100
 	},
+	hungryWormSpeed = 30, -- 0 to 30
 	hungryWorms = {
 		{950, 384}
 	},
