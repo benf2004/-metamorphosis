@@ -23,14 +23,12 @@ HeadWorm = BaseWorm:new()
 local neckLength = 3
 local targetJoint = nil
 
-function HeadWorm:initialize(x, y, physics, foodTruck)
-	self:initializeSprite("wormhead")
+function HeadWorm:initialize(x, y, physics, foodTruck, sceneLoader)
+	self:initializeSprite("wormhead", sceneLoader)
 	self.sprite.x, self.sprite.y = x, y
 	self.type = "head"
-	self.displayGroup = display.newGroup( )
-	self.displayGroup:insert( self.sprite )
-	self.foodTruck = foodTruck
 
+	self.foodTruck = foodTruck
 	self:initializePhysics(physics)
 	self:initializeNeck()
 
@@ -68,9 +66,7 @@ end
 function HeadWorm:initializeNeck( )
 	for i=1,neckLength do
 		local neck = NeckWorm:new()
-		neck:initialize( )
-		neck:initializePhysics(self.physics)
-		self:attach(neck, self.displayGroup)
+		self:attach(neck)
 	end
 end
 
@@ -81,11 +77,7 @@ function HeadWorm:consume( wormNode )
 	wormNode:detachFromLeading()
 	wormNode:detachFromTrailing()
 
-	--move the node offscreen so that it is hidden during digestion
-	if wormNode.sprite ~= nil then
-		wormNode:removeSelf( )
-		wormNode.sprite = nil
-	end
+	wormNode.sceneLoader:removeDisplayObject(wormNode.sprite)
 
 	self.foodTruck:consumeFood(wormNode)
 
@@ -94,7 +86,8 @@ end
 
 NeckWorm = BaseWorm:new()
 
-function NeckWorm:initialize( )
-	self:initializeSprite("neck")
+function NeckWorm:initialize( physics, sceneLoader )
+	self:initializeSprite("neck", sceneLoader)
 	self.type = "neck"
+	self:initializePhysics( physics )
 end

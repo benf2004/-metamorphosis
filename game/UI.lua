@@ -1,9 +1,6 @@
 local widget = require( "widget" )
 
-local height = 50
-local width = 100
-
-function button(label, x, y, action) 
+function button(label, x, y, width, height, action) 
 	local button = widget.newButton
 		{
 		    label = label,

@@ -3,8 +3,10 @@ require("effects.Effects")
 
 BaseWorm  = Base:new({diameter=32})
 
-function BaseWorm:initializeSprite(textureName)
+function BaseWorm:initializeSprite(textureName, sceneLoader)
 	self.sprite = display.newImageRect( "images/"..textureName..".png", self.diameter, self.diameter )
+	self.sceneLoader = sceneLoader
+	self.sceneLoader:addDisplayObject(self.sprite)
 	self.density = 1
 	self.sprite.obj = self
 end
@@ -53,15 +55,10 @@ function BaseWorm:tail()
 	end
 end
 
-function BaseWorm:attach(next, displayGroup)
+function BaseWorm:attach(next)
 	if self:isTail() and self ~= next then
 		next.density = self.density * 0.9
-		if next.sprite == nil then
-			next:initialize( self.physics )
-		else
-			-- physics.removeBody( next.sprite )
-			-- next:initializePhysics(self.physics)
-		end
+		next:initialize( self.physics, self.sceneLoader )
 		if next.sprite.name ~= "gravityworm" then
 			next:affectedByGravity(false)
 		else
@@ -74,12 +71,18 @@ function BaseWorm:attach(next, displayGroup)
 		next.forwardJoint = joint
 		self.trailing = next
 		next.leading = self
-		displayGroup:insert(next.sprite)
-		next.sprite:toBack( )
+		next:reorderZ()
 	else
 		if self ~= next then
-	 		self.trailing:attach(next, displayGroup)
+	 		self.trailing:attach(next)
 	 	end
+	end
+end
+
+function BaseWorm:reorderZ()
+	self.sprite:toFront()
+	if not self:isHead() then
+		self.leading:reorderZ()
 	end
 end
 
@@ -114,7 +117,7 @@ function BaseWorm:die()
 	if self.sprite ~= nil then
 		local locationx, locationy = self.sprite.x, self.sprite.y
 		explode(locationx, locationy)
-		self:removeSelf( ) 
+		self.sceneLoader:removeDisplayObject(self.sprite)
 	end
 	self.dead = true
 end
@@ -141,18 +144,12 @@ function BaseWorm:activate()
 end
 
 function BaseWorm:onScreen()
-	if self.sprite ~= nil then
-		if self.sprite.x <= 1024 and self.sprite.x > 0 and self.sprite.y <= 768 and self.sprite.y > 0 then
-			return true
-		else
-			return false
-		end
-	end
-end
-
-function BaseWorm:removeSelf()
-	if self.sprite ~= nil and self.sprite.removeSelf ~= nil then
-		self.sprite:removeSelf()
+	if self.sprite ~= nil and self.sprite.x ~= nil and
+	   self.sprite.x <= 1024 and self.sprite.x > 0 and 
+	   self.sprite.y <= 768 and self.sprite.y > 0 then
+		return true
+	else
+		return false
 	end
 end
 

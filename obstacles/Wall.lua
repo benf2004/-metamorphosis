@@ -3,7 +3,9 @@ require("game.Colors")
 
 Wall  = Base:new()
 
-function Wall:initialize(x, y, width, height, physics, sceneGroup)
+function Wall:initialize(x, y, width, height, physics, sceneLoader)
+	self.sceneLoader = sceneLoader
+
 	local leftCapCenterX, leftCapCenterY = nil, nil
 	local rightCapCenterX, rightCapCenterY = nil, nil
 	local boxCenterX, boxCenterY = nil, nil
@@ -37,13 +39,7 @@ function Wall:initialize(x, y, width, height, physics, sceneGroup)
 	physics.addBody(self.leftCap, "kinematic", { radius=capRadius, friction=0.0, bounce=0.0 } )
 	physics.addBody(self.rightCap, "kinematic", { radius=capRadius, friction=0.0, bounce=0.0 } )
 
-	sceneGroup:insert(self.box)
-	sceneGroup:insert(self.leftCap)
-	sceneGroup:insert(self.rightCap)
-end
-
-function Wall:removeSelf()
-	if self.box.removeSelf then self.box:removeSelf( ) end
-	if self.leftCap.removeSelf then self.leftCap:removeSelf() end
-	if self.rightCap.removeSelf then self.rightCap:removeSelf() end
+	self.sceneLoader:addDisplayObject(self.box)
+	self.sceneLoader:addDisplayObject(self.leftCap)
+	self.sceneLoader:addDisplayObject(self.rightCap)
 end

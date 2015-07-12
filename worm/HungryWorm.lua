@@ -24,6 +24,9 @@ function HungryWorm:initializeMotion(speed)
 	local targetTimerWait = math.random(2000, 3000)
 	self.targetTimer = timer.performWithDelay( targetTimerWait, target , -1 )
 	self.moveTimer = timer.performWithDelay( 100, move, -1 )
+
+	self.sceneLoader:addTimer(self.targetTimer)
+	self.sceneLoader:addTimer(self.moveTimer)
 end
 
 function HungryWorm:destroy()
@@ -42,15 +45,5 @@ function HungryWorm:moveToLocation(x, y)
 		local dx = x - self.sprite.x
 		local dy = y - self.sprite.y
 		self.sprite:setLinearVelocity( dx/dt, dy/dt )
-	end
-end
-
-function HungryWorm:endHunger()
-	if self.targetTimer ~= nil then
-		timer.cancel( self.targetTimer )
-	end 
-
-	if self.moveTimer ~= nil then
-		timer.cancel( self.moveTimer )
 	end
 end

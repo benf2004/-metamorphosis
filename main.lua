@@ -5,7 +5,7 @@
 -----------------------------------------------------------------------------------------
 
 --global current scene properties
-currentScene = nil
+currentScene = require("scenes.Level1")
 
 -- hide the status bar
 display.setStatusBar( display.HiddenStatusBar )
@@ -14,4 +14,4 @@ display.setStatusBar( display.HiddenStatusBar )
 local composer = require "composer"
 
 -- load menu screen
-composer.gotoScene( "scenes.Menu" )
+composer.gotoScene( "core.Menu" )

@@ -15,14 +15,16 @@ local function onLocalCollision(self, event)
 	end
 end
 
-function Activator:initializeSprite(x, y)
-	print("initializing"..x..","..y)
+function Activator:initializeSprite(x, y, sceneLoader)
+	self.sceneLoader = sceneLoader
 	self.sprite = display.newImageRect( "images/activator.png", self.diameter, self.diameter )
 	self.sprite.x, self.sprite.y = x, y
 	self.sprite.obj = self
 
 	self.sprite.collision = onLocalCollision
 	self.sprite:addEventListener( "collision", self.sprite )
+
+	sceneLoader:addDisplayObject(self.sprite)
 end
 
 function Activator:initializePhysics(physics)

@@ -11,10 +11,8 @@ function DriftingWall:adjustVelocity()
 end
 
 DriftingWallTruck  = Base:new()
-local contents = {}
-local deliveryTimer = nil
 
-function DriftingWallTruck:initialize(physics, interval, ramp, minWidth, maxWidth, screenW, screenH, sceneGroup)
+function DriftingWallTruck:initialize(physics, interval, ramp, minWidth, maxWidth, screenW, screenH, sceneLoader)
 	self.physics = physics
 	self.interval = interval
 	self.ramp = ramp
@@ -22,7 +20,9 @@ function DriftingWallTruck:initialize(physics, interval, ramp, minWidth, maxWidt
 	self.maxWidth = maxWidth
 	self.screenW = screenW
 	self.screenH = screenH
-	self.sceneGroup = sceneGroup
+	self.sceneLoader = sceneLoader
+	self.contents = {}
+	self.deliveryTimer = nil
 	self:adjustVelocity()
 end
 
@@ -31,7 +31,7 @@ function DriftingWallTruck:adjustVelocity()
 		self.interval = self.interval - self.ramp 
 		self.velocity = -200 / self.interval 
 
-		for i, driftingWall in pairs(contents) do 
+		for i, driftingWall in pairs(self.contents) do 
 			driftingWall.velocity = self.velocity
 			driftingWall:adjustVelocity()
 		end
@@ -51,22 +51,22 @@ function DriftingWallTruck:makeDelivery()
 	local width3 = self.screenW - s2
 
 	local driftingWall1 = DriftingWall:new()
-	driftingWall1:initialize(x1, y, width1, height, self.physics, self.sceneGroup)
+	driftingWall1:initialize(x1, y, width1, height, self.physics, self.sceneLoader)
 	driftingWall1.velocity = self.velocity
 	driftingWall1:adjustVelocity()
-	table.insert(contents, driftingWall1)
+	table.insert(self.contents, driftingWall1)
 
 	local driftingWall2 = DriftingWall:new()
-	driftingWall2:initialize(x2, y, width2, height, self.physics, self.sceneGroup)
+	driftingWall2:initialize(x2, y, width2, height, self.physics, self.sceneLoader)
 	driftingWall2.velocity = self.velocity
 	driftingWall2:adjustVelocity()
-	table.insert(contents, driftingWall2)
+	table.insert(self.contents, driftingWall2)
 
 	local driftingWall3 = DriftingWall:new()
-	driftingWall3:initialize(x3, y, width3, height, self.physics, self.sceneGroup)
+	driftingWall3:initialize(x3, y, width3, height, self.physics, self.sceneLoader)
 	driftingWall3.velocity = self.velocity
 	driftingWall3:adjustVelocity()
-	table.insert(contents, driftingWall3)	
+	table.insert(self.contents, driftingWall3)	
 
 	self:adjustVelocity()
 
@@ -80,11 +80,5 @@ function DriftingWallTruck:pause()
 	self.paused = true
 	if deliveryTimer ~= nil then
 		timer.cancel( deliveryTimer )
-	end
-end
-
-function DriftingWallTruck:empty()
-	for i, driftingWall in pairs(contents) do 
-		driftingWall:removeSelf()
 	end
 end

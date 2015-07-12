@@ -5,9 +5,10 @@ require("worm.GravityWorm")
 FoodTruck  = Base:new()
 local contents = {}
 
-function FoodTruck:initialize( physics, level )
+function FoodTruck:initialize( physics, level, sceneLoader )
 	self.physics = physics
 	self.level = level
+	self.sceneLoader = sceneLoader
 end
 
 function FoodTruck:makeDelivery(event)
@@ -22,7 +23,7 @@ function FoodTruck:makeDelivery(event)
 	else
 		food = StandardWorm:new()
 	end
-	food:initialize( self.physics )
+	food:initialize( self.physics, self.sceneLoader )
 	food.sprite.x = x
 	food.sprite.y = y
 	table.insert(contents, food)
@@ -37,6 +38,7 @@ function FoodTruck:randomFood(attempt)
 		if food:onScreen() then 
 			return contents[random]
 		else
+			self:consumeFood(food)
 			return self:randomFood(attempt + 1)
 		end
 	else
@@ -51,6 +53,7 @@ end
 function FoodTruck:consumeFood(food)
 	for i=#contents, 1, -1 do
 		if contents[i] == food then
+			print("consuming")
 			table.remove(contents, i)
 		end
 	end
