@@ -1,4 +1,4 @@
-require("worm.Baseworm")
+require("worm.BaseWorm")
 
 StandardWorm = BaseWorm:new()
 
