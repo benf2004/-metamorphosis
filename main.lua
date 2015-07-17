@@ -5,7 +5,7 @@
 -----------------------------------------------------------------------------------------
 
 --global current scene properties
-currentScene = require("scenes.Level1")
+currentScene = nil
 
 -- hide the status bar
 display.setStatusBar( display.HiddenStatusBar )
