@@ -5,15 +5,12 @@ local level6 = {
 	},
 	foodTruck = {
 		standardWorm = 30,
-		gravityWorm = 70
-		},
-
-driftingWalls = {
+		gravityWorm = 100
+	},
+	driftingWalls = {
 		interval = 5,
 		minWidth = 300,
-		maxWidth = 900	
-	
-
+		maxWidth = 900
 	},
 	secondsAllowed = 60,
 	lengthObjective = 50

@@ -10,5 +10,7 @@ function StandardWorm:initialize( physics, sceneLoader )
 end
 
 function StandardWorm:activate()
-	self:die()
+	if not self.shielded then
+		self:die()
+	end
 end

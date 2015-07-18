@@ -15,5 +15,7 @@ function GravityWorm:postInitializePhysics( physics, sceneLoader)
 end
 
 function GravityWorm:activate()
-	self:die()
+	if not self.shielded then
+		self:die()
+	end
 end

@@ -12,7 +12,7 @@ local level5 = {
 		maxWidth = 900
 	},
 	secondsAllowed = 60,
-	lengthObjective = 50
+	lengthObjective = 40
 }
 
 return level5

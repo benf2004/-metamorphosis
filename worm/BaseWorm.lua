@@ -9,6 +9,7 @@ function BaseWorm:initializeSprite(textureName, sceneLoader)
 	self.sceneLoader:addDisplayObject(self.sprite)
 	self.density = 1
 	self.sprite.obj = self
+	self.sprite:addEventListener( "touch", self.sceneLoader.touchListener )
 end
 
 function BaseWorm:initializePhysics(physics)
@@ -25,10 +26,12 @@ function BaseWorm:postInitializePhysics(physics)
 end
 
 function BaseWorm:moveToLocation(x, y)
-	local dt = 2.0 / display.fps
-	local dx = x - self.sprite.x
-	local dy = y - self.sprite.y
-	self.sprite:setLinearVelocity( dx/dt, dy/dt )
+	if (x ~= nil and y ~= nil and self.sprite ~= nil and self.sprite.x ~= nil and self.sprite.y ~= nil) then 
+		local dt = 2.0 / display.fps
+		local dx = x - self.sprite.x
+		local dy = y - self.sprite.y
+		self.sprite:setLinearVelocity( dx/dt, dy/dt )
+	end
 end
 
 function BaseWorm:isHead()
@@ -72,6 +75,7 @@ function BaseWorm:attach(next)
 		self.trailing = next
 		next.leading = self
 		next:reorderZ()
+		next:setShield(self.shielded)
 	else
 		if self ~= next then
 	 		self.trailing:attach(next)
@@ -192,5 +196,26 @@ function BaseWorm:affectedByGravity(affected)
 		if self.trailing ~= nil then
 			self.trailing:affectedByGravity(affected)
 		end
+	end
+end
+
+function BaseWorm:setShield(shielded)
+	if shielded == true then
+		print("Setting shield")
+		self.glow = display.newCircle( self.sprite.x, self.sprite.y, (self.diameter / 2) + 2)
+		self.glow:setFillColor( 1, 1, 0)
+		self.sceneLoader:addDisplayObject(self.glow)
+		self.physics.addBody( self.glow, { radius = (self.diameter / 2) + 2, density=0} )
+		self.physics.newJoint( "pivot", self.sprite, self.glow, self.sprite.x, self.sprite.y )
+		self:reorderZ()
+	else
+		if self.glow ~= nil then
+			self.sceneLoader:removeDisplayObject(self.glow)
+		end
+	end
+
+	self.shielded = shielded
+	if self.trailing ~= nil then
+		self.trailing:setShield(shielded)
 	end
 end

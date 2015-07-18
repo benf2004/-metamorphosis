@@ -4,21 +4,17 @@ local level8 = {
 		y = 374
 	},
 	foodTruck = {
-		gravityWorm = 100
+		anchorWorm = 100
 	},
 	activators = {
-		{512, 384},
-		{256, 192},
-		{768, 192},
-		{256, 576},
-		{768, 576}
+		{512, 384}
 	},
 	angryWormSpeed = 20, -- 0 to 30
 	angryWorms = {
 		{950, 384}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 40
+	lengthObjective = 30
 }
 
 return level8

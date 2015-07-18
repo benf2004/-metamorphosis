@@ -68,7 +68,7 @@ function DriftingWallTruck:makeDelivery()
 	driftingWall3:adjustVelocity()
 	table.insert(self.contents, driftingWall3)	
 
-	self:adjustVelocity()
+	-- self:adjustVelocity()
 
 	if not self.paused then
 		local closure = function() self:makeDelivery() end

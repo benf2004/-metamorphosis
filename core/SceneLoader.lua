@@ -62,9 +62,20 @@ function SceneLoader:initializePhysics()
 	-- self.physics.setDrawMode( "hybrid" )
 
 	self.touchListener = function( event )
-		if ( event.phase == "moved" ) then
-			self.head:moveToLocation(event.x, event.y)
+		if ( event.phase == "began" ) then
+			if (event.target.obj) then
+				self.touchTarget = event.target.obj
+			end
+		elseif ( event.phase == "moved" ) then
+			-- if self.touchTarget ~= nil and self.touchTarget.moveToLocation ~= nil then
+			-- 	self.touchTarget:moveToLocation(event.x, event.y)
+			-- else
+				self.head:moveToLocation(event.x, event.y)
+			-- end
+		elseif (event.phase == "ended" or event.phase == "cancelled") then
+			self.touchTarget = nil
     	end
+    	return true
     end
 end
 
