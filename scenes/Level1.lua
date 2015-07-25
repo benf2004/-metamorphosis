@@ -7,7 +7,8 @@ local level1 = {
 		standardWorm = 100
 	},
 	secondsAllowed = 60,
-	lengthObjective = 50
+	lengthObjective = 50,
+	sceneEffect = "midnight"
 }
 
 return level1

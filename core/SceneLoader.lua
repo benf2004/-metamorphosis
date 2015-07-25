@@ -91,6 +91,12 @@ function SceneLoader:initializeBackground()
 	background:setFillColor( 1 )
 
 	self:addDisplayObject(background)
+
+	local sceneEffect = currentScene.sceneEffect or "None"
+	if sceneEffect == "midnight" then
+		local bkg = display.newRect( self.centerX, self.centerY, 768, 1024 )
+		bkg:setFillColor( 0 )
+	end
 end
 
 function SceneLoader:initializeFoodTruck()
