@@ -6,7 +6,8 @@ local level9 = {
 	foodTruck = {
 		standardWorm = 33,
 		gravityWorm = 66,
-		anchorWorm = 100
+		anchorWorm = 90,
+		shieldWorm = 100
 	},
 	hungryWormSpeed = 25, -- 0 to 30
 	hungryWorms = {
@@ -17,7 +18,7 @@ local level9 = {
 		{950, 444}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 10
+	lengthObjective = 15
 }
 
 return level9

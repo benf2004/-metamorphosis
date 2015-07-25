@@ -100,7 +100,7 @@ function BaseWorm:replace(replacement)
 		previous:attach(replacement, x, y)
 	end
 
-	if trailing ~= nil and trailing.sprite ~= nil and replacement.sprite ~= nil then 
+	if trailing ~= nil and trailing.sprite ~= nil and replacement ~= nil and replacement.sprite ~= nil then 
 		trailing.sprite.x = replacement.sprite.x - trailing.sprite.width / 2
 		trailing.sprite.y = replacement.sprite.y
 		local joint = self.physics.newJoint( "pivot", trailing.sprite, replacement.sprite, trailing.sprite.x, trailing.sprite.y )
