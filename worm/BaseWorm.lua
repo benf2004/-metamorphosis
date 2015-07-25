@@ -174,6 +174,21 @@ function BaseWorm:lengthToEnd()
 	end
 end
 
+function BaseWorm:killBadJoints()
+	if self.leading ~= nil then
+		local dx = math.abs(self.leading.sprite.x - self.sprite.x)
+		local dy = math.abs(self.leading.sprite.y - self.sprite.y)
+		if dx > self.sprite.width or dy > self.sprite.width then
+			self:die()
+		end
+	end
+
+	if self.trailing ~= nil then
+		self.trailing:killBadJoints()
+	end
+end
+
+
 function BaseWorm:activate()
 end
 

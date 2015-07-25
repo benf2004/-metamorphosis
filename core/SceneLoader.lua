@@ -23,6 +23,7 @@ function SceneLoader:load()
 	self:initializeDriftingWallTruck()
 	self:initializeHud()
 	self:initializeGravity()
+	self:initializeJointCheck()
 end
 
 function SceneLoader:start()
@@ -30,10 +31,13 @@ function SceneLoader:start()
 	self.physics.start()
 
 	self.hudTimer = timer.performWithDelay( 1000, self.updateHud, -1)
-	self:addTimer(hudTimer)
+	self:addTimer(self.hudTimer)
 
 	self.foodTruckTimer = timer.performWithDelay( 750, self.makeDelivery, -1 )
-	self:addTimer(foodTruckTimer)
+	self:addTimer(self.foodTruckTimer)
+
+	self.jointCheckTimer = timer.performWithDelay( 250, self.jointCheck, -1)
+	self:addTimer(self.jointCheckTimer)
 end
 
 function SceneLoader:pause()
@@ -42,6 +46,7 @@ function SceneLoader:pause()
 
 	self:removeTimer(self.hudTimer)
 	self:removeTimer(self.foodTruckTimer)
+	self:removeTimer(self.jointCheckTimer)
 
 	if self.driftingWallTruck ~= nil then self.driftingWallTruck:pause() end
 end
@@ -153,12 +158,11 @@ function SceneLoader:initializeDriftingWallTruck(sceneGroup)
 	if currentScene.driftingWalls ~= nil then
 		local interval = currentScene.driftingWalls.interval or 5
 		local step = currentScene.driftingWalls.step or 0.3
-		local minWidth = currentScene.driftingWalls.minWidth or 100
-		local maxWidth = currentScene.driftingWalls.maxWidth or 750
+		local direction = currentScene.driftingWalls.direction or "vertical"
 		
 		self.driftingWallTruck = DriftingWallTruck:new()
 
-		self.driftingWallTruck:initialize(self.physics, interval, step, minWidth, maxWidth, self.screenW, self.screenH, self)
+		self.driftingWallTruck:initialize(self.physics, interval, step, direction, self.screenW, self.screenH, self)
 		self.driftingWallTruck:makeDelivery()
 	end
 end
@@ -197,6 +201,10 @@ function SceneLoader:initializeHud(sceneGroup)
 		elseif self.head.sprite.y <= -250 then
 			statusLabel = "You Lose!"
 			self:pause()
+		elseif self.head:lengthToEnd() < 3 then
+			self.head:die()
+			statusLabel = "You Lose!"
+			self:pause()
 		end
 
 		if statusLabel ~= nil then
@@ -210,4 +218,10 @@ function SceneLoader:initializeGravity()
 	physics.setGravity( 0, -19.6 )
 	physics.setTimeStep( 0 )
 	-- physics.setDrawMode( "hybrid" )
+end
+
+function SceneLoader:initializeJointCheck()
+	self.jointCheck = function()
+		self.head:killBadJoints()
+	end
 end
