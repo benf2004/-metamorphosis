@@ -23,7 +23,8 @@ function AnchorWorm:activate()
 		local destroyAnchor = function()
 			self.sceneLoader:removeDisplayObject(self.anchor)
 			self.anchor = nil
-			self:die()
+			local replacement = StandardWorm:new()
+			self:replace(replacement)
 		end
 
 		local upAnchor = timer.performWithDelay( 5000, destroyAnchor, 1)

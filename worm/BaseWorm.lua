@@ -58,7 +58,7 @@ function BaseWorm:tail()
 	end
 end
 
-function BaseWorm:attach(next)
+function BaseWorm:attach(next, x, y)
 	if self:isTail() and self ~= next then
 		next.density = self.density * 0.9
 		next:initialize( self.physics, self.sceneLoader )
@@ -67,8 +67,12 @@ function BaseWorm:attach(next)
 		else
 			next:affectedByGravity(true)
 		end
+		-- if (x == nil) then x = self.sprite.x - next.sprite.width / 2 end
+		-- if (y == nil) then y = self.sprite.y end
+
 		next.sprite.x = self.sprite.x - next.sprite.width / 2
 		next.sprite.y = self.sprite.y
+
 		local joint = self.physics.newJoint( "pivot", self.sprite, next.sprite, next.sprite.x, next.sprite.y )
 		self.rearwardJoint = joint
 		next.forwardJoint = joint
@@ -78,8 +82,34 @@ function BaseWorm:attach(next)
 		next:setShield(self.shielded)
 	else
 		if self ~= next then
-	 		self.trailing:attach(next)
+	 		self.trailing:attach(next, x, y)
 	 	end
+	end
+end
+
+function BaseWorm:replace(replacement)
+	local previous = self.leading
+	local trailing = self.trailing
+
+	self:detachFromLeading()
+	self:detachFromTrailing()
+	self.sceneLoader:removeDisplayObject(self.sprite)
+
+	if previous ~= nil then
+		local x, y = self.sprite.x, self.sprite.y
+		previous:attach(replacement, x, y)
+	end
+
+	if trailing ~= nil and trailing.sprite ~= nil then 
+		trailing.sprite.x = replacement.sprite.x - trailing.sprite.width / 2
+		trailing.sprite.y = replacement.sprite.y
+		local joint = self.physics.newJoint( "pivot", trailing.sprite, replacement.sprite, trailing.sprite.x, trailing.sprite.y )
+		replacement.rearwardJoint = joint
+		trailing.forwardJoint = joint
+		replacement.trailing = trailing
+		trailing.leading = replacement
+		trailing:reorderZ()
+		trailing:setShield(replacement.shielded)
 	end
 end
 
@@ -99,7 +129,6 @@ function BaseWorm:detachFromLeading()
 		self.leading.rearwardJoint = nil
 		self.leading.trailing = nil
 		self.leading = nil
-		self:affectedByGravity(true)
 	end
 end
 
@@ -117,6 +146,7 @@ end
 
 function BaseWorm:die()
 	self:detachFromLeading()
+	self:affectedByGravity(true)
 	self:detachFromTrailing()
 	if self.sprite ~= nil then
 		local locationx, locationy = self.sprite.x, self.sprite.y
@@ -201,7 +231,6 @@ end
 
 function BaseWorm:setShield(shielded)
 	if shielded == true then
-		print("Setting shield")
 		self.glow = display.newCircle( self.sprite.x, self.sprite.y, (self.diameter / 2) + 2)
 		self.glow:setFillColor( 1, 1, 0)
 		self.sceneLoader:addDisplayObject(self.glow)

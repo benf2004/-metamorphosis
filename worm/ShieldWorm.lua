@@ -12,14 +12,13 @@ function ShieldWorm:initialize( physics, sceneLoader )
 end
 
 function ShieldWorm:activate()
-	print("Trying to activate")
 	if self.shielded == nil or self.shielded == false then
-		print("Activating")
 		self:head():setShield(true)
 
 		local destroyShield = function()
 			self:head():setShield(false)
-			self:die()
+			local replacement = StandardWorm:new()
+			self:replace(replacement)
 		end
 
 		local downShield = timer.performWithDelay( 5000, destroyShield, 1)
