@@ -12,7 +12,7 @@ function AnchorWorm:initialize( physics, sceneLoader )
 end
 
 function AnchorWorm:activate()
-	if not self.shielded and notself.anchor and self.sprite and self.sprite.x and self.sprite.y then 
+	if not self.shielded and not self.anchor and self.sprite and self.sprite.x and self.sprite.y then 
 		self.anchor = display.newCircle( self.sprite.x, self.sprite.y, 2 )
 		self.anchor:setFillColor( 0, 0, 0, 0)
 		self.sceneLoader:addDisplayObject(self.anchor)
