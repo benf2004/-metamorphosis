@@ -3,6 +3,7 @@ require("worm.StandardWorm")
 require("worm.GravityWorm")
 require("worm.AnchorWorm")
 require("worm.ShieldWorm")
+require("worm.PoisonWorm")
 
 FoodTruck  = Base:new()
 local contents = {}
@@ -26,6 +27,8 @@ function FoodTruck:makeDelivery(event)
 		food = AnchorWorm:new()
 	elseif kind <= (self.level.foodTruck.shieldWorm or 0) then
 		food = ShieldWorm:new()
+	elseif kind <= (self.level.foodTruck.poisonWorm or 0) then
+		food = PoisonWorm:new()
 	else
 		food = StandardWorm:new()
 	end

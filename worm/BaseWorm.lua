@@ -1,5 +1,6 @@
 require("Base")
 require("effects.Effects")
+require("game.Colors")
 
 BaseWorm  = Base:new({diameter=32})
 
@@ -79,7 +80,7 @@ function BaseWorm:attach(next, x, y)
 		self.trailing = next
 		next.leading = self
 		next:reorderZ()
-		next:setShield(self.shielded)
+		next:setShield(self.shield)
 	else
 		if self ~= next then
 	 		self.trailing:attach(next, x, y)
@@ -109,7 +110,7 @@ function BaseWorm:replace(replacement)
 		replacement.trailing = trailing
 		trailing.leading = replacement
 		trailing:reorderZ()
-		trailing:setShield(replacement.shielded)
+		trailing:setShield(replacement.shield)
 	end
 end
 
@@ -152,6 +153,9 @@ function BaseWorm:die()
 		local locationx, locationy = self.sprite.x, self.sprite.y
 		explode(locationx, locationy)
 		self.sceneLoader:removeDisplayObject(self.sprite)
+	end
+	if self.glow ~= nil then
+		self.sceneLoader:removeDisplayObject(self.glow)
 	end
 	self.dead = true
 end
@@ -244,22 +248,40 @@ function BaseWorm:affectedByGravity(affected)
 	end
 end
 
-function BaseWorm:setShield(shielded)
-	if shielded == true then
+function BaseWorm:addGlow(color)
+	if self.glow == nil then 
 		self.glow = display.newCircle( self.sprite.x, self.sprite.y, (self.diameter / 2) + 2)
-		self.glow:setFillColor( 1, 1, 0)
+		self.glow:setFillColor( color[1], color[2], color[3] )
 		self.sceneLoader:addDisplayObject(self.glow)
 		self.physics.addBody( self.glow, { radius = (self.diameter / 2) + 2, density=0} )
 		self.physics.newJoint( "pivot", self.sprite, self.glow, self.sprite.x, self.sprite.y )
 		self:reorderZ()
-	else
-		if self.glow ~= nil then
-			self.sceneLoader:removeDisplayObject(self.glow)
+	end
+end	
+
+function BaseWorm:removeGlow()
+	if self.glow ~= nil then
+		self.sceneLoader:removeDisplayObject(self.glow)
+		self.glowColor = nil
+		self.glow = nil
+		self.shield = nil
+	end
+end
+
+function BaseWorm:setShield(shield)
+	if shield ~= nil then
+		if shield == "poison" then
+			self.glowColor = colors.purple
+		else
+			self.glowColor = colors.yellow
 		end
+		self.shield = shield
+		self:addGlow(self.glowColor)
+	else
+		self:removeGlow()
 	end
 
-	self.shielded = shielded
 	if self.trailing ~= nil then
-		self.trailing:setShield(shielded)
+		self.trailing:setShield(shield)
 	end
 end

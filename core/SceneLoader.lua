@@ -198,11 +198,11 @@ function SceneLoader:initializeHud(sceneGroup)
 		elseif self.statistics.timeRemaining <= 0 then
 			statusLabel = "You Lose!"
 			self:pause()
-		elseif self.head.sprite.y <= -250 or self.head.sprite.x <= -250 then
+		elseif self.head:lengthToEnd() < 2 then
+			self.head:die()
 			statusLabel = "You Lose!"
 			self:pause()
-		elseif self.head:lengthToEnd() < 3 then
-			self.head:die()
+		elseif self.head.sprite.y <= -250 or self.head.sprite.x <= -250 then
 			statusLabel = "You Lose!"
 			self:pause()
 		end

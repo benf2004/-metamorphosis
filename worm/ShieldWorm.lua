@@ -12,11 +12,11 @@ function ShieldWorm:initialize( physics, sceneLoader )
 end
 
 function ShieldWorm:activate()
-	if self.shielded == nil or self.shielded == false then
-		self:head():setShield(true)
+	if self.shield == nil then
+		self:head():setShield("shield")
 
 		local destroyShield = function()
-			self:head():setShield(false)
+			self:head():setShield(nil)
 			local replacement = StandardWorm:new()
 			self:replace(replacement)
 		end
