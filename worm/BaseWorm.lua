@@ -115,7 +115,7 @@ end
 
 function BaseWorm:reorderZ()
 	self.sprite:toFront()
-	if not self:isHead() then
+	if not self:isHead() and self.leading ~= nil then
 		self.leading:reorderZ()
 	end
 end
