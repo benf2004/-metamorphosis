@@ -6,7 +6,7 @@ Menu = SceneBase:new()
 
 function Menu:load()
 	self.columns = 3
-	self.rows = 4
+	self.rows = 5
 
 	self:initializeBackground()
 	self:initializeButtons()

@@ -5,6 +5,7 @@ require("game.UI")
 require("worm.HeadWorm")
 require("worm.HungryWorm")
 require("worm.AngryWorm")
+require("worm.FlashlightWorm")
 require("obstacles.Wall")
 require("obstacles.Activator")
 require("obstacles.DriftingWall")
@@ -30,7 +31,7 @@ function SceneLoader:start()
 	self:addEventListener( "touch", self.touchListener )
 	self.physics.start()
 
-	self.hudTimer = timer.performWithDelay( 1000, self.updateHud, -1)
+	self.hudTimer = timer.performWithDelay( 1000, self.hud.updateHud, -1)
 	self:addTimer(self.hudTimer)
 
 	self.foodTruckTimer = timer.performWithDelay( 750, self.makeDelivery, -1 )
@@ -43,6 +44,7 @@ end
 function SceneLoader:pause()
 	self.physics.pause()
 	self:removeEventListener( "touch", self.touchListener )
+	self.head:pause()
 
 	self:removeTimer(self.hudTimer)
 	self:removeTimer(self.foodTruckTimer)
@@ -53,11 +55,15 @@ end
 
 function SceneLoader:restart()
 	self:unload()
+	self.hud:removeAllDisplayObjects()
+	display.remove(self.blackGroup)
 	self.scene:moveToScene("core.CutScene")
 end
 
 function SceneLoader:menu()
 	self:unload()
+	self.hud:removeAllDisplayObjects()
+	display.remove(self.blackGroup)
 	self.scene:moveToScene("core.Menu")
 end
 
@@ -85,18 +91,18 @@ function SceneLoader:initializePhysics()
 end
 
 function SceneLoader:initializeBackground()
+	self.blackGroup = display.newGroup()
+	local blackBase = display.newRect( self.centerX, self.centerY, self.screenW, self.screenH )
+	blackBase:setFillColor( 0 )
+	self.blackGroup:insert(blackBase)
+
 	local background = display.newImageRect( "images/Background.png", self.screenW, self.screenH )
 	background.anchorX = 0
 	background.anchorY = 0
 	background:setFillColor( 1 )
 
+	self:addDisplayObject(blackBase)
 	self:addDisplayObject(background)
-
-	local sceneEffect = currentScene.sceneEffect or "None"
-	if sceneEffect == "midnight" then
-		local bkg = display.newRect( self.centerX, self.centerY, 768, 1024 )
-		bkg:setFillColor( 0 )
-	end
 end
 
 function SceneLoader:initializeFoodTruck()
@@ -106,7 +112,11 @@ function SceneLoader:initializeFoodTruck()
 end
 
 function SceneLoader:initializeWorm()
-	self.head = HeadWorm:new()
+	if currentScene.sceneEffect == "midnight" then
+		self.head = FlashlightWorm:new()
+	else
+		self.head = HeadWorm:new()
+	end
 	local x, y = currentScene.worm.x, currentScene.worm.y
 	self.head:initialize(x, y, self.physics, self.foodTruck, self)
 	self.head:initializeMotion()
@@ -174,50 +184,9 @@ function SceneLoader:initializeDriftingWallTruck(sceneGroup)
 end
 
 function SceneLoader:initializeHud(sceneGroup)
-	local restartClosure = function() self:restart() end
-	local reset = button("Reset", (self.screenW - 50), 25, 100, 50, restartClosure)
-	self:addDisplayObject(reset)
-
-	local menuClosure = function() self:menu() end
-	local menu = button("Menu", (self.screenW - 160), 25, 100, 50, menuClosure)
-	self:addDisplayObject(menu)
-
-	self.statistics = {}
-	self.statistics.wormLength = self.head:lengthToEnd()
-	self.statistics.timeRemaining = currentScene.secondsAllowed
-
-	local lengthLabel = label(tostring(self.statistics.wormLength.." / "..currentScene.lengthObjective), 50, 25, 18, self.view)
-	self:addDisplayObject(lengthLabel)
-	local timerLabel = label(tostring(self.statistics.timeRemaining), 160, 25, 18, self.view)
-	self:addDisplayObject(timerLabel)
-
-	self.updateHud = function ()
-		self.statistics.timeRemaining = self.statistics.timeRemaining - 1
-		self.statistics.wormLength = self.head:lengthToEnd()
-		lengthLabel.text = self.statistics.wormLength.." / "..currentScene.lengthObjective
-		timerLabel.text = self.statistics.timeRemaining
-
-		local statusLabel = nil
-		if self.statistics.wormLength >= currentScene.lengthObjective then
-			statusLabel = "You Win!"
-			self:pause()
-		elseif self.statistics.timeRemaining <= 0 then
-			statusLabel = "You Lose!"
-			self:pause()
-		elseif self.head:lengthToEnd() < 2 then
-			self.head:die()
-			statusLabel = "You Lose!"
-			self:pause()
-		elseif self.head.sprite.y <= -250 or self.head.sprite.x <= -250 then
-			statusLabel = "You Lose!"
-			self:pause()
-		end
-
-		if statusLabel ~= nil then
-			local resultLabel = label(statusLabel, self.screenW/2, self.screenH/2, 72, self.view)
-			self:addDisplayObject(resultLabel)
-		end
-	end
+	require("game.HUD")
+	self.hud = HUD:new()
+	self.hud:initialize(self)
 end
 
 function SceneLoader:initializeGravity()

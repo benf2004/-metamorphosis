@@ -8,6 +8,8 @@ function SceneBase:initialize(scene)
 	self.timers = {}
 	self.screenW = display.contentWidth
 	self.screenH = display.contentHeight
+	self.centerX = self.screenW / 2
+	self.centerY = self.screenH / 2
 end
 
 function SceneBase:addDisplayObject(displayObject)
