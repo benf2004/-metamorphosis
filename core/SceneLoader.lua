@@ -15,6 +15,7 @@ SceneLoader  = SceneBase:new()
 function SceneLoader:load()
 	self:initializePhysics()
 	self:initializeBackground()
+	self:initializeMusic()
 	self:initializeFoodTruck()
 	self:initializeWorm()
 	self:initializeHungryWorms()
@@ -39,6 +40,8 @@ function SceneLoader:start()
 
 	self.jointCheckTimer = timer.performWithDelay( 250, self.jointCheck, -1)
 	self:addTimer(self.jointCheckTimer)
+
+	self:playAudio("background")
 end
 
 function SceneLoader:pause()
@@ -103,6 +106,10 @@ function SceneLoader:initializeBackground()
 
 	self:addDisplayObject(blackBase)
 	self:addDisplayObject(background)
+end
+
+function SceneLoader:initializeMusic()
+	self:loadAudio("background", "audio/background1.mp3")
 end
 
 function SceneLoader:initializeFoodTruck()

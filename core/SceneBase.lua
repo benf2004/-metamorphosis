@@ -6,6 +6,7 @@ function SceneBase:initialize(scene)
 	self.scene = scene
 	self.view = scene.view
 	self.timers = {}
+	self.audio = {}
 	self.screenW = display.contentWidth
 	self.screenH = display.contentHeight
 	self.centerX = self.screenW / 2
@@ -57,6 +58,16 @@ end
 function SceneBase:removeEventListener( eventType, listener )
 	self.view:removeEventListener( eventType, listener )
 end
+
+function SceneBase:loadAudio( name, audioFile )
+	self.audio[name] = audio.loadStream( audioFile )
+end
+
+function SceneBase:playAudio( name, loops)
+	return audio.play(self.audio[name], { channel=1, loops=-1 })
+end
+
+
 
 function SceneBase:load() end
 function SceneBase:start() end
