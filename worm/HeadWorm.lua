@@ -21,7 +21,6 @@ end
 HeadWorm = BaseWorm:new()
 
 local neckLength = 3
-local targetJoint = nil
 
 function HeadWorm:initialize(x, y, physics, foodTruck, sceneLoader)
 	self:initializeSprite("wormhead", sceneLoader)
@@ -34,20 +33,27 @@ function HeadWorm:initialize(x, y, physics, foodTruck, sceneLoader)
 
 	self.sprite.collision = onLocalCollision
 	self.sprite:addEventListener( "collision", self.sprite )
+	self:initializeEffect()
+end
+
+function HeadWorm:initializeEffect()
+end
+
+function HeadWorm:pause()
 end
 
 function HeadWorm:initializeMotion()
-	targetJoint = physics.newJoint( "touch", self.sprite, self.sprite.x, self.sprite.y )
-	targetJoint.dampingRatio = 1
-	targetJoint.freqency = 1
-	targetJoint.maxForce = 3000
+	self.targetJoint = physics.newJoint( "touch", self.sprite, self.sprite.x, self.sprite.y )
+	self.targetJoint.dampingRatio = 1
+	self.targetJoint.freqency = 1
+	self.targetJoint.maxForce = 3000
 end
 
 function HeadWorm:destroy()
-	if targetJoint ~= nil and targetJoint.removeSelf ~= nil then
-		targetJoint:removeSelf( )
+	if self.targetJoint ~= nil and self.targetJoint.removeSelf ~= nil then
+		self.targetJoint:removeSelf( )
 	end
-	targetJoint = nil
+	self.targetJoint = nil
 
 	if self.trailing ~= nil then
 		self.trailing:destroy()
@@ -60,7 +66,7 @@ function HeadWorm:destroy()
 end
 
 function HeadWorm:moveToLocation(x, y)
-	targetJoint:setTarget( x, y )
+	self.targetJoint:setTarget( x, y )
 end
 
 function HeadWorm:initializeNeck( )
