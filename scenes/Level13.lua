@@ -4,21 +4,17 @@ local level13 = {
 		y = 397
 	},
 	foodTruck = {
-		shieldWorm = 90,
+		shieldWorm = 10,
 		poisonWorm = 100
 	},
-	activators = {
-		{420, 663},
-		{686, 659},
-		{396, 521},
-		{569, 496},
-		{193, 458},
-		{761, 432},
-		{336, 387},
-		{442, 272}
+	driftingWalls = {
+		interval = 4,
+		minWidth = 300,
+		maxWidth = 900
 	},	
 	secondsAllowed = 60,
-	lengthObjective = 30
+	lengthObjective = 45,
+	sceneEffect = "midnight"
 }
 
 return level13
