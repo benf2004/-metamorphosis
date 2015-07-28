@@ -15,9 +15,11 @@ function FlashlightWorm:initializeEffect()
 end
 
 function FlashlightWorm:moveToLocation(x, y)
-	self.targetJoint:setTarget( x, y )
-	self.sceneLoader.view.maskX = x
-	self.sceneLoader.view.maskY = y
+	if self.targetJoint ~= nil then
+		self.targetJoint:setTarget( x, y )
+		self.sceneLoader.view.maskX = x
+		self.sceneLoader.view.maskY = y
+	end
 end
 
 function FlashlightWorm:pulsate()
@@ -41,7 +43,6 @@ end
 
 function FlashlightWorm:setTargetFlashlight()
 	self.flashlightTarget = (math.random( 3, 20 ) / 10)
-	print(self.flashlightTarget)
 end
 
 function FlashlightWorm:pause()
