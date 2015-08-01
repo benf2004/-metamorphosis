@@ -9,12 +9,14 @@ require("worm.FlashlightWorm")
 require("obstacles.Wall")
 require("obstacles.Activator")
 require("obstacles.DriftingWall")
+require ("effects.Lightning")
 
 SceneLoader  = SceneBase:new()
 
 function SceneLoader:load()
 	self:initializePhysics()
 	self:initializeBackground()
+	self:initializeLightning()
 	self:initializeMusic()
 	self:initializeFoodTruck()
 	self:initializeWorm()
@@ -106,6 +108,13 @@ function SceneLoader:initializeBackground()
 
 	self:addDisplayObject(blackBase)
 	self:addDisplayObject(background)
+end
+
+function SceneLoader:initializeLightning()
+	if currentScene.sceneEffect == "lightning" then
+		self.lightning = Lightning:new()
+		self.lightning:initialize (currentScene, self)
+	end
 end
 
 function SceneLoader:initializeMusic()
