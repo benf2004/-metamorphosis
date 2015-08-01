@@ -35,18 +35,17 @@ function SceneBase:addTimer(timerId)
 end
 
 function SceneBase:removeTimer(timerId)
-	timer.cancel( timerId )
 	for i=#self.timers, 1, -1 do
 		if self.timers[i] == timerId then
 			table.remove( self.timers, i )
 		end
 	end
+	timer.cancel( timerId )
 	timerId = nil
 end
 
 function SceneBase:removeAllTimers()
 	for i=#self.timers, 1, -1 do
-		print(self.timers[i])
 		self:removeTimer(self.timers[i])
 	end
 end

@@ -10,7 +10,8 @@ function BaseWorm:initializeSprite(textureName, sceneLoader)
 	self.sceneLoader:addDisplayObject(self.sprite)
 	self.density = 1
 	self.sprite.obj = self
-	self.sprite:addEventListener( "touch", self.sceneLoader.touchListener )
+	self.sprite.xF, self.sprite.xY = 0, 0
+	-- self.sprite:addEventListener( "touch", self.sceneLoader.touchListener )
 end
 
 function BaseWorm:initializePhysics(physics)
@@ -160,6 +161,32 @@ function BaseWorm:die()
 	self.dead = true
 end
 
+function BaseWorm:dieAll()
+	if self.trailing ~= nil then
+		self.trailing:dieAll()
+	end
+	self:die()
+end
+
+function BaseWorm:burstWithHappiness()
+	if self.trailing ~= nil then
+		self.trailing:burstWithHappiness()
+	end
+	self:detachFromLeading()
+	self:affectedByGravity(true)
+	self:detachFromTrailing()
+	if self.sprite ~= nil then
+		local locationx, locationy = self.sprite.x, self.sprite.y
+		-- heartSwirl(locationx, locationy)
+		heartExplosion(locationx, locationy)
+		self.sceneLoader:removeDisplayObject(self.sprite)
+	end
+	if self.glow ~= nil then
+		self.sceneLoader:removeDisplayObject(self.glow)
+	end
+	self.dead = true
+end
+
 function BaseWorm:destroy()
 	if self.trailing ~= nil then
 		self.trailing:destroy()
@@ -182,7 +209,7 @@ function BaseWorm:killBadJoints()
 	if self.leading ~= nil then
 		local dx = math.abs(self.leading.sprite.x - self.sprite.x)
 		local dy = math.abs(self.leading.sprite.y - self.sprite.y)
-		if dx > self.sprite.width or dy > self.sprite.width then
+		if dx > self.sprite.width*2 or dy > self.sprite.width*2 then
 			self:die()
 		end
 	end

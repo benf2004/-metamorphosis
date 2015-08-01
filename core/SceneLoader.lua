@@ -9,6 +9,8 @@ require("worm.FlashlightWorm")
 require("obstacles.Wall")
 require("obstacles.Activator")
 require("obstacles.DriftingWall")
+require("obstacles.WaterCanon")
+require("obstacles.FireSpout")
 
 SceneLoader  = SceneBase:new()
 
@@ -22,6 +24,8 @@ function SceneLoader:load()
 	self:initializeAngryWorms()
 	self:initializeActivators()
 	self:initializeWalls()
+	self:initializeWaterCanons()
+	self:initializeFireSpout()
 	self:initializeDriftingWallTruck()
 	self:initializeHud()
 	self:initializeGravity()
@@ -49,11 +53,15 @@ function SceneLoader:pause()
 	self:removeEventListener( "touch", self.touchListener )
 	self.head:pause()
 
-	self:removeTimer(self.hudTimer)
-	self:removeTimer(self.foodTruckTimer)
-	self:removeTimer(self.jointCheckTimer)
+	self:removeAllTimers()
 
 	if self.driftingWallTruck ~= nil then self.driftingWallTruck:pause() end
+
+	if self.spouts ~= nil then
+		for i=#self.spouts, 1, -1 do
+			self.spouts[i]:pause()
+		end
+	end
 end
 
 function SceneLoader:restart()
@@ -72,8 +80,8 @@ end
 
 function SceneLoader:initializePhysics()
 	self.physics = require( "physics" )
+	-- self.physics.setDrawMode("hybrid")
 	self.physics.start(); self.physics.pause()
-	-- self.physics.setDrawMode( "hybrid" )
 
 	self.touchListener = function( event )
 		if ( event.phase == "began" ) then
@@ -161,6 +169,38 @@ function SceneLoader:initializeActivators()
 		local activator = Activator:new()
 		activator:initializeSprite(activatorDefinition[1], activatorDefinition[2], self)
 		activator:initializePhysics(self.physics)
+	end
+end
+
+function SceneLoader:initializeWaterCanons()
+	self.spouts = self.spouts or {}
+	local waterCanons = currentScene.waterCanons or {}
+	for i, waterCanonDefinition in ipairs(waterCanons) do
+		local x, y = waterCanonDefinition.x, waterCanonDefinition.y
+		local rotation = waterCanonDefinition.rotation or 0
+		local rotating = waterCanonDefinition.rotate or false
+		local waterCanon = WaterCanon:new()
+		waterCanon:initialize(x, y, self)
+		waterCanon:setRotation( rotation )
+		if rotating == true then waterCanon:rotate() end
+		waterCanon:on()
+		table.insert(self.spouts, waterCanon)
+	end
+end
+
+function SceneLoader:initializeFireSpout()
+	self.spouts = self.spouts or {}
+	local fireSpouts = currentScene.fireSpouts or {}
+	for i, fireSpoutDefinition in ipairs(fireSpouts) do
+		local x, y = fireSpoutDefinition.x, fireSpoutDefinition.y
+		local rotation = fireSpoutDefinition.rotation or 0
+		local rotating = fireSpoutDefinition.rotate or false
+		local fireSpout = FireSpout:new()
+		fireSpout:initialize(x, y, self)
+		fireSpout:setRotation( rotation )
+		if rotating == true then fireSpout:rotate() end
+		fireSpout:on()
+		table.insert(self.spouts, fireSpout)
 	end
 end
 

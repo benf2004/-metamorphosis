@@ -66,7 +66,9 @@ function HeadWorm:destroy()
 end
 
 function HeadWorm:moveToLocation(x, y)
-	self.targetJoint:setTarget( x, y )
+	if self.targetJoint and self.targetJoint.setTarget then 
+		self.targetJoint:setTarget( x, y ) 
+	end
 end
 
 function HeadWorm:initializeNeck( )

@@ -15,6 +15,12 @@ local level4 = {
 	activators = {
 		{512, 384}
 	},
+	waterCanons = {
+		{x = 512, y = 384, rotation = 45, rotate = true},
+		{x = 512, y = 384, rotation = 135, rotate = true},
+		{x = 512, y = 384, rotation = 225, rotate = true},
+		{x = 512, y = 384, rotation = 315, rotate = true},
+	},
 	secondsAllowed = 60,
 	lengthObjective = 65
 }
