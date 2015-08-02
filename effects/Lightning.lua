@@ -27,7 +27,7 @@ end
 
 function Lightning:storm()
 	local pause = math.random (500,5000)
-	local count = math.random (1,7)
+	local count = math.random (1,5)
 	self:flash(count)
 	local closure = function ()
 		self:storm()
