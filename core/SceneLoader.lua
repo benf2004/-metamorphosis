@@ -51,6 +51,7 @@ function SceneLoader:start()
 end
 
 function SceneLoader:pause()
+	self.view:setMask(nil)
 	self.physics.pause()
 	self:removeEventListener( "touch", self.touchListener )
 	self.head:pause()
@@ -63,7 +64,7 @@ function SceneLoader:pause()
 		for i=#self.spouts, 1, -1 do
 			self.spouts[i]:pause()
 		end
-	end
+	end	
 end
 
 function SceneLoader:restart()
