@@ -19,7 +19,6 @@ function Lightning:flash(count)
 	end
 	 self.showmask = function ()
 		self.sceneLoader.view:setMask(self.lightning)
-		
 	end
 	timer.performWithDelay(150, self.hidemask, count)
  
