@@ -16,6 +16,7 @@ require ("effects.Lightning")
 SceneLoader  = SceneBase:new()
 
 function SceneLoader:load()
+	self.currentScene = currentScene
 	self:initializePhysics()
 	self:initializeBackground()
 	self:initializeLightning()
@@ -57,6 +58,7 @@ function SceneLoader:pause()
 	self.head:pause()
 
 	self:removeAllTimers()
+	self:removeAllGlobalEventListeners()
 
 	if self.driftingWallTruck ~= nil then self.driftingWallTruck:pause() end
 

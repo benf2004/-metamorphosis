@@ -1,4 +1,5 @@
 require("worm.HeadWorm")
+require("worm.FireTongue")
 
 AngryWorm = HeadWorm:new()
 
@@ -25,16 +26,24 @@ function AngryWorm:initializeMotion(speed, targetWorm)
 	local targetTimerWait = math.random(2000, 3000)
 	self.targetTimer = timer.performWithDelay( targetTimerWait, target , -1 )
 	self.moveTimer = timer.performWithDelay( 100, move, -1 )
+	self.sceneLoader:addTimer(self.targetTimer)
+	self.sceneLoader:addTimer(self.moveTimer)
 end
 
-function AngryWorm:destroy()
-	if self.trailing ~= nil then
-		self.trailing:destroy()
+function AngryWorm:initializeEffect()
+	local angryWormFireTongues = self.sceneLoader.currentScene.angryWormFireTongues or false
+	if angryWormFireTongues then 
+		self.fireTongue = FireTongue:new()
+		self.fireTongue:initialize( self.sprite.x, self.sprite.y, self.sceneLoader)
+		self.fireTongue:on()
+		self.fireTongue:lashIn()
+		local synchronizeTongue = function()
+			if self.sprite then
+				self.fireTongue:pairWithWorm(self.sprite)
+			end
+		end
+		self.sceneLoader:addGlobalEventListener( "enterFrame", synchronizeTongue )
 	end
-	self:detachFromLeading()
-	self:detachFromTrailing()
-	self:removeSelf( )
-	self.dead = true
 end
 
 function AngryWorm:moveToLocation(x, y)
@@ -43,15 +52,5 @@ function AngryWorm:moveToLocation(x, y)
 		local dx = x - self.sprite.x
 		local dy = y - self.sprite.y
 		self.sprite:setLinearVelocity( dx/dt, dy/dt )
-	end
-end
-
-function AngryWorm:endAnger()
-	if self.targetTimer ~= nil then
-		timer.cancel( self.targetTimer )
-	end 
-
-	if self.moveTimer ~= nil then
-		timer.cancel( self.moveTimer )
 	end
 end

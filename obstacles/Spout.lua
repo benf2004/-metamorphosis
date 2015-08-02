@@ -113,6 +113,13 @@ function Spout:rotate()
 	self.sceneLoader:addTimer(self.rotator)
 end
 
+function Spout:moveToLocation(x, y)
+	self.sensor.x = x
+	self.sensor.y = y
+	self.emitter.x = x
+	self.emitter.y = y
+end
+
 function Spout:pause()
 	self:off()
 	if (self.rotator ~= nil) then

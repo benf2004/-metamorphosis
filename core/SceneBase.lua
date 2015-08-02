@@ -6,6 +6,7 @@ function SceneBase:initialize(scene)
 	self.scene = scene
 	self.view = scene.view
 	self.timers = {}
+	self.globalListeners = {}
 	self.audio = {}
 	self.screenW = display.contentWidth
 	self.screenH = display.contentHeight
@@ -66,7 +67,21 @@ function SceneBase:playAudio( name, loops)
 	return audio.play(self.audio[name], { channel=1, loops=-1 })
 end
 
+function SceneBase:addGlobalEventListener( event, funct )
+	local tuple = {event, funct}
+	table.insert(self.globalListeners, tuple)
+	Runtime:addEventListener( event, funct )
+end
 
+function SceneBase:removeGlobalEventListener( event, funct )
+	Runtime:removeEventListener( event, funct )
+end
+
+function SceneBase:removeAllGlobalEventListeners( )
+	for i=#self.globalListeners, 1, -1 do
+		self:removeGlobalEventListener(self.globalListeners[i])
+	end
+end
 
 function SceneBase:load() end
 function SceneBase:start() end
@@ -74,6 +89,7 @@ function SceneBase:pause() end
 function SceneBase:unload()
 	self:removeAllDisplayObjects()
 	self:removeAllTimers()
+	self:removeAllGlobalEventListeners()
 end
 
 

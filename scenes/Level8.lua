@@ -10,6 +10,7 @@ local level8 = {
 		{512, 384}
 	},
 	angryWormSpeed = 20, -- 0 to 30
+	angryWormFireTongues = true,
 	angryWorms = {
 		{950, 384}
 	},
