@@ -1,4 +1,5 @@
 require("core.SceneBase")
+require("core.SceneLoader")
 require("game.UI")
 require("game.Colors")
 
@@ -35,7 +36,8 @@ function Menu:initializeButtons()
 	local menuSelected = function(event)
 		local level = event.target:getLabel()
 		currentScene = require( "scenes.Level" .. level)
-		self.scene:moveToScene("core.CoreScene")
+		local sceneLoader = SceneLoader:new()
+		self.scene:moveToScene(sceneLoader)
 		return true
 	end
 
@@ -52,56 +54,3 @@ function Menu:initializeButtons()
 		end
 	end
 end
-
---------------------------------------------------
-
-local composer = require( "composer" )
-local scene = composer.newScene()
-
-function scene:create( event ) 
-end
-
-function scene:show( event )
-    local phase = event.phase
-    
-    if ( phase == "will" ) then
-    	if self.sceneLoader == nil then
-    		self.sceneLoader = Menu:new()
-    		self.sceneLoader:initialize( self )
-    	end
-    	self.sceneLoader:load()
-    elseif ( phase == "did" ) then
-    	self.sceneLoader:start()
-    end
-end
-
-function scene:hide( event )
-    local phase = event.phase
-    
-    if ( phase == "will" ) then
-    	composer.removeScene( "core.CoreScene" )
-    	self.sceneLoader:pause()
-    elseif ( phase == "did" ) then
-    	self.sceneLoader:unload()
-    	self.sceneLoader = nil
-    end
-end
-
-function scene:destroy( event )
- 	if self.sceneLoader ~= nil then
- 		self.sceneLoader:pause()
- 		self.sceneLoader:unload()
- 		self.sceneLoader = nil
- 	end   
-end
-
-function scene:moveToScene( sceneName )
-	composer.gotoScene( sceneName, "fade", 250 )
-end
-
-scene:addEventListener( "create", scene )
-scene:addEventListener( "show", scene )
-scene:addEventListener( "hide", scene )
-scene:addEventListener( "destroy", scene )
-
-return scene

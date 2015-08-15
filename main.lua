@@ -14,4 +14,10 @@ display.setStatusBar( display.HiddenStatusBar )
 local composer = require "composer"
 
 -- load menu screen
-composer.gotoScene( "core.Menu" )
+require("core.Menu")
+local options = {
+	params = {
+		sceneLoader = Menu:new()
+	}
+}
+composer.gotoScene( "core.CoreScene", options )

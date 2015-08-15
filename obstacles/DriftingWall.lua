@@ -31,7 +31,6 @@ function DriftingWallTruck:initialize(physics, interval, ramp, direction, screen
 	self.screenH = screenH
 	self.sceneLoader = sceneLoader
 	self.contents = {}
-	self.deliveryTimer = nil
 	self:adjustVelocity()
 end
 
@@ -54,13 +53,6 @@ function DriftingWallTruck:makeDelivery()
 
 	if self.direction == "vertical" or self.direction == "both" then
 		self:makeVerticalWalls()
-	end
-
-	-- self:adjustVelocity()
-
-	if not self.paused then
-		local closure = function() self:makeDelivery() end
-		deliveryTimer = timer.performWithDelay( self.interval * 1000, closure)
 	end
 end
 
@@ -130,11 +122,4 @@ function DriftingWallTruck:makeVerticalWalls()
 	driftingWall3.velocity = self.velocity
 	driftingWall3:adjustVelocity()
 	table.insert(self.contents, driftingWall3)	
-end
-
-function DriftingWallTruck:pause()
-	self.paused = true
-	if deliveryTimer ~= nil then
-		timer.cancel( deliveryTimer )
-	end
 end

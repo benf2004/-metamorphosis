@@ -35,6 +35,26 @@ function SceneBase:addTimer(timerId)
 	table.insert( self.timers, timerId )
 end
 
+function SceneBase:pauseTimer(timerId)
+	timer.pause(timerId)
+end
+
+function SceneBase:pauseAllTimers()
+	for i=#self.timers, 1, -1 do
+		self:pauseTimer(self.timers[i])
+	end
+end
+
+function SceneBase:resumeTimer(timerId)
+	timer.resume(timerId)
+end
+
+function SceneBase:resumeAllTimers()
+	for i=#self.timers, 1, -1 do
+		self:resumeTimer(self.timers[i])
+	end
+end
+
 function SceneBase:removeTimer(timerId)
 	for i=#self.timers, 1, -1 do
 		if self.timers[i] == timerId then
@@ -60,11 +80,11 @@ function SceneBase:removeEventListener( eventType, listener )
 end
 
 function SceneBase:loadAudio( name, audioFile )
-	self.audio[name] = audio.loadStream( audioFile )
+	-- self.audio[name] = audio.loadStream( audioFile )
 end
 
 function SceneBase:playAudio( name, loops)
-	return audio.play(self.audio[name], { channel=1, loops=-1 })
+	-- return audio.play(self.audio[name], { channel=1, loops=-1 })
 end
 
 function SceneBase:addGlobalEventListener( event, funct )
@@ -81,6 +101,10 @@ function SceneBase:removeAllGlobalEventListeners( )
 	for i=#self.globalListeners, 1, -1 do
 		self:removeGlobalEventListener(self.globalListeners[i])
 	end
+end
+
+function SceneBase:openModal()
+	self.scene:openModal()
 end
 
 function SceneBase:load() end

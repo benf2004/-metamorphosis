@@ -1,4 +1,5 @@
 require("core.SceneBase")
+require("core.CutScene")
 require("game.FoodTruck")
 require("game.Colors")
 require("game.UI")
@@ -38,17 +39,15 @@ end
 function SceneLoader:start()
 	self:addEventListener( "touch", self.touchListener )
 	self.physics.start()
+	self:resumeAllTimers()
 
-	self.hudTimer = timer.performWithDelay( 1000, self.hud.updateHud, -1)
-	self:addTimer(self.hudTimer)
+	if self.spouts ~= nil then
+		for i=#self.spouts, 1, -1 do
+			self.spouts[i]:unpause()
+		end
+	end
 
-	self.foodTruckTimer = timer.performWithDelay( 750, self.makeDelivery, -1 )
-	self:addTimer(self.foodTruckTimer)
-
-	self.jointCheckTimer = timer.performWithDelay( 250, self.jointCheck, -1)
-	self:addTimer(self.jointCheckTimer)
-
-	self:playAudio("background")
+	-- self:playAudio("background")
 end
 
 function SceneLoader:pause()
@@ -57,10 +56,8 @@ function SceneLoader:pause()
 	self:removeEventListener( "touch", self.touchListener )
 	self.head:pause()
 
-	self:removeAllTimers()
+	self:pauseAllTimers()
 	self:removeAllGlobalEventListeners()
-
-	if self.driftingWallTruck ~= nil then self.driftingWallTruck:pause() end
 
 	if self.spouts ~= nil then
 		for i=#self.spouts, 1, -1 do
@@ -70,17 +67,18 @@ function SceneLoader:pause()
 end
 
 function SceneLoader:restart()
-	self:unload()
-	self.hud:removeAllDisplayObjects()
-	display.remove(self.blackGroup)
-	self.scene:moveToScene("core.CutScene")
+	-- self:unload()
+	-- self.hud:removeAllDisplayObjects()
+	-- local sceneLoader = SceneLoader:new()
+	-- self.scene:moveToScene(sceneLoader)
+	self:openModal()
 end
 
 function SceneLoader:menu()
 	self:unload()
 	self.hud:removeAllDisplayObjects()
-	display.remove(self.blackGroup)
-	self.scene:moveToScene("core.Menu")
+	local menu = Menu:new()
+	self.scene:moveToScene(menu)
 end
 
 function SceneLoader:initializePhysics()
@@ -107,17 +105,11 @@ function SceneLoader:initializePhysics()
 end
 
 function SceneLoader:initializeBackground()
-	self.blackGroup = display.newGroup()
-	local blackBase = display.newRect( self.centerX, self.centerY, self.screenW, self.screenH )
-	blackBase:setFillColor( 0 )
-	self.blackGroup:insert(blackBase)
-
 	local background = display.newImageRect( "images/Background.png", self.screenW, self.screenH )
 	background.anchorX = 0
 	background.anchorY = 0
 	background:setFillColor( 1 )
 
-	self:addDisplayObject(blackBase)
 	self:addDisplayObject(background)
 end
 
@@ -136,6 +128,9 @@ function SceneLoader:initializeFoodTruck()
 	self.foodTruck = FoodTruck:new()
 	self.foodTruck:initialize(physics, currentScene, self)
 	self.makeDelivery = function() self.foodTruck:makeDelivery() end
+	self.foodTruckTimer = timer.performWithDelay( 750, self.makeDelivery, -1 )
+	self:addTimer(self.foodTruckTimer)
+	self:pauseTimer(self.foodTruckTimer)
 end
 
 function SceneLoader:initializeWorm()
@@ -238,6 +233,11 @@ function SceneLoader:initializeDriftingWallTruck(sceneGroup)
 		self.driftingWallTruck = DriftingWallTruck:new()
 
 		self.driftingWallTruck:initialize(self.physics, interval, step, direction, self.screenW, self.screenH, self)
+
+		local closure = function() self.driftingWallTruck:makeDelivery() end
+		self.wallTruckTimer = timer.performWithDelay( interval * 1000, closure, -1)
+		self:addTimer(self.wallTruckTimer)
+		self:pauseTimer(self.wallTruckTimer)
 		self.driftingWallTruck:makeDelivery()
 	end
 end
@@ -246,11 +246,14 @@ function SceneLoader:initializeHud(sceneGroup)
 	require("game.HUD")
 	self.hud = HUD:new()
 	self.hud:initialize(self)
+
+	self.hudTimer = timer.performWithDelay( 1000, self.hud.updateHud, -1)
+	self:addTimer(self.hudTimer)
+	self:pauseTimer(self.hudTimer)
 end
 
 function SceneLoader:initializeGravity()
 	physics.setGravity( 0, -19.6 )
-	physics.setTimeStep( 0 )
 	-- physics.setDrawMode( "hybrid" )
 end
 
@@ -258,4 +261,7 @@ function SceneLoader:initializeJointCheck()
 	self.jointCheck = function()
 		self.head:killBadJoints()
 	end
+	self.jointCheckTimer = timer.performWithDelay( 250, self.jointCheck, -1)
+	self:addTimer(self.jointCheckTimer)
+	self:pauseTimer(self.jointCheckTimer)
 end

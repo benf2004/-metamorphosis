@@ -106,6 +106,7 @@ function Spout:setRotation(degrees)
 end
 
 function Spout:rotate()
+	if (self.rotator ~= nil) then timer.cancel( self.rotator ) end
 	self.rotationFunction = function()
 		self:setRotation(self.sensor.rotation + 1)
 	end
@@ -125,4 +126,11 @@ function Spout:pause()
 	if (self.rotator ~= nil) then
 		timer.cancel( self.rotator )
 	end
+end
+
+function Spout:unpause()
+	if (self.rotator ~= nil) then
+		self:rotate()
+	end
+	self:on()
 end

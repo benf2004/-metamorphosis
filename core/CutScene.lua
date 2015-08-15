@@ -1,18 +1,3 @@
-require("core.SceneLoader")
-
-CutScene  = SceneLoader:new()
-
-function CutScene:load()
-	self:initializeBackground()
-end
-
-function CutScene:load() end
-function CutScene:start() 
-	self.scene:moveToScene("core.CoreScene")
-end
-function CutScene:pause() end
----------------------------------------------
-
 local composer = require( "composer" )
 local scene = composer.newScene()
 
@@ -24,35 +9,24 @@ function scene:show( event )
     
     if ( phase == "will" ) then
     	composer.removeScene( "core.CoreScene" )
-    	self.cutScene = CutScene:new()
-    	self.cutScene:initialize( self )
-    	self.cutScene:load()
     elseif ( phase == "did" ) then
-    	self.cutScene:start()
+        print(event.params)
+        print(event.params.sceneLoader)
+        local options = {
+            effect = event.params.effect,
+            time = event.params.time,
+            params = {
+                sceneLoader = event.params.sceneLoader
+            }
+        }
+    	composer.gotoScene( "core.CoreScene", options )
     end
 end
 
-function scene:hide( event )
-    local phase = event.phase
-    
-    if ( phase == "will" ) then
-    	self.cutScene:pause()
-    elseif ( phase == "did" ) then
-    	self.cutScene:unload()
-    	self.cutScene = nil
-    end
+function scene:hide( event ) 
 end
 
-function scene:destroy( event )
- 	if self.cutScene ~= nil then
- 		self.cutScene:pause()
- 		self.cutScene:unload()
- 		self.cutScene = nil
- 	end   
-end
-
-function scene:moveToScene( sceneName )
-	composer.gotoScene( sceneName )
+function scene:destroy( event ) 
 end
 
 scene:addEventListener( "create", scene )

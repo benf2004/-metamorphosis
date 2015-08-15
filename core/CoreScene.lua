@@ -1,5 +1,3 @@
-require( "core.SceneLoader" )
-
 local composer = require( "composer" )
 local scene = composer.newScene()
 
@@ -7,13 +5,12 @@ function scene:create( event )
 end
 
 function scene:show( event )
+    local params = event.params
     local phase = event.phase
     
     if ( phase == "will" ) then
-    	if self.sceneLoader == nil then
-    		self.sceneLoader = SceneLoader:new()
-    		self.sceneLoader:initialize( self )
-    	end
+    	self.sceneLoader = params.sceneLoader
+    	self.sceneLoader:initialize( self )
     	self.sceneLoader:load()
     elseif ( phase == "did" ) then
     	self.sceneLoader:start()
@@ -39,8 +36,27 @@ function scene:destroy( event )
  	end   
 end
 
-function scene:moveToScene( sceneName )
-	composer.gotoScene( sceneName, "fade", 250 )
+function scene:moveToScene( sceneLoader )
+    local options = {
+        params = {
+            effect = "fade",
+            time = 250,
+            sceneLoader = sceneLoader
+        }
+    }
+	composer.gotoScene( "core.CutScene", options )
+end
+
+function scene:openModal( )
+    self.sceneLoader:pause()
+    composer.showOverlay( "core.Modal" )
+    local closure = function() self:closeModal() end
+    timer.performWithDelay( 3000, closure )
+end
+
+function scene:closeModal( )
+    self.sceneLoader:start()
+    composer.hideOverlay( )
 end
 
 scene:addEventListener( "create", scene )
