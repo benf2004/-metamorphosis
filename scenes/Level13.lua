@@ -13,8 +13,8 @@ local level13 = {
 		maxWidth = 900
 	},	
 	secondsAllowed = 60,
-	lengthObjective = 45,
-	sceneEffect = "lightning"
+	lengthObjective = 25,
+	sceneEffect = "midnight"
 }
 
 return level13

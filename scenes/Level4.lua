@@ -22,7 +22,7 @@ local level4 = {
 		{x = 512, y = 384, rotation = 315, rotate = true},
 	},
 	secondsAllowed = 60,
-	lengthObjective = 65
+	lengthObjective = 45
 }
 
 return level4
