@@ -12,7 +12,7 @@ local level8 = {
 	},
 	secondsAllowed = 60,
 	lengthObjective = 40,
-	instructions = "These are level 2 instructions!\nAnother line!"
+	instructions = "Uh oh! Here comes HungryWorm! \n Eat the food before the HungryWorm does!"
 }
 
 return level8
