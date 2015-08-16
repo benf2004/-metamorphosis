@@ -57,7 +57,7 @@ function SceneLoader:start()
 		end
 	end
 
-	self:playAudio("background")
+	self:playAudio("stormyBackground")
 end
 
 function SceneLoader:pause()
@@ -132,6 +132,7 @@ end
 
 function SceneLoader:initializeMusic()
 	self:loadAudio("background", "audio/background1.wav")
+	self:loadAudio("stormyBackground", "audio/background2.mp3")
 end
 
 function SceneLoader:initializeFoodTruck()
