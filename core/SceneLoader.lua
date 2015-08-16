@@ -57,7 +57,7 @@ function SceneLoader:start()
 		end
 	end
 
-	-- self:playAudio("background")
+	self:playAudio("background")
 end
 
 function SceneLoader:pause()
@@ -131,7 +131,7 @@ function SceneLoader:initializeLightning()
 end
 
 function SceneLoader:initializeMusic()
-	self:loadAudio("background", "audio/background1.mp3")
+	self:loadAudio("background", "audio/background1.wav")
 end
 
 function SceneLoader:initializeFoodTruck()

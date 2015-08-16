@@ -80,11 +80,11 @@ function SceneBase:removeEventListener( eventType, listener )
 end
 
 function SceneBase:loadAudio( name, audioFile )
-	-- self.audio[name] = audio.loadStream( audioFile )
+	self.audio[name] = audio.loadStream( audioFile )
 end
 
 function SceneBase:playAudio( name, loops)
-	-- return audio.play(self.audio[name], { channel=1, loops=-1 })
+	return audio.play(self.audio[name], { channel=1, loops=-1 })
 end
 
 function SceneBase:addGlobalEventListener( event, funct )

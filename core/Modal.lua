@@ -67,8 +67,6 @@ function Modal:sceneInstructions()
 
 	self:addDisplayObject(self.instFrame)
 	self:addDisplayObject(label)
-
-	self:printTable(native.getFontNames( ))
 end
 
 function Modal:goButton()
