@@ -7,8 +7,8 @@ function Base:new( o )
 	return o
 end
 
-function Base:printSelf()
-	local t = self
+function Base:printTable(toPrint)
+	local t = toPrint
     local print_r_cache={}
     local function sub_print_r(t,indent)
         if (print_r_cache[tostring(t)]) then

@@ -108,6 +108,9 @@ function SceneBase:openModal()
 end
 
 function SceneBase:load() end
+function SceneBase:launch() 
+	self:start()
+end
 function SceneBase:start() end
 function SceneBase:pause() end
 function SceneBase:unload()

@@ -11,7 +11,8 @@ local level8 = {
 		{950, 384}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 40
+	lengthObjective = 40,
+	instructions = "These are level 2 instructions!\nAnother line!"
 }
 
 return level8

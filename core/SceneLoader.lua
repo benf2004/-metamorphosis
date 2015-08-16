@@ -36,6 +36,16 @@ function SceneLoader:load()
 	self:initializeJointCheck()
 end
 
+function SceneLoader:launch()
+	local restarting = currentScene.restarting or false
+	if restarting then
+		currentScene.restarting = false
+		self:start()
+	else
+		self:openModal()
+	end
+end
+
 function SceneLoader:start()
 	self:addEventListener( "touch", self.touchListener )
 	self.physics.start()
@@ -67,11 +77,11 @@ function SceneLoader:pause()
 end
 
 function SceneLoader:restart()
-	-- self:unload()
-	-- self.hud:removeAllDisplayObjects()
-	-- local sceneLoader = SceneLoader:new()
-	-- self.scene:moveToScene(sceneLoader)
-	self:openModal()
+	currentScene.restarting = true
+	self:unload()
+	self.hud:removeAllDisplayObjects()
+	local sceneLoader = SceneLoader:new()
+	self.scene:moveToScene(sceneLoader)
 end
 
 function SceneLoader:menu()

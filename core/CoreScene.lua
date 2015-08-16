@@ -13,7 +13,8 @@ function scene:show( event )
     	self.sceneLoader:initialize( self )
     	self.sceneLoader:load()
     elseif ( phase == "did" ) then
-    	self.sceneLoader:start()
+        self.sceneLoader:launch()
+    	-- self.sceneLoader:start()
     end
 end
 
@@ -50,13 +51,11 @@ end
 function scene:openModal( )
     self.sceneLoader:pause()
     composer.showOverlay( "core.Modal" )
-    local closure = function() self:closeModal() end
-    timer.performWithDelay( 3000, closure )
 end
 
 function scene:closeModal( )
+    composer.hideOverlay( "fade", 250 )
     self.sceneLoader:start()
-    composer.hideOverlay( )
 end
 
 scene:addEventListener( "create", scene )
