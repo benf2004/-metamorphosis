@@ -84,7 +84,31 @@ function SceneBase:loadAudio( name, audioFile )
 end
 
 function SceneBase:playAudio( name, loops)
-	return audio.play(self.audio[name], { channel=1, loops=-1 })
+	audio.play(self.audio[name], { channel=1, loops=-1 })
+end
+
+function SceneBase:pauseAllMusic()
+	for i=32, 1, -1 do
+		if audio.isChannelPlaying( i ) then
+			audio.pause( i )
+		end
+	end
+end
+
+function SceneBase:resumeAllMusic()
+	for i=32, 1, -1 do
+		if audio.isChannelPaused( i ) then
+			audio.resume( i )
+		end
+	end
+end
+
+function SceneBase:resetAllMusic()
+	for i=32, 1, -1 do
+		if audio.isChannelPaused( i ) then
+			audio.rewind( i )
+		end
+	end
 end
 
 function SceneBase:addGlobalEventListener( event, funct )

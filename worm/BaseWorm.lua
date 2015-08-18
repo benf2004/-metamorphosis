@@ -276,7 +276,7 @@ function BaseWorm:affectedByGravity(affected)
 end
 
 function BaseWorm:addGlow(color)
-	if self.glow == nil then 
+	if self.glow == nil and self.sprite ~= nil then 
 		self.glow = display.newCircle( self.sprite.x, self.sprite.y, (self.diameter / 2) + 2)
 		self.glow:setFillColor( color[1], color[2], color[3] )
 		self.sceneLoader:addDisplayObject(self.glow)

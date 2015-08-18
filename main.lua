@@ -4,6 +4,14 @@
 --
 -----------------------------------------------------------------------------------------
 
+local function unhandledErrorListener( event )
+	print(event.errorMessage)
+	print(event.stackTrace)
+    return true
+end
+
+Runtime:addEventListener("unhandledError", unhandledErrorListener)
+
 --global current scene properties
 currentScene = nil
 

@@ -35,11 +35,11 @@ function HUD:initialize(sceneLoader)
 		if self.statistics.wormLength >= currentScene.lengthObjective then
 			self:win()
 		elseif self.statistics.timeRemaining <= 0 then
-			self:lose()
+			self:lose("Times up!")
 		elseif self.sceneLoader.head:lengthToEnd() < 3 then
-			self:lose()
+			self:lose("You lose!")
 		elseif self.sceneLoader.head.sprite.y <= -250 or self.sceneLoader.head.sprite.x <= -250 then
-			self:lose()
+			self:lose("You lose!")
 		end
 
 		if self.statusLabel ~= nil then
@@ -66,9 +66,9 @@ function HUD:removeAllDisplayObjects()
 	self.displayGroup = nil
 end
 
-function HUD:lose()
+function HUD:lose(message)
 	self.sceneLoader.head:dieAll()
-	self.statusLabel = "You Lose!"
+	self.statusLabel = message
 	self.sceneLoader:pause()
 end
 

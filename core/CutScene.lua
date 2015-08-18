@@ -10,8 +10,6 @@ function scene:show( event )
     if ( phase == "will" ) then
     	composer.removeScene( "core.CoreScene" )
     elseif ( phase == "did" ) then
-        print(event.params)
-        print(event.params.sceneLoader)
         local options = {
             effect = event.params.effect,
             time = event.params.time,

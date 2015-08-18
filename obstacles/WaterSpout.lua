@@ -5,7 +5,7 @@ WaterSpout = Spout:new()
 function WaterSpout:initialize(x, y, sceneLoader)
 	local width = 80
 	local height = 300
-	local power = 150
+	local power = 35
 
 	self:initializeSpout("effects/wind.pex", x, y, width, height, power, sceneLoader)
 end
@@ -31,7 +31,7 @@ end
 function WaterSpout:unspray(object)
 	object.xF = object.xF or 0
 	object.yF = object.yF or 0
-	object.xF, object.yF = object.xF - self.xF, object.yF - self.yF
+	object.xF, object.yF = 0, 0 --object.xF - self.xF, object.yF - self.yF
 
 	if object.constantForce ~= nil then
 		Runtime:removeEventListener( "enterFrame", object.constantForce )

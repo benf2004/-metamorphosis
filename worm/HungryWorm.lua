@@ -12,7 +12,14 @@ function HungryWorm:initializeMotion(speed)
 	self.moveTimer = nil
 
 	local target = function() 
-		self.targetFood = self.foodTruck:randomFood() 
+		self.targetFood = self.foodTruck:randomFood()
+		local x,y = 0,0
+		if self.targetFood ~= nil and self.targetFood.sprite ~= nil then
+			x,y = self.targetFood.sprite.x, self.targetFood.sprite.y
+		else
+			x = math.random(0, self.sceneLoader.screenW)
+			y = math.random(0, self.sceneLoader.screenH)
+		end
 	end
 
 	local move = function()

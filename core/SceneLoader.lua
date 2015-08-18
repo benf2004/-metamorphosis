@@ -37,6 +37,11 @@ function SceneLoader:load()
 end
 
 function SceneLoader:launch()
+	local audioToPlay = currentScene.backgroundMusic or "background"
+	self:resetAllMusic()
+	self:playAudio(audioToPlay)
+	self:pauseAllMusic()
+
 	local restarting = currentScene.restarting or false
 	if restarting then
 		currentScene.restarting = false
@@ -50,6 +55,7 @@ function SceneLoader:start()
 	self:addEventListener( "touch", self.touchListener )
 	self.physics.start()
 	self:resumeAllTimers()
+	self:resumeAllMusic()
 
 	if self.spouts ~= nil then
 		for i=#self.spouts, 1, -1 do
@@ -57,7 +63,7 @@ function SceneLoader:start()
 		end
 	end
 
-	self:playAudio("stormyBackground")
+	self.head:initializeEffect()
 end
 
 function SceneLoader:pause()
@@ -68,6 +74,7 @@ function SceneLoader:pause()
 
 	self:pauseAllTimers()
 	self:removeAllGlobalEventListeners()
+	self:pauseAllMusic()
 
 	if self.spouts ~= nil then
 		for i=#self.spouts, 1, -1 do
@@ -131,7 +138,7 @@ function SceneLoader:initializeLightning()
 end
 
 function SceneLoader:initializeMusic()
-	self:loadAudio("background", "audio/background1.wav")
+	self:loadAudio("background", "audio/background1.mp3")
 	self:loadAudio("stormyBackground", "audio/background2.mp3")
 end
 
