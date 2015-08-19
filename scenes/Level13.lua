@@ -14,7 +14,7 @@ local level13 = {
 	},	
 	secondsAllowed = 60,
 	lengthObjective = 25,
-	sceneEffect = "midnight"
+	sceneEffect = "midnight",
 	instructions = "It's nighttime, but Wormy just woke up for a midnight snack.  Use your finger as a flashlight to help him find food!"
 }
 
