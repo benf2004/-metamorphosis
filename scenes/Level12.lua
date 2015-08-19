@@ -12,7 +12,8 @@ local level12 = {
 		maxWidth = 900
 	},
 	secondsAllowed = 60,
-	lengthObjective = 40
+	lengthObjective = 40,
+	instructions = "This level needs something more interesting.  Ben - HELP!"
 }
 
 return level12

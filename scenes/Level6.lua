@@ -4,16 +4,11 @@ local level6 = {
 		y = 374
 	},
 	foodTruck = {
-		standardWorm = 30,
 		gravityWorm = 100
 	},
-	driftingWalls = {
-		interval = 5,
-		minWidth = 300,
-		maxWidth = 900
-	},
 	secondsAllowed = 60,
-	lengthObjective = 40
+	lengthObjective = 50,
+	instructions = "Wormy needs to catch the drift to survive this level!"
 }
 
 return level6

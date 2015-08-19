@@ -12,6 +12,7 @@ require("obstacles.Activator")
 require("obstacles.DriftingWall")
 require("obstacles.WaterCanon")
 require("obstacles.FireSpout")
+require("obstacles.MiniFireSpout")
 require ("effects.Lightning")
 
 SceneLoader  = SceneBase:new()
@@ -30,6 +31,7 @@ function SceneLoader:load()
 	self:initializeWalls()
 	self:initializeWaterCanons()
 	self:initializeFireSpout()
+	self:initializeMiniFireSpout()
 	self:initializeDriftingWallTruck()
 	self:initializeHud()
 	self:initializeGravity()
@@ -221,6 +223,22 @@ function SceneLoader:initializeFireSpout()
 		local rotation = fireSpoutDefinition.rotation or 0
 		local rotating = fireSpoutDefinition.rotate or false
 		local fireSpout = FireSpout:new()
+		fireSpout:initialize(x, y, self)
+		fireSpout:setRotation( rotation )
+		if rotating == true then fireSpout:rotate() end
+		fireSpout:on()
+		table.insert(self.spouts, fireSpout)
+	end
+end
+
+function SceneLoader:initializeMiniFireSpout()
+	self.spouts = self.spouts or {}
+	local fireSpouts = currentScene.miniFireSpouts or {}
+	for i, fireSpoutDefinition in ipairs(fireSpouts) do
+		local x, y = fireSpoutDefinition.x, fireSpoutDefinition.y
+		local rotation = fireSpoutDefinition.rotation or 0
+		local rotating = fireSpoutDefinition.rotate or false
+		local fireSpout = MiniFireSpout:new()
 		fireSpout:initialize(x, y, self)
 		fireSpout:setRotation( rotation )
 		if rotating == true then fireSpout:rotate() end

@@ -14,7 +14,7 @@ local level16 = {
 
 	},
 	secondsAllowed = 60,
-	lengthObjective = 30,  
+	lengthObjective = 30
 }
 
 return level16

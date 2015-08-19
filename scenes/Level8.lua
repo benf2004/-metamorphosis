@@ -15,7 +15,8 @@ local level8 = {
 		{950, 384}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 30
+	lengthObjective = 30,
+	instructions = "Uh oh!  Wormy's arch-nemesis, Fire Tongue, is in the garden.  Run Wormy, Run!  Don't get anchored down!"
 }
 
 return level8

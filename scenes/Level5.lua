@@ -12,7 +12,8 @@ local level5 = {
 		maxWidth = 900
 	},
 	secondsAllowed = 60,
-	lengthObjective = 40
+	lengthObjective = 40,
+	instructions = "Don't get carried away!  The fence builders are coming!"
 }
 
 return level5

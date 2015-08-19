@@ -19,7 +19,8 @@ local level7 = {
 		{1000, 120}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 40
+	lengthObjective = 40,
+	instructions = "Ouch! Ouch! Ouch!  Too many thorns!"
 }
 
 return level7

@@ -18,7 +18,8 @@ local level9 = {
 		{950, 444}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 15
+	lengthObjective = 15,
+	instructions = "Ughh!  Now Margaret is having a slumber party with all her little hungry friends.  It's a feeding frenzy!"
 }
 
 return level9

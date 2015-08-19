@@ -20,7 +20,7 @@ local level15 = {
 	},
 	secondsAllowed = 60,
 	lengthObjective = 15,
-	sceneEffect = "midnight"
+	sceneEffect = "lightning"
 }
 
 return level15

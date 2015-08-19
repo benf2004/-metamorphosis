@@ -16,13 +16,14 @@ local level4 = {
 		{512, 384}
 	},
 	waterCanons = {
-		{x = 512, y = 384, rotation = 45, rotate = true},
-		{x = 512, y = 384, rotation = 135, rotate = true},
-		{x = 512, y = 384, rotation = 225, rotate = true},
-		{x = 512, y = 384, rotation = 315, rotate = true},
+		{x = 256, y = 192, rotation = 45, rotate = true},
+		{x = 768, y = 576, rotation = 135, rotate = true},
+		{x = 256, y = 576, rotation = 225, rotate = true},
+		{x = 768, y = 192, rotation = 315, rotate = true},
 	},
 	secondsAllowed = 60,
-	lengthObjective = 45
+	lengthObjective = 40,
+	instructions = "The farmer is watering the garden today, but Wormy still has to eat!"
 }
 
 return level4
