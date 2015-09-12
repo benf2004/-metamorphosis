@@ -42,6 +42,12 @@ end
 function HeadWorm:pause()
 end
 
+function HeadWorm:activate()
+	if self.shield == nil then
+		self:dieAll()
+	end
+end
+
 function HeadWorm:initializeMotion()
 	self.targetJoint = physics.newJoint( "touch", self.sprite, self.sprite.x, self.sprite.y )
 	self.targetJoint.dampingRatio = 1
@@ -98,4 +104,10 @@ function NeckWorm:initialize( physics, sceneLoader )
 	self:initializeSprite("neck", sceneLoader)
 	self.type = "neck"
 	self:initializePhysics( physics )
+end
+
+function NeckWorm:activate()
+	if self.shield == nil then
+		self:head():dieAll()
+	end
 end

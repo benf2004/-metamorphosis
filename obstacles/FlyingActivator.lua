@@ -3,16 +3,18 @@ require("obstacles.Activator")
 FlyingActivator = Activator:new()
 
 function FlyingActivator:initializePhysics(physics, wormHead, velocity)
-	physics.addBody( self.sprite, { radius = (self.diameter / 2), density=self.density, friction=0.0, bounce=0.0})
-	self.physics = physics
-	self.sprite.name = "activator"
+	if wormHead.sprite ~= nil and wormHead.sprite.x ~= nil then
+		physics.addBody( self.sprite, { radius = (self.diameter / 2), density=self.density, friction=0.0, bounce=0.0})
+		self.physics = physics
+		self.sprite.name = "activator"
 
-	local dx = (wormHead.sprite.x - self.sprite.x) * velocity
-	local dy = (wormHead.sprite.y - self.sprite.y) * velocity
+		local dx = (wormHead.sprite.x - self.sprite.x) * velocity
+		local dy = (wormHead.sprite.y - self.sprite.y) * velocity
 
-	self.sprite.gravityScale = 0
-	self.sprite:setLinearVelocity( dx, dy )
-	self.sprite.angularVelocity = 360
+		self.sprite.gravityScale = 0
+		self.sprite:setLinearVelocity( dx, dy )
+		self.sprite.angularVelocity = 360
+	end
 end
 
 FlyingActivatorTruck = Base:new()

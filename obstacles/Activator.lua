@@ -5,9 +5,7 @@ Activator  = Base:new({diameter=32})
 local function onLocalCollision(self, event)
 	if event.phase == "began" and event.other.obj then
 		local otherType = event.other.obj.type or "none"
-		if otherType == "neck" or otherType == "head" then
-			return true
-		elseif otherType == "body" then
+		if otherType == "neck" or otherType == "head" or otherType == "body" then
 			local closure = function() event.other.obj:activate() end
 			timer.performWithDelay( 10, closure)
 			return true
