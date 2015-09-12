@@ -1,10 +1,11 @@
-local level7 = {
+local level = {
 	worm = {
 		x = 100,
 		y = 374
 	},
 	foodTruck = {
-		gravityWorm = 100
+		standardWorm = 50,
+		gravityWorm = 50
 	},
 	activators = {
 		{52, 120},
@@ -23,4 +24,4 @@ local level7 = {
 	instructions = "Ouch! Ouch! Ouch!  Too many thorns!"
 }
 
-return level7
+return level 

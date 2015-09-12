@@ -1,25 +1,20 @@
-local level9 = {
+local level = {
 	worm = {
 		x = 100,
 		y = 374
 	},
 	foodTruck = {
-		standardWorm = 33,
-		gravityWorm = 66,
-		anchorWorm = 70,
-		shieldWorm = 100
+		standardWorm = 100
 	},
-	hungryWormSpeed = 25, -- 0 to 30
-	hungryWorms = {
-		{950, 324},
-		{950, 354},
-		{950, 384},
-		{950, 414},
-		{950, 444}
+	driftingWalls = {
+		direction = "horizontal",
+		interval = 5,
+		minWidth = 300,
+		maxWidth = 900
 	},
 	secondsAllowed = 60,
-	lengthObjective = 15,
-	instructions = "Ughh!  Now Margaret is having a slumber party with all her little hungry friends.  It's a feeding frenzy!"
+	lengthObjective = 45,
+	instructions = "The fence builders are back!  They are just getting warmed up!"
 }
 
-return level9
+return level

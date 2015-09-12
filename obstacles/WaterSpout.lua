@@ -29,7 +29,7 @@ function WaterSpout:spray(object)
 end
 
 function WaterSpout:unspray(object)
-	if (object ~= nil) then
+	if object ~= nil then 
 		object.xF = object.xF or 0
 		object.yF = object.yF or 0
 		object.xF, object.yF = 0, 0 --object.xF - self.xF, object.yF - self.yF
