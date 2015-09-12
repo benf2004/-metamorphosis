@@ -6,12 +6,12 @@ BaseWorm  = Base:new({diameter=32})
 
 function BaseWorm:initializeSprite(textureName, sceneLoader)
 	self.sprite = display.newImageRect( "images/"..textureName..".png", self.diameter, self.diameter )
+	-- self.sprite = display.newImageRect( "images/wormhead.png", self.diameter, self.diameter )
 	self.sceneLoader = sceneLoader
 	self.sceneLoader:addDisplayObject(self.sprite)
 	self.density = 1
 	self.sprite.obj = self
 	self.sprite.xF, self.sprite.xY = 0, 0
-	-- self.sprite:addEventListener( "touch", self.sceneLoader.touchListener )
 end
 
 function BaseWorm:initializePhysics(physics)
@@ -27,28 +27,35 @@ end
 function BaseWorm:postInitializePhysics(physics)
 end
 
-function BaseWorm:moveToLocation(x, y)
-	if (x ~= nil and y ~= nil and self.sprite ~= nil and self.sprite.x ~= nil and self.sprite.y ~= nil) then 
-		local dt = 2.0 / display.fps
-		local dx = x - self.sprite.x
-		local dy = y - self.sprite.y
-		self.sprite:setLinearVelocity( dx/dt, dy/dt )
+function BaseWorm:leading()
+	if self.leadingJoint ~= nil then
+		return self.leadingJoint.leading
+	else
+		return nil
+	end
+end
+
+function BaseWorm:trailing()
+	if self.trailingJoint ~= nil then
+		return self.trailingJoint.trailing
+	else
+		return nil
 	end
 end
 
 function BaseWorm:isHead()
-	return self.leading == nil
+	return self.leadingJoint == nil
 end
 
 function BaseWorm:isTail()
-	return self.trailing == nil
+	return self.trailingJoint == nil
 end
 
 function BaseWorm:head()
 	if self:isHead() then
 		return self
 	else
-		return self.leading:head()
+		return self:leading():head()
 	end
 end
 
@@ -56,121 +63,154 @@ function BaseWorm:tail()
 	if self:isTail() then
 		return self
 	else
-		return self.trailing:tail()
-	end
-end
-
-function BaseWorm:attach(next, x, y)
-	if self:isTail() and self ~= next then
-		next.density = self.density * 0.9
-		next:initialize( self.physics, self.sceneLoader )
-		if next.sprite.name ~= "gravityworm" then
-			next:affectedByGravity(false)
-		else
-			next:affectedByGravity(true)
-		end
-		-- if (x == nil) then x = self.sprite.x - next.sprite.width / 2 end
-		-- if (y == nil) then y = self.sprite.y end
-
-		next.sprite.x = self.sprite.x - next.sprite.width / 2
-		next.sprite.y = self.sprite.y
-
-		local joint = self.physics.newJoint( "pivot", self.sprite, next.sprite, next.sprite.x, next.sprite.y )
-		self.rearwardJoint = joint
-		next.forwardJoint = joint
-		self.trailing = next
-		next.leading = self
-		next:reorderZ()
-		next:setShield(self.shield)
-	else
-		if self ~= next then
-	 		self.trailing:attach(next, x, y)
-	 	end
-	end
-end
-
-function BaseWorm:replace(replacement)
-	local previous = self.leading
-	local trailing = self.trailing
-
-	self:detachFromLeading()
-	self:detachFromTrailing()
-	self.sceneLoader:removeDisplayObject(self.sprite)
-
-	if previous ~= nil then
-		local x, y = self.sprite.x, self.sprite.y
-		previous:attach(replacement, x, y)
-	end
-
-	if trailing ~= nil and trailing.sprite ~= nil and replacement ~= nil and replacement.sprite ~= nil then 
-		trailing.sprite.x = replacement.sprite.x - trailing.sprite.width / 2
-		trailing.sprite.y = replacement.sprite.y
-		local joint = self.physics.newJoint( "pivot", trailing.sprite, replacement.sprite, trailing.sprite.x, trailing.sprite.y )
-		replacement.rearwardJoint = joint
-		trailing.forwardJoint = joint
-		replacement.trailing = trailing
-		trailing.leading = replacement
-		trailing:reorderZ()
-		trailing:setShield(replacement.shield)
-	end
-end
-
-function BaseWorm:reorderZ()
-	self.sprite:toFront()
-	if not self:isHead() and self.leading ~= nil then
-		self.leading:reorderZ()
+		return self:trailing():tail()
 	end
 end
 
 function BaseWorm:detachFromLeading()
-	if self.leading ~= nil then
-		if self.forwardJoint.removeSelf ~= nil then
-			self.forwardJoint:removeSelf( )
+	if self.leadingJoint ~= nil then
+		local joint = self.leadingJoint.joint
+		local leading = self.leadingJoint.leading
+
+		if joint.removeSelf ~= nil then
+			joint:removeSelf()
 		end
-		self.forwardJoint = nil
-		self.leading.rearwardJoint = nil
-		self.leading.trailing = nil
-		self.leading = nil
+		
+		self.leadingJoint.joint = nil
+		self.leadingJoint.leading = nil
+		self.leadingJoint.trailing = nil
+		self.leadingJoint = nil
+
+		leading.trailingJoint = nil
 	end
 end
 
 function BaseWorm:detachFromTrailing() 
-	if self.trailing ~= nil then
-		if self.rearwardJoint.removeSelf ~= nil then 
-			self.rearwardJoint:removeSelf( )
+	if self.trailingJoint ~= nil then
+		local joint = self.trailingJoint.joint
+		local trailing = self.trailingJoint.trailing
+
+		if joint.removeSelf ~= nil then
+			joint:removeSelf()
 		end
-		self.rearwardJoint = nil
-		self.trailing.forwardJoint = nil
-		self.trailing.leading = nil
-		self.trailing = nil
+
+		self.trailingJoint.joint = nil
+		self.trailingJoint.leading = nil
+		self.trailingJoint.trailing = nil
+		self.trailingJoint = nil
+
+		trailing.leadingJoint = nil
+	end
+end
+
+function BaseWorm:attachJoint(trailing)
+	local joint = self.physics.newJoint( "pivot", self.sprite, trailing.sprite, trailing.sprite.x, trailing.sprite.y)
+	-- joint.isLimitEnabled = true
+	-- joint:setRotationLimits( -20, 20 )
+	local jointRef = {
+		joint = joint,
+		leading = self,
+		trailing = trailing
+	}
+
+	self.trailingJoint = jointRef
+	trailing.leadingJoint = jointRef
+end
+
+
+function BaseWorm:attach(next)
+	if self:isTail() then
+		if self ~= next then 
+			next.density = self.density * 0.9
+			next:initialize( self.physics, self.sceneLoader )
+			if next.sprite.name ~= "gravityworm" then
+				next:affectedByGravity(false)
+			else
+				next:affectedByGravity(true)
+			end
+
+			if self:leading() and self:leading().sprite ~= nil then
+				local ref = self:leading().sprite
+				local rx, ry = ref.x, ref.y
+				local dx, dy = self.sprite.x - rx, self.sprite.y - ry
+				next.sprite.x = self.sprite.x + dx
+				next.sprite.y = self.sprite.y + dy
+				next.sprite.rotation = ref.rotation
+			else
+				next.sprite.x = self.sprite.x - next.sprite.width / 2
+				next.sprite.y = self.sprite.y	
+			end
+
+			self:attachJoint(next)
+			next:setShield(self.shield)
+
+			next:reorderZ()
+		end
+	else
+		self:trailing():attach(next, x, y)
+	end
+end
+
+function BaseWorm:replace(replacement)
+	-- local previous = self.leading
+	-- local trailing = self.trailing
+
+	-- self:detachFromLeading()
+	-- self:detachFromTrailing()
+	-- self.sceneLoader:removeDisplayObject(self.sprite)
+
+	-- if previous ~= nil then
+	-- 	local x, y = self.sprite.x, self.sprite.y
+	-- 	previous:attach(replacement, x, y)
+	-- end
+
+	-- if trailing ~= nil and trailing.sprite ~= nil and replacement ~= nil and replacement.sprite ~= nil then 
+	-- 	trailing.sprite.x = replacement.sprite.x - trailing.sprite.width / 2
+	-- 	trailing.sprite.y = replacement.sprite.y
+	-- 	local joint = self.physics.newJoint( "pivot", trailing.sprite, replacement.sprite, trailing.sprite.x, trailing.sprite.y )
+	-- 	replacement.rearwardJoint = joint
+	-- 	trailing.forwardJoint = joint
+	-- 	replacement.trailing = trailing
+	-- 	trailing.leading = replacement
+	-- 	trailing:reorderZ()
+	-- 	trailing:setShield(replacement.shield)
+	-- end
+end
+
+function BaseWorm:reorderZ()
+	self.sprite:toFront()
+	if not self:isHead() then
+		self:leading():reorderZ()
 	end
 end
 
 function BaseWorm:die()
-	self:detachFromLeading()
-	self:affectedByGravity(true)
-	self:detachFromTrailing()
-	if self.sprite ~= nil then
-		local locationx, locationy = self.sprite.x, self.sprite.y
-		explode(locationx, locationy)
-		self.sceneLoader:removeDisplayObject(self.sprite)
+	if not self.shielded then 
+		self:detachFromLeading()
+		self:affectedByGravity(true)
+		self:detachFromTrailing()
+		if self.sprite ~= nil then
+			local locationx, locationy = self.sprite.x, self.sprite.y
+			explode(locationx, locationy)
+			self.sceneLoader:removeDisplayObject(self.sprite)
+		end
+		if self.glow ~= nil then
+			self.sceneLoader:removeDisplayObject(self.glow)
+		end
+		self.dead = true
 	end
-	if self.glow ~= nil then
-		self.sceneLoader:removeDisplayObject(self.glow)
-	end
-	self.dead = true
 end
 
 function BaseWorm:dieAll()
-	if self.trailing ~= nil then
-		self.trailing:dieAll()
+	if self:trailing() ~= nil then
+		self:trailing():dieAll()
 	end
 	self:die()
 end
 
 function BaseWorm:burstWithHappiness()
-	if self.trailing ~= nil then
-		self.trailing:burstWithHappiness()
+	if self:trailing() ~= nil then
+		self:trailing():burstWithHappiness()
 	end
 	self:detachFromLeading()
 	self:affectedByGravity(true)
@@ -188,8 +228,8 @@ function BaseWorm:burstWithHappiness()
 end
 
 function BaseWorm:destroy()
-	if self.trailing ~= nil then
-		self.trailing:destroy()
+	if self:trailing() ~= nil then
+		self:trailing():destroy()
 	end
 	self:detachFromLeading()
 	self:detachFromTrailing()
@@ -198,24 +238,24 @@ function BaseWorm:destroy()
 end
 
 function BaseWorm:lengthToEnd()
-	if self.trailing ~= nil then
-		return self.trailing:lengthToEnd() + 1
+	if self:trailing() ~= nil then
+		return self:trailing():lengthToEnd() + 1
 	else
 		return 1
 	end
 end
 
 function BaseWorm:killBadJoints()
-	if self.leading ~= nil then
-		local dx = math.abs(self.leading.sprite.x - self.sprite.x)
-		local dy = math.abs(self.leading.sprite.y - self.sprite.y)
+	if self.sprite ~= nil and self:leading() ~= nil and self:leading().sprite ~= nil then
+		local dx = math.abs(self:leading().sprite.x - self.sprite.x)
+		local dy = math.abs(self:leading().sprite.y - self.sprite.y)
 		if dx > self.sprite.width*2 or dy > self.sprite.width*2 then
 			self:die()
 		end
 	end
 
-	if self.trailing ~= nil then
-		self.trailing:killBadJoints()
+	if self:trailing() ~= nil then
+		self:trailing():killBadJoints()
 	end
 end
 
@@ -235,14 +275,14 @@ end
 
 function BaseWorm:digest(wormNode, displayGroup)
 	local eat = function()
-		if self.trailing == nil then
+		if self:trailing() == nil then
 			if self.sprite == nil or self.sprite.x == nil then
 				timer.performWithDelay( 5, eat )
 			else 
-				self:attach(wormNode, displayGroup)
+				self:attach(wormNode)
 			end
 		else
-			self.trailing:digest(wormNode, displayGroup)
+			self:trailing():digest(wormNode, displayGroup)
 		end
 	end
 	local shrink = function()
@@ -269,8 +309,8 @@ function BaseWorm:affectedByGravity(affected)
 		else
 			self.sprite.gravityScale = 0.0
 		end
-		if self.trailing ~= nil then
-			self.trailing:affectedByGravity(affected)
+		if self:trailing() ~= nil then
+			self:trailing():affectedByGravity(affected)
 		end
 	end
 end
@@ -303,12 +343,15 @@ function BaseWorm:setShield(shield)
 			self.glowColor = colors.yellow
 		end
 		self.shield = shield
+		self.shielded = true
 		self:addGlow(self.glowColor)
 	else
 		self:removeGlow()
+		self.shielded = false
+		self.shield = nil
 	end
 
-	if self.trailing ~= nil then
-		self.trailing:setShield(shield)
+	if self:trailing() ~= nil then
+		self:trailing():setShield(shield)
 	end
 end

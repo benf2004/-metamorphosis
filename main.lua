@@ -4,10 +4,12 @@
 --
 -----------------------------------------------------------------------------------------
 
+require("core.MemoryMonitor")
+
 local function unhandledErrorListener( event )
 	print(event.errorMessage)
 	print(event.stackTrace)
-    return true
+    return false
 end
 
 Runtime:addEventListener("unhandledError", unhandledErrorListener)

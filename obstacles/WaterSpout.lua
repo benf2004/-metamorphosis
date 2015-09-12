@@ -29,17 +29,19 @@ function WaterSpout:spray(object)
 end
 
 function WaterSpout:unspray(object)
-	object.xF = object.xF or 0
-	object.yF = object.yF or 0
-	object.xF, object.yF = 0, 0 --object.xF - self.xF, object.yF - self.yF
+	if (object ~= nil) then
+		object.xF = object.xF or 0
+		object.yF = object.yF or 0
+		object.xF, object.yF = 0, 0 --object.xF - self.xF, object.yF - self.yF
 
-	if object.constantForce ~= nil then
-		Runtime:removeEventListener( "enterFrame", object.constantForce )
-		object.constantForce = nil
-	end
+		if object.constantForce ~= nil then
+			Runtime:removeEventListener( "enterFrame", object.constantForce )
+			object.constantForce = nil
+		end
 
-	--special case headworm
-	if object.obj ~= nil and object.obj.targetJoint ~= nil then 
-		object.obj.targetJoint.maxForce = object.obj.targetJoint.maxForce * 10
+		--special case headworm
+		if object.obj ~= nil and object.obj.targetJoint ~= nil then 
+			object.obj.targetJoint.maxForce = object.obj.targetJoint.maxForce * 10
+		end
 	end
 end
