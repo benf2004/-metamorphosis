@@ -12,6 +12,20 @@ function FoodTruck:initialize( physics, level, sceneLoader )
 	self.physics = physics
 	self.level = level
 	self.sceneLoader = sceneLoader
+
+	self.worms = {
+		{StandardWorm, self.level.foodTruck.standardWorm or 0},
+		{GravityWorm, self.level.foodTruck.gravityWorm or 0},
+		{AnchorWorm, self.level.foodTruck.anchorWorm or 0},
+		{ShieldWorm, self.level.foodTruck.shieldWorm or 0},
+		{PoisonWorm, self.level.foodTruck.poisonWorm or 0}
+	}
+
+	local compare = function(a,b)
+		return a[2] > b[2]
+	end
+
+	table.sort(self.worms, compare)
 end
 
 function FoodTruck:makeDelivery(event)
@@ -19,19 +33,20 @@ function FoodTruck:makeDelivery(event)
 	local y = math.random(0, display.contentHeight)
 	local kind = math.random(1, 100)
 	local food = nil
-	if kind <= (self.level.foodTruck.standardWorm or 0) then
-		food = StandardWorm:new()
-	elseif kind <= (self.level.foodTruck.gravityWorm or 0) then
-		food = GravityWorm:new()
-	elseif kind <= (self.level.foodTruck.anchorWorm or 0) then
-		food = AnchorWorm:new()
-	elseif kind <= (self.level.foodTruck.shieldWorm or 0) then
-		food = ShieldWorm:new()
-	elseif kind <= (self.level.foodTruck.poisonWorm or 0) then
-		food = PoisonWorm:new()
-	else
+
+	for _,v in pairs(self.worms) do
+		if v[2] > kind then
+			food = v[1]:new()
+			break
+		else
+			kind = kind - v[2]
+		end
+	end
+
+	if food == nil then
 		food = StandardWorm:new()
 	end
+
 	food:initialize( self.physics, self.sceneLoader )
 	food.sprite.x = x
 	food.sprite.y = y

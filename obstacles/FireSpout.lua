@@ -12,7 +12,9 @@ end
 
 function FireSpout:spray(object)
 	local closure = function()
-		if object.obj.dieAll then object.obj:dieAll() end
+		if object.obj ~= nil and object.obj.dieAll ~= nil then 
+			object.obj:dieAll() 
+		end
 	end
 	timer.performWithDelay( 10, closure )
 end

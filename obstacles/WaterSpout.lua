@@ -40,7 +40,7 @@ function WaterSpout:unspray(object)
 		end
 
 		--special case headworm
-		if object.obj ~= nil and object.obj.targetJoint ~= nil then 
+		if object.obj ~= nil and object.obj.targetJoint ~= nil and object.obj.targetJoint.maxForce ~= nil then 
 			object.obj.targetJoint.maxForce = object.obj.targetJoint.maxForce * 10
 		end
 	end
