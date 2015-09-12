@@ -12,6 +12,7 @@ function FlyingActivator:initializePhysics(physics, wormHead, velocity)
 
 	self.sprite.gravityScale = 0
 	self.sprite:setLinearVelocity( dx, dy )
+	self.sprite.angularVelocity = 360
 end
 
 FlyingActivatorTruck = Base:new()
