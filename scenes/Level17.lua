@@ -1,4 +1,4 @@
-local level17 = {
+local level = {
 	worm = {
 		x = 100,
 		y = 374
@@ -18,4 +18,4 @@ local level17 = {
 	lengthObjective = 40
 }
 
-return level17
+return level

@@ -1,4 +1,4 @@
-local level5 = {
+local level = {
 	worm = {
 		x = 100,
 		y = 374
@@ -16,4 +16,4 @@ local level5 = {
 	instructions = "Don't get carried away!  The fence builders are coming!"
 }
 
-return level5
+return level

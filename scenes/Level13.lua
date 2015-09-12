@@ -1,21 +1,17 @@
-local level13 = {
+local level = {
 	worm = {
-		x = 469,
-		y = 397
+		x = 100,
+		y = 374
 	},
 	foodTruck = {
-		shieldWorm = 10,
-		poisonWorm = 100
+		standardWorm = 100
+
 	},
-	driftingWalls = {
-		interval = 4,
-		minWidth = 300,
-		maxWidth = 900
-	},	
+	fireSpouts = {
+		{x = 512, y = 384, rotation = 0, rotate = true}
+	}, 
 	secondsAllowed = 60,
-	lengthObjective = 25,
-	sceneEffect = "midnight",
-	instructions = "It's nighttime, but Wormy just woke up for a midnight snack.  Use your finger as a flashlight to help him find food!"
+	lengthObjective = 40
 }
 
-return level13
+return level

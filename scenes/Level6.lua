@@ -1,4 +1,4 @@
-local level6 = {
+local level = {
 	worm = {
 		x = 100,
 		y = 374
@@ -7,8 +7,8 @@ local level6 = {
 		gravityWorm = 100
 	},
 	secondsAllowed = 60,
-	lengthObjective = 50,
+	lengthObjective = 40,
 	instructions = "Wormy needs to catch the drift to survive this level!"
 }
 
-return level6
+return level

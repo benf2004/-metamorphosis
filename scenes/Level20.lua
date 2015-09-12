@@ -1,4 +1,4 @@
-local level20 = {
+local level = {
 	worm = {
 		x = 100,
 		y = 374
@@ -22,4 +22,4 @@ local level20 = {
 	}
 }
 
-return level20
+return level

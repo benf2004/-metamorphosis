@@ -1,20 +1,20 @@
-local level10 = {
+local level = {
 	worm = {
 		x = 100,
 		y = 374
 	},
 	foodTruck = {
-		standardWorm = 100
-	},
-	driftingWalls = {
-		direction = "horizontal",
-		interval = 5,
-		minWidth = 300,
-		maxWidth = 900
+		anchorWorm = 100
+		
+		},
+		angryWormSpeed = 18, -- 0 to 30
+	angryWormFireTongues = false,
+	angryWorms = {
+		{950, 384}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 45,
-	instructions = "The fence builders are back!  They are just getting warmed up!"
+	lengthObjective = 40,
+	instructions = "Blue food plus angryworm"
 }
 
-return level10
+return level

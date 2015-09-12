@@ -1,22 +1,29 @@
-local level8 = {
+local level = {
 	worm = {
-		x = 100,
-		y = 374
+		x = 410,
+		y = 200
 	},
 	foodTruck = {
-		anchorWorm = 100
+		standardWorm = 100
+	},
+	walls = {
+		{56, 359, 400, 50},
+		{568, 359, 400, 50},
+		{487, 72, 50, 200},
+		{487, 496, 50, 200}
 	},
 	activators = {
 		{512, 384}
 	},
-	angryWormSpeed = 20, -- 0 to 30
-	angryWormFireTongues = true,
-	angryWorms = {
-		{950, 384}
+	waterCanons = {
+		{x = 256, y = 192, rotation = 45, rotate = true},
+		{x = 768, y = 576, rotation = 135, rotate = true},
+		{x = 256, y = 576, rotation = 225, rotate = true},
+		{x = 768, y = 192, rotation = 315, rotate = true},
 	},
 	secondsAllowed = 60,
-	lengthObjective = 30,
-	instructions = "Uh oh!  Wormy's arch-nemesis, Fire Tongue, is in the garden.  Run Wormy, Run!  Don't get anchored down!"
+	lengthObjective = 40,
+	instructions = "The farmer is watering the garden today, but Wormy still has to eat!"
 }
 
-return level8
+return level

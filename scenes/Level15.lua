@@ -1,4 +1,4 @@
-local level15 = {
+local level = {
 	worm = {
 		x = 100,
 		y = 374
@@ -23,4 +23,4 @@ local level15 = {
 	sceneEffect = "lightning"
 }
 
-return level15
+return level

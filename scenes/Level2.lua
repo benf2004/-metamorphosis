@@ -1,4 +1,4 @@
-local level8 = {
+local level = {
 	worm = {
 		x = 100,
 		y = 374
@@ -6,13 +6,14 @@ local level8 = {
 	foodTruck = {
 		standardWorm = 100
 	},
-	hungryWormSpeed = 15, -- 0 to 30
-	hungryWorms = {
-		{950, 384}
+	walls = {
+		{251, 0, 100, 592},
+		{484, 185, 536, 95},
+		{496, 530, 522, 100}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 40,
-	instructions = "Little sisters can be so annoying!  Wormy's little sister Margaret is in the garden with him today.  Help Wormy get to the food first!"
+	lengthObjective = 50,
+	instructions = "Meet Wormy. He's very hungry! Drag him with your finger to feed him."
 }
 
-return level8
+return level
