@@ -9,6 +9,7 @@ require("worm.AngryWorm")
 require("worm.FlashlightWorm")
 require("obstacles.Wall")
 require("obstacles.Activator")
+require("obstacles.FlyingActivator")
 require("obstacles.DriftingWall")
 require("obstacles.WaterCanon")
 require("obstacles.FireSpout")
@@ -28,6 +29,7 @@ function SceneLoader:load()
 	self:initializeHungryWorms()
 	self:initializeAngryWorms()
 	self:initializeActivators()
+	self:initializeFlyingActivators()
 	self:initializeWalls()
 	self:initializeWaterCanons()
 	self:initializeFireSpout()
@@ -196,6 +198,13 @@ function SceneLoader:initializeActivators()
 		local activator = Activator:new()
 		activator:initializeSprite(activatorDefinition[1], activatorDefinition[2], self)
 		activator:initializePhysics(self.physics)
+	end
+end
+
+function SceneLoader:initializeFlyingActivators()
+	if currentScene.flyingActivators then 
+		self.flyingActivatorTruck = FlyingActivatorTruck:new()
+		self.flyingActivatorTruck:initialize(currentScene, self)
 	end
 end
 
