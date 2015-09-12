@@ -7,7 +7,7 @@ local level = {
 		standardWorm = 100
 	},
 	flyingActivators = {
-		velocity = 0.75,
+		velocity = 9999999999,
 		frequency = 1000
 	},
 	secondsAllowed = 60,
