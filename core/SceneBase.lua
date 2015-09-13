@@ -79,20 +79,29 @@ function SceneBase:removeEventListener( eventType, listener )
 	self.view:removeEventListener( eventType, listener )
 end
 
+function SceneBase:loadSound( name, audioFile )
+	self.audio[name] = audio.loadSound( audioFile )
+end
+
+function SceneBase:playSound(name)
+	audio.play(self.audio[name])
+end
+
 function SceneBase:loadAudio( name, audioFile )
 	self.audio[name] = audio.loadStream( audioFile )
 end
 
 function SceneBase:playAudio( name, loops)
-	audio.play(self.audio[name], { channel=1, loops=-1 })
+	audio.play(self.audio[name], { channel=30, loops=-1 })
 end
 
 function SceneBase:pauseAllMusic()
-	for i=32, 1, -1 do
-		if audio.isChannelPlaying( i ) then
-			audio.pause( i )
-		end
-	end
+	-- for i=32, 1, -1 do
+	-- 	if audio.isChannelPlaying( i ) then
+	-- 		audio.pause( i )
+	-- 	end
+	-- end
+	audio.pause(30)
 end
 
 function SceneBase:resumeAllMusic()

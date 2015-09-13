@@ -67,12 +67,14 @@ function HUD:removeAllDisplayObjects()
 end
 
 function HUD:lose(message)
+	self.sceneLoader:playSound("gong")
 	self.sceneLoader.head:dieAll()
 	self.statusLabel = message
 	self.sceneLoader:pause()
 end
 
 function HUD:win()
+	self.sceneLoader:playSound("happy")
 	self.statusLabel = "You Win!"
 	-- fireflies(0, 192)
 	-- fireflies(256, 192)

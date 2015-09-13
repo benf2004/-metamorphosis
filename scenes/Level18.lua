@@ -4,7 +4,7 @@ local level = {
 		y = 374
 	},
 	foodTruck = {
-		sheildWorm = 15,
+		shieldWorm = 15,
 		poisonWorm = 85
 	},
 	fireSpouts = {

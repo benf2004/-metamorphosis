@@ -42,6 +42,13 @@ end
 function HeadWorm:pause()
 end
 
+function BaseWorm:dieAll()
+	if self:trailing() ~= nil then
+		self:trailing():dieAll()
+	end
+	self:die("squak")
+end
+
 function HeadWorm:activate()
 	if self.shield == nil then
 		self:dieAll()
@@ -94,6 +101,7 @@ function HeadWorm:consume( wormNode )
 	wormNode.sceneLoader:removeDisplayObject(wormNode.sprite)
 
 	self.foodTruck:consumeFood(wormNode)
+	self.sceneLoader:playSound("click")
 
 	self:digest(wormNode, self.displayGroup, self.foodTruck)
 end

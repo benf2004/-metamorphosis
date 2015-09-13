@@ -4,7 +4,7 @@
 --
 -----------------------------------------------------------------------------------------
 
-require("core.MemoryMonitor")
+-- require("core.MemoryMonitor")
 
 local function unhandledErrorListener( event )
 	print(event.errorMessage)

@@ -121,6 +121,7 @@ end
 function BaseWorm:attach(next)
 	if self:isTail() then
 		if self ~= next then 
+			self.sceneLoader:playSound("pop")
 			next.density = self.density * 0.9
 			next:initialize( self.physics, self.sceneLoader )
 			if next.sprite.name ~= "gravityworm" then
@@ -184,13 +185,15 @@ function BaseWorm:reorderZ()
 	end
 end
 
-function BaseWorm:die()
+function BaseWorm:die(sound)
 	if not self.shielded then 
 		self:detachFromLeading()
 		self:affectedByGravity(true)
 		self:detachFromTrailing()
 		if self.sprite ~= nil then
 			local locationx, locationy = self.sprite.x, self.sprite.y
+			local snd = sound or "bang"
+			self.sceneLoader:playSound(snd)
 			explode(locationx, locationy)
 			self.sceneLoader:removeDisplayObject(self.sprite)
 		end

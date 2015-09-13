@@ -144,6 +144,12 @@ end
 function SceneLoader:initializeMusic()
 	self:loadAudio("background", "audio/background1.mp3")
 	self:loadAudio("stormyBackground", "audio/background2.mp3")
+	self:loadAudio("happy", "audio/happy.mp3")
+	self:loadAudio("gong", "audio/gong.wav")
+	self:loadSound("pop", "audio/pop3.wav")
+	self:loadSound("click", "audio/click.wav")
+	self:loadSound("bang", "audio/rocket.wav")
+	self:loadSound("squak", "audio/squak.wav")
 end
 
 function SceneLoader:initializeFoodTruck()
