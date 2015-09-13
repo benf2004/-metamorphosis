@@ -6,10 +6,6 @@ local level = {
 	foodTruck = {
 		standardWorm = 100
 	},
-	flyingActivators = {
-		velocity = 0.75,
-		frequency = 1000
-	},
 	secondsAllowed = 60,
 	lengthObjective = 50,
 	instructions = "Meet Wormy. He's very hungry! Drag him with your finger to feed him."

@@ -6,7 +6,7 @@ require("game.Colors")
 Menu = SceneBase:new()
 
 function Menu:load()
-	self.columns = 4
+	self.columns = 5
 	self.rows = 5
 
 	self:initializeBackground()
