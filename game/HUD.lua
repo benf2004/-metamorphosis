@@ -76,15 +76,6 @@ end
 function HUD:win()
 	self.sceneLoader:playSound("happy")
 	self.statusLabel = "You Win!"
-	-- fireflies(0, 192)
-	-- fireflies(256, 192)
-	-- fireflies(512, 192)
-	-- fireflies(768, 192)
-	-- fireflies(1024, 192)
-	-- fireflies(0, 576)
-	-- fireflies(256, 576)
-	-- fireflies(512, 576)
-	-- fireflies(768, 576)
-	-- fireflies(1024, 576)
 	self.sceneLoader.head:burstWithHappiness()
+	completeLevel(currentLevel, self.statistics.timeRemaining, 3)
 end
