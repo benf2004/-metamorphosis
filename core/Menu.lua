@@ -56,8 +56,8 @@ function Menu:initializeButtons()
 			local locked = false
 
 			if not self:isLevelUnlocked(level) then
-				label = "Locked"
-				locked = true
+				--label = "Locked"
+				--locked = true
 			end
 			
 			local menuButton = button(label, x, y, width, height, menuSelected)

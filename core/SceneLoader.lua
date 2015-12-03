@@ -38,6 +38,7 @@ function SceneLoader:load()
 	self:initializeHud()
 	self:initializeGravity()
 	self:initializeJointCheck()
+	self:initializeFood()
 end
 
 function SceneLoader:launch()
@@ -272,6 +273,17 @@ function SceneLoader:initializeWalls()
  			wallDefinition[3],
  			wallDefinition[4], 
  			self.physics, self)
+	end
+end
+
+function SceneLoader:initializeFood()
+	local standardWorms = currentScene.standardFood or {}
+	for i, wormDef in ipairs(standardWorms) do
+		local x = wormDef.x
+		local y = wormDef.y
+		local c = wormDef.count
+		local d = wormDef.delay
+		self.foodTruck:fixedFood(x, y, c, d)
 	end
 end
 

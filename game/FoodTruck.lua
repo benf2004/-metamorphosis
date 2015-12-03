@@ -70,6 +70,21 @@ function FoodTruck:randomFood(attempt)
 	end
 end
 
+function FoodTruck:fixedFood(x, y, count, delay)
+	local f = function()
+		for i=0, count do
+			food = StandardWorm:new()
+			food:initialize( self.physics, self.sceneLoader)
+			local dx = math.random(0, 5)
+			local dy = math.random(0, 5)
+			food.sprite.x = x + dx
+			food.sprite.y = y + dy
+			table.insert(contents, food)
+		end
+	end
+	timer.performWithDelay( delay, f )
+end
+
 function FoodTruck:addFreeBody(food)
 	table.insert(contents, food)
 end

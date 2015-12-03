@@ -36,9 +36,6 @@ end
 gameState = loadGameState()
 
 function completeLevel(level, timeRemaining, stars)
-	local message = "Completed level"..level.." "..timeRemaining.." "..stars
-	print(message)
-
 	local lvl = "Level"..level
 	gameState[lvl] = {
 		completed = true,
