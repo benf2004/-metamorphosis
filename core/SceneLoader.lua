@@ -31,6 +31,7 @@ function SceneLoader:load()
 	self:initializeActivators()
 	self:initializeFlyingActivators()
 	self:initializeWalls()
+	self:initializeSafetyWall()
 	self:initializeWaterCanons()
 	self:initializeFireSpout()
 	self:initializeMiniFireSpout()
@@ -266,6 +267,24 @@ end
 function SceneLoader:initializeWalls()
 	local walls = currentScene.walls or {}
 	for i, wallDefinition in ipairs(walls) do
+  		local wall = Wall:new()
+  		wall:initialize(
+  			wallDefinition[1],
+ 			wallDefinition[2],
+ 			wallDefinition[3],
+ 			wallDefinition[4], 
+ 			self.physics, self)
+	end
+end
+
+function SceneLoader:initializeSafetyWall()
+	local safetyWalls = {
+		{-100, -100, 1224, 50},
+		{-100, -100, 50, 1068},
+		{-100, 1068, 1224, 50},
+		{1224, -100, 50, 1068}
+	}
+	for i, wallDefinition in ipairs(safetyWalls) do
   		local wall = Wall:new()
   		wall:initialize(
   			wallDefinition[1],

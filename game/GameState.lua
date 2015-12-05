@@ -35,12 +35,15 @@ end
 --Global GameState
 gameState = loadGameState()
 
-function completeLevel(level, timeRemaining, stars)
+function endLevel(level, completed, timeRemaining, maximumLength)
 	local lvl = "Level"..level
-	gameState[lvl] = {
-		completed = true,
-		timeRemaining = timeRemaining,
-		stars = stars
-	}
+	local levelState = gameState[lvl] or {}
+	levelState.completed = levelState.completed or completed
+	levelState.bestTime = math.max( timeRemaining, (levelState.bestTime or 0) )
+	levelState.totalAttempts = (levelState.totalAttempts or 0) + 1
+	levelState.maximumLength = math.max( maximumLength, (levelState.maximumLength or 0))
+	levelState.totalTimeRemaining = timeRemaining + (levelState.totalTimeRemaining or 0)
+	levelState.averageTimeRemaining = levelState.totalTimeRemaining / levelState.totalAttempts
+	gameState[lvl] = levelState
 	saveGameState(gameState)
 end

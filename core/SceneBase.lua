@@ -15,7 +15,9 @@ function SceneBase:initialize(scene)
 end
 
 function SceneBase:addDisplayObject(displayObject)
-	self.view:insert(displayObject)
+	if self.view.insert ~= nil then
+		self.view:insert(displayObject)
+	end
 end
 
 function SceneBase:removeDisplayObject(displayObject)
@@ -84,7 +86,7 @@ function SceneBase:loadSound( name, audioFile )
 end
 
 function SceneBase:playSound(name)
-	audio.play(self.audio[name])
+	-- audio.play(self.audio[name])
 end
 
 function SceneBase:loadAudio( name, audioFile )

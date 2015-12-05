@@ -28,6 +28,7 @@ function HUD:initialize(sceneLoader)
 	self.updateHud = function ()
 		self.statistics.timeRemaining = self.statistics.timeRemaining - 1
 		self.statistics.wormLength = self.sceneLoader.head:lengthToEnd()
+		self.statistics.maximumWormLength = math.max(self.statistics.wormLength or (self.statistics.maximumWormLength or 0))
 		lengthLabel.text = self.statistics.wormLength.." / "..currentScene.lengthObjective
 		timerLabel.text = self.statistics.timeRemaining
 
@@ -71,11 +72,16 @@ function HUD:lose(message)
 	self.sceneLoader.head:dieAll()
 	self.statusLabel = message
 	self.sceneLoader:pause()
+	self:endLevel(false)
 end
 
 function HUD:win()
 	self.sceneLoader:playSound("happy")
 	self.statusLabel = "You Win!"
 	self.sceneLoader.head:burstWithHappiness()
-	completeLevel(currentLevel, self.statistics.timeRemaining, 3)
+	self:endLevel(true)
+end
+
+function HUD:endLevel(completed)
+	endLevel(currentLevel, completed, self.statistics.timeRemaining, self.statistics.maximumWormLength)
 end
