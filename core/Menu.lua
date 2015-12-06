@@ -123,7 +123,7 @@ function Menu:initializeButtons()
 	local upperY = self.screenH * .125
 
 	local commandButtonHeight = 75
-	local adHeight = 45
+	local adHeight = 0
 
 	local background = display.newRoundedRect( upperX, upperY, menuWidth, menuHeight, 15)
 	background.anchorX, background.anchorY = 0, 0
@@ -132,6 +132,16 @@ function Menu:initializeButtons()
 
 	local width = ((menuWidth - (spacing * (columns+1))) / columns)
 	local height = (((menuHeight - commandButtonHeight - adHeight) - (spacing * (rows+1))) / rows)
+
+	local instW = (menuWidth - (spacing * 3)) / 2
+	local instX = spacing + (instW / 2) + upperX
+	local instY = (rows * (height + spacing)) + spacing + upperY + ((commandButtonHeight - spacing) / 2)
+
+	local instructionsButton = button("How to Play", instX, instY, instW, commandButtonHeight - spacing, instructionsSelected)
+	self:addDisplayObject(instructionsButton)
+
+	local unlockButton = button("Unlock Levels 1-25 for $4.99", (instX + instW + spacing) , instY, instW, commandButtonHeight - spacing, unlockLevelPack)
+	self:addDisplayObject(unlockButton)
 
 	local menuSelected = function(event)
 		if not event.target.locked then
