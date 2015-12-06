@@ -4,8 +4,7 @@ local level = {
 		y = 374
 	},
 	foodTruck = {
-		shieldWorm = 15,
-		poisonWorm = 85
+		standardWorm =100
 	},
 	fireSpouts = {
 		{x = 768, y = 384, rotation = 270, rotate = true}

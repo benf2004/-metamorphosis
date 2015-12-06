@@ -5,8 +5,7 @@ local level = {
 	},
 	foodTruck = {
 		standardWorm = 33,
-		gravityWorm = 23,
-		shieldWorm = 10,
+		gravityWorm = 33,
 		anchorWorm = 34
 	},
 	hungryWormSpeed = 25, -- 0 to 30

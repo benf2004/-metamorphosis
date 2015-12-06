@@ -12,6 +12,12 @@ local level = {
 		{487, 72, 50, 200},
 		{487, 496, 50, 200}
 	},
+	waterCanons = {
+		{x = 512, y = 384, rotation = 45, rotate = true},
+		{x = 512, y = 384, rotation = 135, rotate = true},
+		{x = 512, y = 384, rotation = 225, rotate = true},
+		{x = 512, y = 384, rotation = 315, rotate = true}
+	},
 	activators = {
 		{512, 384},
 		{512, 713},
@@ -21,7 +27,7 @@ local level = {
 
 	},
 	secondsAllowed = 60,
-	lengthObjective = 40,
+	lengthObjective = 25,
 	instructions = "The farmer is watering the garden today, but Wormy still has to eat!"
 }
 

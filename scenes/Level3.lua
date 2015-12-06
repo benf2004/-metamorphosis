@@ -20,7 +20,7 @@ local level = {
 		{612, 409}
 	},	
 	secondsAllowed = 60,
-	lengthObjective = 50,
+	lengthObjective = 40,
 	instructions = "Beware of the prickly thorns!\nThey're not good for Wormy's skin!"
 }
 
