@@ -21,7 +21,13 @@ function Menu:load()
 	self:initializeFood()
 end
 function Menu:start() self.physics.start() end
-function Menu:pause() end
+function Menu:pause() 
+	self.physics.pause()
+
+	self:pauseAllTimers()
+	self:removeAllGlobalEventListeners()
+	self:pauseAllMusic()
+end
 
 function Menu:initializeBackground()
 	local background = display.newImageRect( "images/Background.png", display.contentWidth, display.contentHeight )
@@ -38,7 +44,7 @@ function Menu:initializeFoodTruck()
 end
 
 function Menu:initializeMenuWorm()
-	local menuWormsDefinitions = {{30, 30}}
+	local menuWormsDefinitions = {{150, 50}}
 	local speed = 22
 	for i, menuWormDefinition in ipairs(menuWormsDefinitions) do
 		local menuWorm = MenuWorm:new()
@@ -116,16 +122,20 @@ function Menu:initializeButtons()
 	local upperX = self.screenW * .125
 	local upperY = self.screenH * .125
 
+	local commandButtonHeight = 75
+	local adHeight = 45
+
 	local background = display.newRoundedRect( upperX, upperY, menuWidth, menuHeight, 15)
 	background.anchorX, background.anchorY = 0, 0
 	background.fill = {0, 0, 0, 0.5}
 	self:addDisplayObject(background)
 
 	local width = ((menuWidth - (spacing * (columns+1))) / columns)
-	local height = ((menuHeight - (spacing * (rows+1))) / rows)
+	local height = (((menuHeight - commandButtonHeight - adHeight) - (spacing * (rows+1))) / rows)
 
 	local menuSelected = function(event)
 		if not event.target.locked then
+			self:pause()
 			currentLevel = event.target.level
 			currentScene = require( "scenes.Level" .. currentLevel)
 			local sceneLoader = SceneLoader:new()
@@ -164,6 +174,14 @@ function Menu:initializeButtons()
 			menuButton.level = level
 			menuButton.locked = locked
 		end
+	end
+
+	local instructionsSelected = function(event)
+		print "Instructions Selected"
+	end
+
+	local unlockLevelPack = function(event)
+		print "Unlock level pack"
 	end
 end
 
