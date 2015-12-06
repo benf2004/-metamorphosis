@@ -4,7 +4,8 @@ local level = {
 		y = 374
 	},
 	foodTruck = {
-		standardWorm = 100
+		anchorWorm = 25,
+		standardWorm = 75
 	},
 	driftingWalls = {
 		interval = 5,
@@ -12,7 +13,7 @@ local level = {
 		maxWidth = 900
 	},
 	secondsAllowed = 60,
-	lengthObjective = 40,
+	lengthObjective = 30,
 	instructions = "Don't get carried away!  The fence builders are coming!"
 }
 

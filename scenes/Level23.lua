@@ -4,12 +4,18 @@ local level = {
 		y = 374
 	},
 	foodTruck = {
-		standardWorm = 50,
-		shieldWorm = 50
+		gravityWorm = 50,
+		standardWorm = 50
+
 	},
 	flyingActivators = {
-		velocity = 2,
-		frequency = 1000
+		velocity = 0.75,
+		frequency = 2000
+	},
+	driftingWalls = {
+		interval = 5,
+		minWidth = 300,
+		maxWidth = 900
 	},
 	secondsAllowed = 60,
 	lengthObjective = 30,

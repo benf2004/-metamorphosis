@@ -13,7 +13,7 @@ local level = {
 		maxWidth = 900
 	},
 	secondsAllowed = 60,
-	lengthObjective = 25,
+	lengthObjective = 20,
 	miniFireSpouts = {
 		{x = 256, y = 192, rotation = 45, rotate = true},
 		{x = 768, y = 576, rotation = 135, rotate = true},
