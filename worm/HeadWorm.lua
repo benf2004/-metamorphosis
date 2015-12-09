@@ -22,8 +22,36 @@ HeadWorm = BaseWorm:new()
 
 local neckLength = 3
 
+function HeadWorm:initializeAnimatedSprite(imageSheet, sceneLoader)
+	local sheetOptions = {
+		width = 32,
+		height = 32,
+		numFrames = 2
+	}
+	local blinkSheet = graphics.newImageSheet( "images/"..imageSheet..".png", sheetOptions )
+	local blinkSequence = {
+        name = "blink",
+        start = 1,
+        count = 2,
+        time = 4000,
+        loopCount = 0,
+        loopDirection = "forward"
+    }
+
+    self.sprite = display.newSprite( blinkSheet, blinkSequence )
+
+    -- self.sprite = display.newImageRect( "images/"..textureName..".png", self.diameter, self.diameter )
+	-- self.sprite = display.newImageRect( "images/wormhead.png", self.diameter, self.diameter )
+	self.sceneLoader = sceneLoader
+	self.sceneLoader:addDisplayObject(self.sprite)
+	self.density = 1
+	self.sprite.obj = self
+	self.sprite.xF, self.sprite.xY = 0, 0
+end
+
 function HeadWorm:initialize(x, y, physics, foodTruck, sceneLoader)
-	self:initializeSprite("wormhead", sceneLoader)
+	-- self:initializeSprite("wormhead", sceneLoader)
+	self:initializeAnimatedSprite("BlinkSheet", sceneLoader)
 	self.sprite.x, self.sprite.y = x, y
 	self.type = "head"
 
@@ -37,12 +65,22 @@ function HeadWorm:initialize(x, y, physics, foodTruck, sceneLoader)
 end
 
 function HeadWorm:initializeEffect()
+	local blinkTimeSwitch = function() 
+    	local timeScale = math.random(5, 23) * .1
+    	self.sprite.timeScale = timeScale
+    end
+    local blinkTimer = timer.performWithDelay( 1000, blinkTimeSwitch, -1)
+    self.sceneLoader:addTimer(blinkTimer)
+	self.sprite:play()
 end
 
 function HeadWorm:pause()
+	if self.sprite ~= nil and self.sprite.pause ~= nil then
+		self.sprite:pause()
+	end
 end
 
-function BaseWorm:dieAll()
+function HeadWorm:dieAll()
 	if self:trailing() ~= nil then
 		self:trailing():dieAll()
 	end
