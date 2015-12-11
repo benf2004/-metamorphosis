@@ -13,7 +13,6 @@ local level = {
 	},
 	secondsAllowed = 60,
 	lengthObjective = 40,
-	instructions = "Blue food plus angryworm"
 }
 
 return level

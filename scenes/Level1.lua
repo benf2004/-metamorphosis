@@ -8,7 +8,6 @@ local level = {
 	},
 	secondsAllowed = 60,
 	lengthObjective = 30,
-	instructions = "Meet Wormy. He's very hungry! Drag him with your finger to feed him."
 }
 
 return level
