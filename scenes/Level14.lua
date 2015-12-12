@@ -14,7 +14,6 @@ local level = {
 	secondsAllowed = 60,
 	lengthObjective = 25,
 	sceneEffect = "midnight",
-	instructions = "It's a dark and stormy night, but Wormy has to keep on the move to survive."
 }
 
 return level

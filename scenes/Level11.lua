@@ -14,7 +14,6 @@ local level = {
 	},
 	secondsAllowed = 60,
 	lengthObjective = 20,
-	instructions = "Is this even possible?  Don't let Wormy get stuck in a pinch!"
 }
 
 return level

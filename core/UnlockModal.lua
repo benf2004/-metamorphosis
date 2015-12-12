@@ -10,6 +10,13 @@ function Modal:load(parent)
 	self:initializeCloseButton()
 end
 
+function Modal:setFontName(fontName)
+	if self.text ~= nil then 
+		self.text:removeSelf()
+	end
+	self.text = display.newText (tostring(fontName), 500, 350, fontName) 
+end
+
 function Modal:initializeBackground()
 	self.centerX, self.centerY = display.contentWidth / 2, display.contentHeight / 2
 	local background = display.newRect( 0, 0, display.contentWidth, display.contentHeight )

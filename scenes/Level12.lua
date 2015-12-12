@@ -18,7 +18,7 @@ local level = {
 	},
 	secondsAllowed = 60,
 	lengthObjective = 15,
-	instructions = "Ughh!  Now Margaret is having a slumber party with all her little hungry friends.  It's a feeding frenzy!"
+	
 }
 
 return level
