@@ -6,8 +6,10 @@ local function onLocalCollision(self, event)
 	if event.phase == "began" and event.other.obj then
 		local otherType = event.other.obj.type or "none"
 		if otherType == "neck" or otherType == "head" or otherType == "body" then
-			local closure = function() event.other.obj:activate() end
-			timer.performWithDelay( 10, closure)
+			local closure = function() 
+				event.other.obj:activate() 
+			end
+			self.obj.sceneLoader:runTimer(10, closure, {event.other.obj})
 			return true
 		end
 	end

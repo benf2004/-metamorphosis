@@ -14,14 +14,17 @@ end
 
 function Lightning:flash(count)
 	self.hidemask = function ()
-		self.sceneLoader.view:setMask(nil)
-		timer.performWithDelay(100, self.showmask)
+		if self.sceneLoader.view ~= nil and self.sceneLoader.view.setMask ~= nil then
+			self.sceneLoader.view:setMask(nil)
+			self.sceneLoader:runTimer(100, self.showmask, self.sceneLoader.view)
+		end
 	end
-	 self.showmask = function ()
-		self.sceneLoader.view:setMask(self.lightning)
+	self.showmask = function ()
+		if self.sceneLoader.view ~= nil and self.sceneLoader.view.setMask ~= nil then
+			self.sceneLoader.view:setMask(self.lightning)
+		end
 	end
-	timer.performWithDelay(150, self.hidemask, count)
- 
+	self.sceneLoader:runTimer(150, self.hidemask, self.sceneLoader.view, count)
 end  
 
 function Lightning:storm()
@@ -31,7 +34,6 @@ function Lightning:storm()
 	local closure = function ()
 		self:storm()
 	end
-	local stormTimer = timer.performWithDelay (pause, closure)
-	self.sceneLoader:addTimer(stormTimer)
+	local stormTimer = self.sceneLoader:runTimer(pause, closure, self)
 end
 

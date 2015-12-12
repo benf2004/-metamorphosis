@@ -53,16 +53,20 @@ end
 function Spout:on()
 	self.physics.addBody(self.sensor, "kinematic", {isSensor=true, shape=self.edges})
 	self.sensor.collision = collide
-	self.sensor:addEventListener( "collision", self.sensor )
-	self.emitter:start()
+	if self.sensor.addEventListener ~= nil then
+		self.sensor:addEventListener( "collision", self.sensor )
+		self.emitter:start()
+	end
 end
 
 function Spout:off()
 	self:clearStack()
 	self.physics.removeBody(self.sensor)
 	self.sensor.collision = nil
-	self.sensor:removeEventListener( "collision", self.sensor )
-	self.emitter:stop()
+	if self.sensor.removeEventListener ~= nil then
+		self.sensor:removeEventListener( "collision", self.sensor )
+		self.emitter:stop()
+	end
 end
 
 function Spout:addToStack(object)
@@ -110,8 +114,7 @@ function Spout:rotate()
 	self.rotationFunction = function()
 		self:setRotation(self.sensor.rotation + 1)
 	end
-	self.rotator = timer.performWithDelay( 30, self.rotationFunction, -1 )
-	self.sceneLoader:addTimer(self.rotator)
+	self.rotator = self.sceneLoader:runTimer(30, self.rotationFunction, {self, self.sensor}, -1)
 end
 
 function Spout:moveToLocation(x, y)

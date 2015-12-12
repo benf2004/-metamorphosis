@@ -7,7 +7,7 @@ local level = {
 		standardWorm = 100
 	},
 	secondsAllowed = 60,
-	lengthObjective = 30,
+	lengthObjective = 10,
 	instructions = "Meet Wormy. He's very hungry! Drag him with your finger to feed him."
 }
 

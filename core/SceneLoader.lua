@@ -157,9 +157,10 @@ end
 function SceneLoader:initializeFoodTruck()
 	self.foodTruck = FoodTruck:new()
 	self.foodTruck:initialize(physics, currentScene, self)
-	self.makeDelivery = function() self.foodTruck:makeDelivery() end
-	self.foodTruckTimer = timer.performWithDelay( 750, self.makeDelivery, -1 )
-	self:addTimer(self.foodTruckTimer)
+	self.makeDelivery = function() 
+		self.foodTruck:makeDelivery() 
+	end
+	self.foodTruckTimer = self:runTimer(750, self.makeDelivery, self.foodTruck, -1)
 	self:pauseTimer(self.foodTruckTimer)
 end
 
@@ -316,9 +317,10 @@ function SceneLoader:initializeDriftingWallTruck(sceneGroup)
 
 		self.driftingWallTruck:initialize(self.physics, interval, step, direction, self.screenW, self.screenH, self)
 
-		local closure = function() self.driftingWallTruck:makeDelivery() end
-		self.wallTruckTimer = timer.performWithDelay( interval * 1000, closure, -1)
-		self:addTimer(self.wallTruckTimer)
+		local closure = function() 
+			self.driftingWallTruck:makeDelivery() 
+		end
+		self.wallTruckTimer = self:runTimer(interval * 1000, closure, self.driftingWallTruck, -1)
 		self:pauseTimer(self.wallTruckTimer)
 		self.driftingWallTruck:makeDelivery()
 	end
@@ -329,8 +331,7 @@ function SceneLoader:initializeHud(sceneGroup)
 	self.hud = HUD:new()
 	self.hud:initialize(self)
 
-	self.hudTimer = timer.performWithDelay( 1000, self.hud.updateHud, -1)
-	self:addTimer(self.hudTimer)
+	self.hudTimer = self:runTimer(1000, self.hud.updateHud, self.hud, -1)
 	self:pauseTimer(self.hudTimer)
 end
 
@@ -343,7 +344,6 @@ function SceneLoader:initializeJointCheck()
 	self.jointCheck = function()
 		self.head:killBadJoints()
 	end
-	self.jointCheckTimer = timer.performWithDelay( 250, self.jointCheck, -1)
-	self:addTimer(self.jointCheckTimer)
+	self.jointCheckTimer = self:runTimer(250, self.jointCheck, self.head, -1)
 	self:pauseTimer(self.jointCheckTimer)
 end

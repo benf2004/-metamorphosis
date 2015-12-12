@@ -10,7 +10,7 @@ local level = {
 		{x = 512, y = 384, rotation = 0, rotate = true}
 	}, 
 	secondsAllowed = 60,
-	lengthObjective = 1 
+	lengthObjective = 40 
 }
 
 return level

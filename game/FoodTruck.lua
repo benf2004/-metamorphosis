@@ -86,8 +86,7 @@ function FoodTruck:fixedFood(x, y, count, delay)
 			table.insert(contents, food)
 		end
 	end
-	local foodTimer = timer.performWithDelay( delay, f )
-	self.sceneLoader:addTimer(foodTimer)
+	self.sceneLoader:runTimer(delay, f)
 end
 
 function FoodTruck:addFreeBody(food)

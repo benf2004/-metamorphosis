@@ -33,6 +33,30 @@ function SceneBase:removeAllDisplayObjects()
 	end
 end
 
+function SceneBase:runTimer(delay, listener, targets, iterations)
+	local function onTimer(event)
+		if (listener ~= nil) then
+			listener()
+		end
+		local params = event.source.params
+		if params.iterations ~= nil then
+			if params.iterations > 0 then
+				params.iterations = params.iterations - 1
+				if params.iterations == 0 then
+					self:removeTimer(event.source)
+				end
+			end
+		else
+			self:removeTimer(event.source)
+		end
+	end
+
+	local timerId = timer.performWithDelay( delay, onTimer, iterations )
+	timerId.params = {targets = targets, iterations = iterations}
+	self:addTimer(timerId)
+	return timerId
+end
+
 function SceneBase:addTimer(timerId)
 	table.insert( self.timers, timerId )
 end
@@ -58,12 +82,12 @@ function SceneBase:resumeAllTimers()
 end
 
 function SceneBase:removeTimer(timerId)
+	timer.cancel( timerId )
 	for i=#self.timers, 1, -1 do
 		if self.timers[i] == timerId then
 			table.remove( self.timers, i )
 		end
 	end
-	timer.cancel( timerId )
 	timerId = nil
 end
 
@@ -86,7 +110,7 @@ function SceneBase:loadSound( name, audioFile )
 end
 
 function SceneBase:playSound(name)
-	-- audio.play(self.audio[name])
+	audio.play(self.audio[name])
 end
 
 function SceneBase:loadAudio( name, audioFile )
@@ -149,9 +173,9 @@ end
 function SceneBase:start() end
 function SceneBase:pause() end
 function SceneBase:unload()
-	self:removeAllDisplayObjects()
-	self:removeAllTimers()
 	self:removeAllGlobalEventListeners()
+	self:removeAllTimers()
+	self:removeAllDisplayObjects()
 end
 
 

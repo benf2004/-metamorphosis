@@ -21,7 +21,6 @@ function ShieldWorm:activate()
 			self:replace(replacement)
 		end
 
-		local downShield = timer.performWithDelay( 5000, destroyShield, 1)
-		self.sceneLoader:addTimer(downShield)
+		self.sceneLoader:runTimer(5000, destoryShield, {}, 1)
 	end
 end
