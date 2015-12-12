@@ -7,11 +7,15 @@ local function onLocalCollision(self, event)
 			return true
 		elseif otherType == "body" then
 			if event.other.obj:head().type == "head" then
-				local closure = function() event.other.obj:activate() end
-				timer.performWithDelay( 10, closure)
+				local closure = function() 
+					event.other.obj:activate() 
+				end
+				self.obj.sceneLoader:runTimer(10, closure, event.other.obj)
 			else
-				local closure = function() self.obj:consume(event.other.obj) end
-				timer.performWithDelay( 10, closure)
+				local closure = function() 
+					self.obj:consume(event.other.obj) 
+				end
+				self.obj.sceneLoader:runTimer(10, closure, {self.obj, event.other.obj})
 			end
 			return true
 		end
@@ -65,12 +69,11 @@ function HeadWorm:initialize(x, y, physics, foodTruck, sceneLoader)
 end
 
 function HeadWorm:initializeEffect()
-	local blinkTimeSwitch = function() 
+	local blinkTimeSwitch = function()
     	local timeScale = math.random(5, 23) * .1
     	self.sprite.timeScale = timeScale
     end
-    local blinkTimer = timer.performWithDelay( 1000, blinkTimeSwitch, -1)
-    self.sceneLoader:addTimer(blinkTimer)
+    local blinkTimer = self.sceneLoader:runTimer(1000, blinkTimeSwitch, self.sprite, -1)
 	self.sprite:play()
 end
 
@@ -78,6 +81,13 @@ function HeadWorm:pause()
 	if self.sprite ~= nil and self.sprite.pause ~= nil then
 		self.sprite:pause()
 	end
+end
+
+function HeadWorm:die(sound)
+	if self.sprite ~= nil and self.sprite.removeEventListener ~= nil then
+		self.sprite:removeEventListener( "collision", self.sprite )
+	end
+	self:death(sound)
 end
 
 function HeadWorm:dieAll()

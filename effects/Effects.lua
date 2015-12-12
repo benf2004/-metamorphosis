@@ -1,14 +1,20 @@
 local pex = require("effects.pex")
 
 function createEmitter(fileName, x, y, lifespan)
-	local particle = pex.load(fileName, "effects/texture.png")
-	local emitter = display.newEmitter( particle )
-	emitter.x = x
-	emitter.y = y
+	if x ~= nil and x > 0 and y ~= nil and y > 0 then
+		local particle = pex.load(fileName, "effects/texture.png")
+		local emitter = display.newEmitter( particle )
+		emitter.x = x
+		emitter.y = y
 
-	local completeEmission = function() complete(emitter) end
-	timer.performWithDelay(lifespan, completeEmission)
-	return emitter
+		local completeEmission = function() 
+			complete(emitter) 
+		end
+		timer.performWithDelay(lifespan, completeEmission)
+		return emitter
+	else 
+		return nil
+	end
 end
 
 function complete(emitter)

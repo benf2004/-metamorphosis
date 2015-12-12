@@ -25,8 +25,7 @@ function FlyingActivatorTruck:initialize(level, sceneLoader)
 	self.sceneLoader = sceneLoader
 
 	local closure = function() self:deliver() end
-	self.deliveryTimer = timer.performWithDelay( self.frequency, closure, -1 )
-	self.sceneLoader:addTimer(self.deliveryTimer)
+	self.deliveryTimer = self.sceneLoader:runTimer(self.frequency, closure, self, -1)
 end
 
 function FlyingActivatorTruck:deliver()

@@ -24,11 +24,7 @@ function PoisonWorm:activate()
 			self.poisonedHead:tail():die()
 		end
 
-		local downPoison = timer.performWithDelay( 5000, destroyPoison, 1)
-		self.sceneLoader:addTimer(downPoison)
-
-		local poisonTimer = timer.performWithDelay( 500, poisonMe, 9 )
-		self.sceneLoader:addTimer(poisonTimer)
-
+		self.sceneLoader:runTimer(5000, destroyPoison, self.poisonedHead, 1)
+		self.sceneLoader:runTimer(500, poisonMe, self.poisonedHead, 9)
 	end
 end

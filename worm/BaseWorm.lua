@@ -186,6 +186,10 @@ function BaseWorm:reorderZ()
 end
 
 function BaseWorm:die(sound)
+	self:death(sound)
+end
+
+function BaseWorm:death(sound)
 	if not self.shielded then 
 		self:detachFromLeading()
 		self:affectedByGravity(true)
@@ -280,7 +284,7 @@ function BaseWorm:digest(wormNode, displayGroup)
 	local eat = function()
 		if self:trailing() == nil then
 			if self.sprite == nil or self.sprite.x == nil then
-				timer.performWithDelay( 5, eat )
+				self.sceneLoader:runTimer(5, eat, {self, self.sprite})
 			else 
 				self:attach(wormNode)
 			end
@@ -292,14 +296,14 @@ function BaseWorm:digest(wormNode, displayGroup)
 		if self.sprite ~= nil then 
 			self.sprite.width = self.diameter
 			self.sprite.height = self.diameter
-			timer.performWithDelay (5, eat)
+			self.sceneLoader:runTimer(5, eat, {self, self.sprite})
 		end
 	end
 	local grow = function()
 		if self.sprite ~= nil then
 			self.sprite.width = self.diameter * 1.3
 			self.sprite.height = self.diameter * 1.3
-			timer.performWithDelay( 50, shrink )
+			self.sceneLoader:runTimer(50, shrink, {self, self.sprite})
 		end
 	end
 	grow()

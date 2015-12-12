@@ -6,13 +6,13 @@
 
 -- require("core.MemoryMonitor")
 
-local function unhandledErrorListener( event )
-	print(event.errorMessage)
-	print(event.stackTrace)
-    return false
-end
+-- local function unhandledErrorListener( event )
+-- 	print(event.errorMessage)
+-- 	print(event.stackTrace)
+--     return false
+-- end
 
-Runtime:addEventListener("unhandledError", unhandledErrorListener)
+-- Runtime:addEventListener("unhandledError", unhandledErrorListener)
 
 --global current scene properties
 currentScene = nil

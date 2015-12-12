@@ -204,7 +204,6 @@ end
 
 function Menu:isLevelUnlocked(level)
 	local lvl = "Level"..(level-1)
-	self:printTable(gameState[lvl])
 	return (gameState[lvl] and gameState[lvl].completed)
 end
 

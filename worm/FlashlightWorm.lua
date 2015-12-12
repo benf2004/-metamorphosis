@@ -15,7 +15,7 @@ function FlashlightWorm:initializeEffect()
 end
 
 function FlashlightWorm:moveToLocation(x, y)
-	if self.targetJoint ~= nil then
+	if self.targetJoint ~= nil and self.targetJoint.setTarget ~= nil then
 		self.targetJoint:setTarget( x, y )
 		self.sceneLoader.view.maskX = x
 		self.sceneLoader.view.maskY = y
@@ -38,7 +38,7 @@ function FlashlightWorm:pulsate()
 		end
 	end
 
-	self.pulsateTimer = timer.performWithDelay( 20, pulseClosure, -1 )
+	self.pulsateTimer = self.sceneLoader:runTimer(20, pulseClosure, {self.sceneLoader.view, self.flashlightTarget}, -1)
 end
 
 function FlashlightWorm:setTargetFlashlight()

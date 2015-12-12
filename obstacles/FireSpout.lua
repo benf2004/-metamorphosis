@@ -16,7 +16,7 @@ function FireSpout:spray(object)
 			object.obj:dieAll() 
 		end
 	end
-	timer.performWithDelay( 10, closure )
+	self.sceneLoader:runTimer(10, closure, {object.obj})
 end
 
 function FireSpout:unspray(object)

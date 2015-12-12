@@ -37,16 +37,13 @@ function MenuWorm:initializeMotion(speed)
 	end
 
 	local targetTimerWait = 2500
-	self.targetTimer = timer.performWithDelay( targetTimerWait, target , -1 )
-	self.sceneLoader:addTimer(self.targetTimer)
+	self.targetTimerWait = self.sceneLoader:runTimer(targetTimerWait, target, self.targets, -1)
 
 	local firstMove = function()
-		self.moveTimer = timer.performWithDelay( 100, move, -1 )
-		self.sceneLoader:addTimer(self.moveTimer)
+		self.moveTimer = self.sceneLoader:runTimer(100, move, self.target, -1)
 	end
 
-	self.firstMoveTimer = timer.performWithDelay( 1500, firstMove )
-	self.sceneLoader:addTimer(self.firstMoveTimer)	
+	self.firstMoveTimer = self.sceneLoader:runTimer(1500, firstMove)
 end
 
 function MenuWorm:destroy()

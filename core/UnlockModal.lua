@@ -8,15 +8,7 @@ function Modal:load(parent)
 	self:initializeBackground()
 	self:initializePopup()
 	self:initializeCloseButton()
-	local systemFonts = native.getFontNames()
-	local i = 0
-	local fn = function ()
-		i = i +1
-		self:setFontName (systemFonts[i])
-	end
-	timer.performWithDelay(2000,fn,-1)
 end
-
 
 function Modal:setFontName(fontName)
 	if self.text ~= nil then 

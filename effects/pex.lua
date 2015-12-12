@@ -37,37 +37,41 @@ local function strip(s)
   local ni,c,label,xarg, empty
   local i, j = 1, 1
   while true do
-    ni,j,c,label,xarg, empty = string.find(s, "<(%/?)([%w:]+)(.-)(%/?)>", i)
-    if not ni then break end
-    if c ~= "/" then
-      if label ~= "particleEmitterConfig" and label ~= "texture" then
-        local args = {} 
-        local k = 1
-        for w in string.gmatch(xarg, "[%w%.%-]+") do args[k] = w; k = k + 1; end
-        for k = 1, #args, 2 do
-          sk, sv = args[k], args[k+1]
-          if sk == "value" then
-            t[label] = tonumber(sv)
-          elseif sk == "x" or sk == "y" then
-            t[label..sk] = tonumber(sv)
-          elseif sk == "data" then 
-            --skip
-          else  
-            t[label..firstToUpper(sk)] = tonumber(sv)
-          end
-        end
-      elseif label == "texture" then
-        local args = {} 
-        local k = 1
-        for w in string.gmatch(xarg, "[%w%.%-]+") do args[k] = w; k = k + 1; end
+    if s ~= nil then
+      ni,j,c,label,xarg, empty = string.find(s, "<(%/?)([%w:]+)(.-)(%/?)>", i)
+      if not ni then break end
+      if c ~= "/" then
+        if label ~= "particleEmitterConfig" and label ~= "texture" then
+          local args = {} 
+          local k = 1
+          for w in string.gmatch(xarg, "[%w%.%-]+") do args[k] = w; k = k + 1; end
           for k = 1, #args, 2 do
             sk, sv = args[k], args[k+1]
-            if sk == "name" then t["textureName"] = sv
+            if sk == "value" then
+              t[label] = tonumber(sv)
+            elseif sk == "x" or sk == "y" then
+              t[label..sk] = tonumber(sv)
+            elseif sk == "data" then 
+              --skip
+            else  
+              t[label..firstToUpper(sk)] = tonumber(sv)
+            end
           end
-        end
-      end  
+        elseif label == "texture" then
+          local args = {} 
+          local k = 1
+          for w in string.gmatch(xarg, "[%w%.%-]+") do args[k] = w; k = k + 1; end
+            for k = 1, #args, 2 do
+              sk, sv = args[k], args[k+1]
+              if sk == "name" then t["textureName"] = sv
+            end
+          end
+        end  
+      end
+      i = j+1
+    else 
+      break
     end
-    i = j+1
   end
   return t
 end

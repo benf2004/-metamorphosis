@@ -29,11 +29,8 @@ function HungryWorm:initializeMotion(speed)
 	end
 
 	local targetTimerWait = math.random(2000, 3000)
-	self.targetTimer = timer.performWithDelay( targetTimerWait, target , -1 )
-	self.moveTimer = timer.performWithDelay( 100, move, -1 )
-
-	self.sceneLoader:addTimer(self.targetTimer)
-	self.sceneLoader:addTimer(self.moveTimer)
+	self.targetTimer = self.sceneLoader:runTimer(targetTimerWait, target, self.foodTruck, -1)
+	self.moveTimer = self.sceneLoader:runTimer(100, move, {}, -1)
 end
 
 function HungryWorm:destroy()

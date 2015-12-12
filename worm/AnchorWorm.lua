@@ -25,7 +25,6 @@ function AnchorWorm:activate()
 			self:die()
 		end
 
-		local upAnchor = timer.performWithDelay( 5000, destroyAnchor, 1)
-		self.sceneLoader:addTimer(upAnchor)
+		self.sceneLoader:runTimer(5000, destroyAnchor, self.anchor, 1)
 	end
 end

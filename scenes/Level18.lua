@@ -8,11 +8,9 @@ local level = {
 	},
 	fireSpouts = {
 		{x = 768, y = 384, rotation = 270, rotate = true}
-			
 	},
 	waterCanons = {
 		{x = 256, y = 384, rotation = 90, rotate = false}
-	
 	}, 
 	secondsAllowed = 60,
 	lengthObjective = 40

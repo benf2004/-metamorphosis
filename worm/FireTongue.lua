@@ -16,7 +16,7 @@ function FireTongue:spray(object)
 			if object.obj.dieAll then object.obj:dieAll() end
 		end
 	end
-	timer.performWithDelay( 10, closure )
+	self.sceneLoader:runTimer(10, closure, {object.obj, object.obj.head, self.mate})
 end
 
 function FireTongue:unspray(object)
@@ -34,14 +34,12 @@ function FireTongue:lashOut()
 	local outTime = math.random(200, 1600)
 	self:on()
 	local closure = function() self:lashIn() end
-	local timerId = timer.performWithDelay( outTime, closure )
-	self.sceneLoader:addTimer(timerId)
+	self.sceneLoader:runTimer(outTime, closure, self)
 end
 
 function FireTongue:lashIn()
 	local inTime = math.random(1000, 7000)
 	self:off()
 	local closure = function() self:lashOut() end
-	local timerId = timer.performWithDelay( inTime, closure )
-	self.sceneLoader:addTimer(timerId)
+	self.sceneLoader:runTimer(inTime, closure, self)
 end
