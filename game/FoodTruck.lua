@@ -75,8 +75,12 @@ function FoodTruck:fixedFood(x, y, count, delay)
 		for i=0, count do
 			food = StandardWorm:new()
 			food:initialize( self.physics, self.sceneLoader)
-			local dx = 0 --math.random(0, 5)
-			local dy = 0 --math.random(0, 5)
+			local dx = 0
+			local dy = 0
+			if count > 1 then
+				dx = math.random(0, 5)
+				dy = math.random(0, 5)
+			end
 			food.sprite.x = x + dx
 			food.sprite.y = y + dy
 			table.insert(contents, food)

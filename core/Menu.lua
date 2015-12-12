@@ -20,7 +20,12 @@ function Menu:load()
 	self:initializeMenuWorm()
 	self:initializeFood()
 end
-function Menu:start() self.physics.start() end
+
+function Menu:start() 
+	self.physics.start() 
+	self:resumeAllTimers()
+end
+
 function Menu:pause() 
 	self.physics.pause()
 
@@ -137,12 +142,6 @@ function Menu:initializeButtons()
 	local instX = spacing + (instW / 2) + upperX
 	local instY = (rows * (height + spacing)) + spacing + upperY + ((commandButtonHeight - spacing) / 2)
 
-	local instructionsButton = button("How to Play", instX, instY, instW, commandButtonHeight - spacing, instructionsSelected)
-	self:addDisplayObject(instructionsButton)
-
-	local unlockButton = button("Unlock Levels 1-25 for $4.99", (instX + instW + spacing) , instY, instW, commandButtonHeight - spacing, unlockLevelPack)
-	self:addDisplayObject(unlockButton)
-
 	local menuSelected = function(event)
 		if not event.target.locked then
 			self:pause()
@@ -152,6 +151,8 @@ function Menu:initializeButtons()
 			self.scene:moveToScene(sceneLoader)
 			return true
 		else
+			lockedLevel = event.target.level
+			self:openUnlockModal()
 			return false
 		end
 	end
@@ -187,16 +188,30 @@ function Menu:initializeButtons()
 	end
 
 	local instructionsSelected = function(event)
-		print "Instructions Selected"
+		self:openInstructionModal()
 	end
 
 	local unlockLevelPack = function(event)
-		print "Unlock level pack"
+		self:openUnlockModal()
 	end
+
+	local instructionsButton = button("How to Play", instX, instY, instW, commandButtonHeight - spacing, instructionsSelected)
+	self:addDisplayObject(instructionsButton)
+
+	local unlockButton = button("Unlock Levels 1-25 for $4.99", (instX + instW + spacing) , instY, instW, commandButtonHeight - spacing, unlockLevelPack)
+	self:addDisplayObject(unlockButton)
 end
 
 function Menu:isLevelUnlocked(level)
 	local lvl = "Level"..(level-1)
 	self:printTable(gameState[lvl])
 	return (gameState[lvl] and gameState[lvl].completed)
+end
+
+function Menu:openInstructionModal()
+	self.scene:openInstructionModal()
+end
+
+function Menu:openUnlockModal()
+	self.scene:openUnlockModal()
 end

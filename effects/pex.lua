@@ -2,6 +2,8 @@
 
 local M = {}
 
+local pexCache = {}
+
 local function getFile( filename, base )
   if not base then base = system.ResourceDirectory; end
   local path = system.pathForFile( filename, base )
@@ -12,6 +14,15 @@ local function getFile( filename, base )
      io.close( file )	-- close the file after using it
   else
     assert(filename .. " not found")
+  end
+  return contents
+end
+
+local function getContents( filename, base )
+  local contents = pexCache[filename]
+  if contents == nil then
+    contents = getFile(filename, base)
+    pexCache[filename] = contents
   end
   return contents
 end
@@ -63,7 +74,7 @@ end
 
 function M.load(pexFile, textureFileName)
   local pexData = {}
-  local pexXML = getFile( pexFile )
+  local pexXML = getContents( pexFile )
   pexData = strip(pexXML)
   -- lifespan fix
   if pexData.particleLifeSpan == 0 then pexData.particleLifeSpan = 1 end

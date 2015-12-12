@@ -7,9 +7,9 @@ local level = {
 		standardWorm = 100
 	},
 	standardFood = {
-		{x=512, y=768-100, count=30, delay=1000},
-		{x=512, y=384, count=30, delay=10000},
-		{x=512, y=192, count=30, delay=25000}
+		{x=512, y=768-100, count=45, delay=1000},
+		{x=512, y=384, count=45, delay=10000},
+		{x=512, y=192, count=45, delay=25000}
 	},
 	walls = {
 		{231, 192, 50, 384},
@@ -22,7 +22,7 @@ local level = {
 		{1024-50, 0, 50, 768}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 100,
+	lengthObjective = 150,
 	instructions = "Yum!"
 }
 

@@ -58,6 +58,26 @@ function scene:closeModal( )
     self.sceneLoader:start()
 end
 
+function scene:openInstructionModal( )
+    self.sceneLoader:pause()
+    composer.showOverlay( "core.InstructionModal" )
+end
+
+function scene:closeInstructionModal( )
+    composer.hideOverlay( "fade", 250 )
+    self.sceneLoader:start()
+end
+
+function scene:openUnlockModal( )
+    self.sceneLoader:pause()
+    composer.showOverlay( "core.UnlockModal" )
+end
+
+function scene:closeUnlockModal( )
+    composer.hideOverlay( "fade", 250 )
+    self.sceneLoader:start()
+end
+
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
