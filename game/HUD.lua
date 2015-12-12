@@ -26,7 +26,6 @@ function HUD:initialize(sceneLoader)
 	self:addDisplayObject(timerLabel)
 
 	self.updateHud = function ()
-		print("updating hud")
 		self.statistics.timeRemaining = self.statistics.timeRemaining - 1
 		self.statistics.wormLength = self.sceneLoader.head:lengthToEnd()
 		if (self.statistics.wormLength > currentScene.lengthObjective) then
@@ -49,13 +48,9 @@ function HUD:initialize(sceneLoader)
 
 		if self.statusLabel ~= nil then
 			local resultLabel = label(self.statusLabel, self.sceneLoader.screenW/2, self.sceneLoader.screenH/2, 72, self.sceneLoader.view)
-			print("Pausing the game in HUD.")
 			self.sceneLoader:pause()
-			print("Adding the message to display.")
 			self:addDisplayObject(resultLabel)
-			print("Successfully added message to display.")
 		end
-		print("done updating hud")
 	end
 end
 
@@ -76,35 +71,20 @@ function HUD:removeAllDisplayObjects()
 end
 
 function HUD:lose(message)
-	print("Starting lose sequence.")
-	print("Playing sound.")
 	self.sceneLoader:playSound("gong")
-	print("Killing the worm")
 	self.sceneLoader.head:dieAll()
-	print("Setting the status message")
 	self.statusLabel = message
-	print("Pausing the game in lose.")
 	self.sceneLoader:pause()
-	print("Ending the level")
 	self:endLevel(false)
-	print("Lose cycle is done.")
 end
 
 function HUD:win()
-	print("Starting win sequence")
-	print("Playing happy sound")
 	self.sceneLoader:playSound("happy")
-	print("Setting the status message")
 	self.statusLabel = "You Win!"
-	print("Bursting the worm with happiness")
 	self.sceneLoader.head:burstWithHappiness()
-	print("Ending the level")
 	self:endLevel(true)
-	print("Win cycle is done")
 end
 
 function HUD:endLevel(completed)
-	print("Going to save game state")
 	endLevel(currentLevel, completed, self.statistics.timeRemaining, self.statistics.maximumWormLength)
-	print("Done saving game state")
 end
