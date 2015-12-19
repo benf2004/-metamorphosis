@@ -7,12 +7,10 @@ local level = {
 		standardWorm = 100
 	},
 	secondsAllowed = 60,
-<<<<<<< HEAD
+	stars = {60, 50, 40},
 	lengthObjective = 30,
-=======
-	lengthObjective = 10,
 	instructions = "Meet Wormy. He's very hungry! Drag him with your finger to feed him."
->>>>>>> 7aba63c96facece5954a36cbc9e0cd5990cb75b4
+
 }
 
 return level
