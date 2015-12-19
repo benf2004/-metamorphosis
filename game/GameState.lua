@@ -47,3 +47,8 @@ function endLevel(level, completed, timeRemaining, maximumLength)
 	gameState[lvl] = levelState
 	saveGameState(gameState)
 end
+
+function resetGameState()
+	gameState = defaultGameState
+	saveGameState(gameState)
+end

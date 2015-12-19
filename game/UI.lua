@@ -15,18 +15,20 @@ function button(label, x, y, width, height, action)
 		    fillColor = { default = colors.brown, over = colors.brown },
 		    strokeColor = { default = colors.black, over = colors.black },
 		    strokeWidth = 4,
-		    onRelease = action
+		    onRelease = action,
+		    font = "Desyrel",
+		    fontSize = 24
 		}	
 	return button
 end
 
-function label(label, x, y, fontSize, displayGroup)
+function label(label, x, y, font, fontSize, displayGroup)
 	local labelOptions = {
 		parentGroup = displayGroup,
 		text = label,
 		x = x,
 		y = y,
-		font = native.systemFontBold,
+		font = font,
 		fontSize = fontSize
 	}
 	local displayLabel = display.newText( labelOptions )

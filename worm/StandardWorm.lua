@@ -3,7 +3,7 @@ require("worm.BaseWorm")
 StandardWorm = BaseWorm:new()
 
 function StandardWorm:initialize( physics, sceneLoader )
-	self:initializeSprite("simplegreen", sceneLoader)
+	self:animateSprite(sceneLoader)
 	self.type = "body"
 
 	self:initializePhysics( physics )

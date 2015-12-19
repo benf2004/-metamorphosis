@@ -4,14 +4,54 @@ require("game.Colors")
 
 BaseWorm  = Base:new({diameter=32})
 
-function BaseWorm:initializeSprite(textureName, sceneLoader)
-	self.sprite = display.newImageRect( "images/"..textureName..".png", self.diameter, self.diameter )
-	-- self.sprite = display.newImageRect( "images/wormhead.png", self.diameter, self.diameter )
+BaseWorm.sheetOptions = {
+	width = 32,
+	height = 32,
+	numFrames = 64
+}
+BaseWorm.wormSheet = graphics.newImageSheet( "images/WormSheet.png", BaseWorm.sheetOptions )
+BaseWorm.sheetIndex = {
+	wormy = 1,
+	wormyBlink = 2,
+	angryWorm = 3,
+	angryRed = 4,
+	hungryWorm = 5,
+	hungryEat = 6,
+	neck = 7,
+	green = 8,
+	slashy = 9,
+	pieChart = 10,
+	stripes = 11,
+	dots = 12,
+	yingyang = 13,
+	wild = 14,
+	gravity = 15,
+	red = 16,
+	anchor = 22,
+	blue = 23,
+	poison = 24,
+	purple = 25,
+	shield = 26,
+	yellow = 27
+}
+--override this in each worm segment
+BaseWorm.wormSequence = {
+	name = "Base",
+	frames = {BaseWorm.sheetIndex.green},
+}
+
+function BaseWorm:animateSprite(sceneLoader)
+	self.sprite = display.newSprite( self.wormSheet, self.wormSequence )
+	self.sprite:play()
 	self.sceneLoader = sceneLoader
 	self.sceneLoader:addDisplayObject(self.sprite)
 	self.density = 1
 	self.sprite.obj = self
 	self.sprite.xF, self.sprite.xY = 0, 0
+end
+
+function BaseWorm:initializeSprite(textureName, sceneLoader)
+	self:animateSprite(sceneLoader)
 end
 
 function BaseWorm:initializePhysics(physics)
