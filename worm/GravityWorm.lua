@@ -2,19 +2,15 @@ require("worm.BaseWorm")
 
 GravityWorm = BaseWorm:new()
 
-GravityWorm.wormSequence = {
-	name = "Base",
-	frames = {15},
-	time = 10000,
-	loopCount = 1
-}
-
 function GravityWorm:initialize( physics, sceneLoader )
-	self:initializeSprite("simplered", sceneLoader)
+	self:initializeSprite(sceneLoader)
 	self.type = "body"
+	
+	self.defaultSkin = self.frameIndex.red
+	self:setSkin(self.frameIndex.gravity)
 
 	self:initializePhysics( physics )
-	self.sprite.name = "gravityworm"
+	self.sprite.name = "GravityWorm"
 end
 
 function GravityWorm:postInitializePhysics( physics, sceneLoader)

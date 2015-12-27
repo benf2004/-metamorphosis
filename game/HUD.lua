@@ -27,6 +27,17 @@ function HUD:initialize(sceneLoader)
 
 	self.updateHud = function ()
 		self.statistics.timeRemaining = self.statistics.timeRemaining - 1
+
+		if (self.statistics.timeRemaining <= 5 and self.statistics.timeRemaining >= 1) then
+			self.sceneLoader:playSound("ding")
+			local unskin = function() 
+				self.sceneLoader.head:skinAll()				
+			end
+
+			self.sceneLoader.head:skinAll(self.sceneLoader.head.frameIndex.red)
+			self.sceneLoader:runTimer(150, unskin, self.sceneLoader.head, 1)
+		end
+
 		self.statistics.wormLength = self.sceneLoader.head:lengthToEnd()
 		if (self.statistics.wormLength > currentScene.lengthObjective) then
 			self.statistics.wormLength = currentScene.lengthObjective
