@@ -54,10 +54,10 @@ function HeadWorm:initializeAnimatedSprite(imageSheet, sceneLoader)
 end
 
 function HeadWorm:initialize(x, y, physics, foodTruck, sceneLoader)
-	-- self:initializeSprite("wormhead", sceneLoader)
 	self:initializeAnimatedSprite("BlinkSheet", sceneLoader)
 	self.sprite.x, self.sprite.y = x, y
 	self.type = "head"
+	self.sprite.name = "head"
 
 	self.foodTruck = foodTruck
 	self:initializePhysics(physics)
@@ -75,6 +75,9 @@ function HeadWorm:initializeEffect()
     end
     local blinkTimer = self.sceneLoader:runTimer(1000, blinkTimeSwitch, self.sprite, -1)
 	self.sprite:play()
+end
+
+function HeadWorm:setSkin(frame)
 end
 
 function HeadWorm:pause()
@@ -157,14 +160,18 @@ end
 NeckWorm = BaseWorm:new()
 
 NeckWorm.wormSequence = {
-	name = "Base",
+	name = "neck",
 	frames = {7},
 	loopCount = 1
 }
 
+function NeckWorm:setSkin(skin)
+end
+
 function NeckWorm:initialize( physics, sceneLoader )
-	self:initializeSprite("neck", sceneLoader)
+	self:initializeSprite(sceneLoader)
 	self.type = "neck"
+	self.sprite.name = "neck"
 	self:initializePhysics( physics )
 end
 

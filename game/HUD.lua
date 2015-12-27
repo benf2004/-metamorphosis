@@ -71,6 +71,7 @@ function HUD:removeAllDisplayObjects()
 end
 
 function HUD:lose(message)
+	self.sceneLoader.head:unshieldAll()
 	self.sceneLoader:playSound("gong")
 	self.sceneLoader.head:dieAll()
 	self.statusLabel = message
@@ -79,6 +80,7 @@ function HUD:lose(message)
 end
 
 function HUD:win()
+	self.sceneLoader.head:unshieldAll()
 	self.sceneLoader:playSound("happy")
 	self.statusLabel = "You Win!"
 	self.sceneLoader.head:burstWithHappiness()

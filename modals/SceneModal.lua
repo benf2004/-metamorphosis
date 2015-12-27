@@ -18,20 +18,22 @@ function SceneModal:initializeContent()
 	self:bottomLine()
 	-- self:sceneInstructions()
 	self:goButton()
-	self:menuButton()
+	self:homeButton()
 	self:unlockButton()
 end
 
 function SceneModal:initializeCloseButton(closeAction)
 end
 
-function SceneModal:menuButton()
+function SceneModal:homeButton()
 	local x = self.centerX - self.width / 3 - 5
 	local y = self.centerY + self.height / 2 - 33 - 5
 	local w = self.width / 3 - 20
 	local h = 75 - 20
-	local instructionsButton = button("Menu", x, y, w, h, instructionsSelected)
-	self:addDisplayObject(instructionsButton)
+
+	-- local home = homeButton("Menu", x, y, w, h, "Desyrel", 24)
+	
+	-- self:addDisplayObject(home)
 end
 
 function SceneModal:unlockButton()

@@ -4,27 +4,31 @@ require("game.Colors")
 PoisonWorm = BaseWorm:new()
 
 function PoisonWorm:initialize( physics, sceneLoader )
-	self:initializeSprite("simplepurple", sceneLoader)
+	self:initializeSprite(sceneLoader)
 	self.type = "body"
+
+	self.shieldSkin = self.frameIndex.purple
+	self:setSkin(self.frameIndex.poison)
 
 	self:initializePhysics( physics )
 	self.sprite.name = "PoisonWorm"
 end
 
-function PoisonWorm:activate()
-	if self.shield == nil then
-		self:head():setShield("poison")
-		self.poisonedHead = self:head()
+function PoisonWorm:attachAction()
+	if not self.shielded and not self.anchor and self.sprite and self.sprite.x and self.sprite.y then 
+		self:shieldAll(self.shieldSkin)
+		local head = self:head()
 
-		local destroyPoison = function()
-			self.poisonedHead:setShield(nil)
+		local destroyShield = function()
+			head:unshieldAll()	
 		end
 
 		local poisonMe = function()
-			self.poisonedHead:tail():die()
+			head:tail().shielded = false
+			head:tail():die()
 		end
 
-		self.sceneLoader:runTimer(5000, destroyPoison, self.poisonedHead, 1)
-		self.sceneLoader:runTimer(500, poisonMe, self.poisonedHead, 9)
+		head.sceneLoader:runTimer(5000, destroyShield, head, 1)
+		head.sceneLoader:runTimer(500, poisonMe, head, 8)		
 	end
 end
