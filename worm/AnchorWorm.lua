@@ -28,7 +28,7 @@ function AnchorWorm:attachAction()
 		local destroyAnchor = function()
 			if self.sceneLoader.removeDisplayObject ~= nil and self.anchor ~= nil and self.unshieldAll ~= nil then
 				self.sceneLoader:removeDisplayObject(self.anchor)
-				self:unshieldAll()
+				self:head():unshieldAll()
 				-- self:die()
 			end
 		end
