@@ -71,7 +71,8 @@ BaseWorm.frameIndex = {
 	poison = 12,
 	purple = 13,
 	shield = 14,
-	yellow = 15
+	yellow = 15,
+	clock = 16
 }
 
 function BaseWorm:animateSprite(sceneLoader)

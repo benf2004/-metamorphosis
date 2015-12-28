@@ -5,6 +5,14 @@
 
 settings =
 {
+	plugins =
+    {
+        ["plugin.google.play.services"] =
+        {
+            publisherId = "com.coronalabs"
+        },
+    },
+    
 	orientation =
 	{
 		-- Supported values for orientation:
@@ -78,13 +86,4 @@ settings =
             "android.permission.ACCESS_NETWORK_STATE",
 		},
 	},
-
-	plugins =
-    {
-        ["plugin.google.play.services"] =
-        {
-            publisherId = "com.coronalabs",
-            supportedPlatforms = { iphone=true, android=true }
-        },
-    },
 }
