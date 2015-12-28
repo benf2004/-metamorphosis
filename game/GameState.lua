@@ -39,7 +39,10 @@ function endLevel(level, completed, timeRemaining, maximumLength)
 	local lvl = "Level"..level
 	local levelState = gameState[lvl] or {}
 	levelState.completed = levelState.completed or completed
-	levelState.bestTime = math.max( timeRemaining, (levelState.bestTime or 0) )
+	levelState.bestTime = levelState.bestTime or 0
+	if completed then
+		levelState.bestTime = math.max( timeRemaining, levelState.bestTime or 0)
+	end
 	levelState.totalAttempts = (levelState.totalAttempts or 0) + 1
 	levelState.maximumLength = math.max( maximumLength, (levelState.maximumLength or 0))
 	levelState.totalTimeRemaining = timeRemaining + (levelState.totalTimeRemaining or 0)

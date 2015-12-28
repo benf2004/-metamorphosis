@@ -4,6 +4,7 @@ require("game.UI")
 require("game.Colors")
 require("game.GameState")
 require("worm.MenuWorm")
+require("ads.AdManager")
 
 Menu = SceneBase:new()
 
@@ -24,12 +25,14 @@ function Menu:load()
 	self.menuWorms = {}
 	self.contents = {}
 
+	self:initializeAdvertising()
 	self:initializePhysics()
 	self:initializeBackground()
 	self:initializeButtons()
 	self:initializeFoodTruck()
 	self:initializeMenuWorm()
 	self:initializeFood()
+	self:showAdvertisement()
 end
 
 function Menu:start() 
@@ -132,11 +135,14 @@ function Menu:initializeButtons()
 	local columns = self.columns
 	local rows = self.rows
 	local spacing = 10
+	
+	local adHeight = 100
+	local availableScreenH = self.screenH - adHeight
 
 	local menuWidth = self.screenW * 0.75
-	local menuHeight = self.screenH * 0.75
+	local menuHeight = availableScreenH * 0.75
 	local upperX = self.screenW * .125
-	local upperY = self.screenH * .125
+	local upperY = availableScreenH * .125
 
 	local commandButtonHeight = 75
 	local adHeight = 0
@@ -160,6 +166,7 @@ function Menu:initializeButtons()
 			currentScene = require( "scenes.Level" .. currentLevel)
 			currentScene.levelState = self:levelState(currentLevel)
 			local sceneLoader = SceneLoader:new()
+			self:hideAdvertisement()
 			self.scene:moveToScene(sceneLoader)
 			return true
 		else
@@ -183,7 +190,7 @@ function Menu:initializeButtons()
 			local completed = levelState and levelState.completed
 
 			if not self:isLevelUnlocked(level) then
-				-- locked = true
+				locked = true
 			end
 
 			local menuButton = button(label, x, y, width, height, menuSelected)
@@ -238,12 +245,12 @@ function Menu:initializeButtons()
 	self:addDisplayObject(instructionsButton)
 
 	local options = {
-		text = "Wormy",
+		text = "Feeding Frenzy",
 		x = self.centerX,
 		y = self.centerY,
 		width = instW,
 		font = "Neon",
-		fontSize = 64,
+		fontSize = 38,
 		align = "center"
 	}
 	local label = display.newText(options)
@@ -271,4 +278,17 @@ end
 
 function Menu:openUnlockModal()
 	resetGameState()
+end
+
+function Menu:initializeAdvertising()
+	self.adManager = AdManager:new()
+	self.adManager:initialize()
+end
+
+function Menu:showAdvertisement()
+	self.adManager:showBannerAd(0, 768)
+end
+
+function Menu:hideAdvertisement()
+	self.adManager:hideAd()
 end

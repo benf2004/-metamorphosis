@@ -62,7 +62,10 @@ function SceneBase:addTimer(timerId)
 end
 
 function SceneBase:pauseTimer(timerId)
-	timer.pause(timerId)
+	if timerId.paused == nil or timerId.paused == false then
+		timer.pause(timerId)
+		timerId.paused = true		
+	end
 end
 
 function SceneBase:pauseAllTimers()
@@ -72,7 +75,10 @@ function SceneBase:pauseAllTimers()
 end
 
 function SceneBase:resumeTimer(timerId)
-	timer.resume(timerId)
+	if timerId.paused then
+		timer.resume(timerId)
+		timerId.paused = false
+	end
 end
 
 function SceneBase:resumeAllTimers()

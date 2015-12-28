@@ -72,8 +72,8 @@ BaseWorm.frameIndex = {
 	blue = 11,
 	poison = 12,
 	purple = 13,
-	shield = 14,
-	yellow = 15, 
+	shield = 14, 
+	yellow = 15,
 	clock = 16
 }
 
@@ -200,9 +200,15 @@ end
 
 function BaseWorm:printWorm()
 	if self:trailing() ~= nil then
-		return self.sprite.name.."--"..self:trailing():printWorm()
+		if self.shielded then
+			return self.sprite.name.."(S)-"..self.trailing():printWorm()
+		else 
+			return self.sprite.name.."--"..self:trailing():printWorm()
+		end
 	else
-		return self.sprite.name
+		if self.shielded then
+			return self.sprite.name
+		end
 	end
 end
 
@@ -330,6 +336,9 @@ end
 
 
 function BaseWorm:activate()
+	if self.shield == nil then
+		self:die()
+	end
 end
 
 function BaseWorm:onScreen()
