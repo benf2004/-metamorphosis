@@ -2,6 +2,27 @@ require("worm.HeadWorm")
 
 HungryWorm = HeadWorm:new()
 
+function HungryWorm:initializeAnimatedSprite(imageSheet, sceneLoader)
+	self.blinkSequence = {
+        name = "blink",
+        start = 5,
+        count = 2,
+        time = 4000,
+        loopCount = 0,
+        loopDirection = "forward"
+    }
+
+    self.sprite = display.newSprite( self.wormSheet, self.blinkSequence )
+
+    -- self.sprite = display.newImageRect( "images/"..textureName..".png", self.diameter, self.diameter )
+	-- self.sprite = display.newImageRect( "images/wormhead.png", self.diameter, self.diameter )
+	self.sceneLoader = sceneLoader
+	self.sceneLoader:addDisplayObject(self.sprite)
+	self.density = 1
+	self.sprite.obj = self
+	self.sprite.xF, self.sprite.xY = 0, 0
+end
+
 function HungryWorm:initializeMotion(speed)
 	if speed > 29 then speed = 29 end
 	if speed < 0 then speed = 0 end
