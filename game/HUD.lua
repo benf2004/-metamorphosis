@@ -20,9 +20,9 @@ function HUD:initialize(sceneLoader)
 	self.statistics.wormLength = self.sceneLoader.head:lengthToEnd()
 	self.statistics.timeRemaining = currentScene.secondsAllowed
 
-	local lengthLabel = label(tostring(self.statistics.wormLength.." / "..currentScene.lengthObjective), 50, 25, 18, self.view)
+	local lengthLabel = label(tostring(self.statistics.wormLength.." / "..currentScene.lengthObjective), 50, 25, "Desyrel", 18, self.view)
 	self:addDisplayObject(lengthLabel)
-	local timerLabel = label(tostring(self.statistics.timeRemaining), 160, 25, 18, self.view)
+	local timerLabel = label(tostring(self.statistics.timeRemaining), 160, 25, "Desyrel", 18, self.view)
 	self:addDisplayObject(timerLabel)
 
 	self.updateHud = function ()
@@ -47,7 +47,7 @@ function HUD:initialize(sceneLoader)
 		end
 
 		if self.statusLabel ~= nil then
-			local resultLabel = label(self.statusLabel, self.sceneLoader.screenW/2, self.sceneLoader.screenH/2, 72, self.sceneLoader.view)
+			local resultLabel = label(self.statusLabel, self.sceneLoader.screenW/2, self.sceneLoader.screenH/2, "Desyrel", 72, self.sceneLoader.view)
 			self.sceneLoader:pause()
 			self:addDisplayObject(resultLabel)
 		end

@@ -156,6 +156,12 @@ end
 
 NeckWorm = BaseWorm:new()
 
+NeckWorm.wormSequence = {
+	name = "Base",
+	frames = {7},
+	loopCount = 1
+}
+
 function NeckWorm:initialize( physics, sceneLoader )
 	self:initializeSprite("neck", sceneLoader)
 	self.type = "neck"

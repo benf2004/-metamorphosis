@@ -1,3 +1,6 @@
+require("core.ModalLaunch")
+require("modals.SceneModal")
+
 local composer = require( "composer" )
 local scene = composer.newScene()
 
@@ -50,30 +53,12 @@ end
 
 function scene:openModal( )
     self.sceneLoader:pause()
-    composer.showOverlay( "core.Modal" )
+    self.modal = SceneModal:new()
+    print("Made a modal")
+    composer.showOverlay( "core.ModalLaunch" )
 end
 
 function scene:closeModal( )
-    composer.hideOverlay( "fade", 250 )
-    self.sceneLoader:start()
-end
-
-function scene:openInstructionModal( )
-    self.sceneLoader:pause()
-    composer.showOverlay( "core.InstructionModal" )
-end
-
-function scene:closeInstructionModal( )
-    composer.hideOverlay( "fade", 250 )
-    self.sceneLoader:start()
-end
-
-function scene:openUnlockModal( )
-    self.sceneLoader:pause()
-    composer.showOverlay( "core.UnlockModal" )
-end
-
-function scene:closeUnlockModal( )
     composer.hideOverlay( "fade", 250 )
     self.sceneLoader:start()
 end

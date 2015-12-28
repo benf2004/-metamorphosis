@@ -7,6 +7,17 @@ require("worm.MenuWorm")
 
 Menu = SceneBase:new()
 
+Menu.sheetOptions = {
+	width = 64,
+	height = 64,
+	numFrames = 2
+}
+Menu.starSheet = graphics.newImageSheet( "images/StarSheet.png", Menu.sheetOptions )
+Menu.starSequence = {
+	name = "Stars",
+	frames = {1, 2}
+}
+
 function Menu:load()
 	self.columns = 5
 	self.rows = 5
@@ -138,7 +149,7 @@ function Menu:initializeButtons()
 	local width = ((menuWidth - (spacing * (columns+1))) / columns)
 	local height = (((menuHeight - commandButtonHeight - adHeight) - (spacing * (rows+1))) / rows)
 
-	local instW = (menuWidth - (spacing * 3)) / 2
+	local instW = (menuWidth - (spacing * 3)) / 3
 	local instX = spacing + (instW / 2) + upperX
 	local instY = (rows * (height + spacing)) + spacing + upperY + ((commandButtonHeight - spacing) / 2)
 
@@ -147,6 +158,7 @@ function Menu:initializeButtons()
 			self:pause()
 			currentLevel = event.target.level
 			currentScene = require( "scenes.Level" .. currentLevel)
+			currentScene.levelState = self:levelState(currentLevel)
 			local sceneLoader = SceneLoader:new()
 			self.scene:moveToScene(sceneLoader)
 			return true
@@ -164,24 +176,51 @@ function Menu:initializeButtons()
 
 			local level = (columns * j + i) + 1
 			local label = level
+
+			local levelState = self:levelState(level)
+
 			local locked = false
+			local completed = levelState and levelState.completed
 
 			if not self:isLevelUnlocked(level) then
-				--locked = true
+				locked = true
 			end
 
 			local menuButton = button(label, x, y, width, height, menuSelected)
 			self:addDisplayObject(menuButton)
 
 			if locked == true then
-				local diameter = math.min(width, height) * .45
+				local diameter = math.min(width, height) * .35
 				imageIcon = display.newImageRect( "images/padlock.png", diameter, diameter )
 				imageIcon.anchorX, imageIcon.anchorY = 0, 0
-				imageIcon.x = x + 15
-				imageIcon.y = y
+				imageIcon.x = x + (width * .2)
+				imageIcon.y = y + (height * .1)
 				self:addDisplayObject(imageIcon)
-			end 
+			end
 
+			local bestTime = (levelState and levelState.bestTime) or -1
+
+			local stars = {
+				display.newSprite( self.starSheet, self.starSequence ),
+				display.newSprite( self.starSheet, self.starSequence ),
+				display.newSprite( self.starSheet, self.starSequence )
+			}
+
+			stars[1].x = x - width * .3
+			stars[2].x = x
+			stars[3].x = x + width * .3
+
+			if completed and bestTime >= 0 then stars[1]:setFrame(2) else stars[1].alpha = 0.3 end
+			if completed and bestTime >= 10 then stars[2]:setFrame(2)	else stars[2].alpha = 0.3 end
+			if completed and bestTime >= 20 then stars[3]:setFrame(2) else stars[3].alpha = 0.3 end
+
+			for i = 1, #stars do
+				stars[i].y = y - height * .25
+				stars[i].width = 25
+				stars[i].height = 25
+				self:addDisplayObject(stars[i])
+			end
+		 
 			menuButton.level = level
 			menuButton.locked = locked
 		end
@@ -198,7 +237,21 @@ function Menu:initializeButtons()
 	local instructionsButton = button("How to Play", instX, instY, instW, commandButtonHeight - spacing, instructionsSelected)
 	self:addDisplayObject(instructionsButton)
 
-	local unlockButton = button("Unlock Levels 1-25 for $4.99", (instX + instW + spacing) , instY, instW, commandButtonHeight - spacing, unlockLevelPack)
+	local options = {
+		text = "Wormy",
+		x = self.centerX,
+		y = self.centerY,
+		width = instW,
+		font = "Neon",
+		fontSize = 64,
+		align = "center"
+	}
+	local label = display.newText(options)
+	label.y = instY + 8
+	label.fill = colors.brown
+	self:addDisplayObject(label)
+
+	local unlockButton = button("Unlock Levels 1-25", (instX + instW + instW + spacing) , instY, instW, commandButtonHeight - spacing, unlockLevelPack)
 	self:addDisplayObject(unlockButton)
 end
 
@@ -207,10 +260,15 @@ function Menu:isLevelUnlocked(level)
 	return (gameState[lvl] and gameState[lvl].completed)
 end
 
+function Menu:levelState(level)
+	local lvl = "Level"..(level)
+	return gameState[lvl]
+end
+
 function Menu:openInstructionModal()
-	self.scene:openInstructionModal()
+	
 end
 
 function Menu:openUnlockModal()
-	self.scene:openUnlockModal()
+	resetGameState()
 end
