@@ -3,6 +3,27 @@ require("worm.FireTongue")
 
 AngryWorm = HeadWorm:new()
 
+function AngryWorm:initializeAnimatedSprite(imageSheet, sceneLoader)
+	self.blinkSequence = {
+        name = "blink",
+        start = 3,
+        count = 2,
+        time = 4000,
+        loopCount = 0,
+        loopDirection = "forward"
+    }
+
+    self.sprite = display.newSprite( self.wormSheet, self.blinkSequence )
+
+    -- self.sprite = display.newImageRect( "images/"..textureName..".png", self.diameter, self.diameter )
+	-- self.sprite = display.newImageRect( "images/wormhead.png", self.diameter, self.diameter )
+	self.sceneLoader = sceneLoader
+	self.sceneLoader:addDisplayObject(self.sprite)
+	self.density = 1
+	self.sprite.obj = self
+	self.sprite.xF, self.sprite.xY = 0, 0
+end
+
 function AngryWorm:initializeMotion(speed, targetWorm)
 	self.targetWorm = targetWorm
 	if speed > 29 then speed = 29 end
@@ -42,6 +63,13 @@ function AngryWorm:initializeEffect()
 		end
 		self.sceneLoader:addGlobalEventListener( "enterFrame", synchronizeTongue )
 	end
+
+	local blinkTimeSwitch = function()
+    	local timeScale = math.random(5, 23) * .1
+    	self.sprite.timeScale = timeScale
+    end
+    local blinkTimer = self.sceneLoader:runTimer(1000, blinkTimeSwitch, self.sprite, -1)
+	self.sprite:play()
 end
 
 function AngryWorm:moveToLocation(x, y)

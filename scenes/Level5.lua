@@ -4,7 +4,7 @@ local level = {
 		y = 374
 	},
 	foodTruck = {
-		anchorWorm = 25,
+		shieldWorm = 25,
 		standardWorm = 75
 	},
 	driftingWalls = {

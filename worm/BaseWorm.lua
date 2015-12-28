@@ -34,23 +34,59 @@ BaseWorm.sheetIndex = {
 	shield = 26,
 	yellow = 27
 }
---override this in each worm segment
+
 BaseWorm.wormSequence = {
 	name = "Base",
-	frames = {BaseWorm.sheetIndex.green},
+	frames = {
+		BaseWorm.sheetIndex.green,
+		BaseWorm.sheetIndex.slashy,
+		BaseWorm.sheetIndex.pieChart,
+		BaseWorm.sheetIndex.stripes,
+		BaseWorm.sheetIndex.dots,
+		BaseWorm.sheetIndex.yingyang,
+		BaseWorm.sheetIndex.wild,
+		BaseWorm.sheetIndex.gravity,
+		BaseWorm.sheetIndex.red,
+		BaseWorm.sheetIndex.anchor,
+		BaseWorm.sheetIndex.blue,
+		BaseWorm.sheetIndex.poison,
+		BaseWorm.sheetIndex.purple,
+		BaseWorm.sheetIndex.shield,
+		BaseWorm.sheetIndex.yellow
+	}
+}
+
+BaseWorm.frameIndex = {
+	green = 1,
+	slashy = 2,
+	pieChart = 3,
+	stripes = 4,
+	dots = 5,
+	yingyang = 6,
+	wild = 7,
+	gravity = 8,
+	red = 9,
+	anchor = 10,
+	blue = 11,
+	poison = 12,
+	purple = 13,
+	shield = 14,
+	yellow = 15
 }
 
 function BaseWorm:animateSprite(sceneLoader)
 	self.sprite = display.newSprite( self.wormSheet, self.wormSequence )
-	self.sprite:play()
 	self.sceneLoader = sceneLoader
 	self.sceneLoader:addDisplayObject(self.sprite)
 	self.density = 1
 	self.sprite.obj = self
 	self.sprite.xF, self.sprite.xY = 0, 0
+	self.sprite.name = "baseworm"
+	self.defaultSkin = self.frameIndex.dots
+	self:setSkin(self.defaultSkin)
 end
 
-function BaseWorm:initializeSprite(textureName, sceneLoader)
+function BaseWorm:initializeSprite(sceneLoader)
 	self:animateSprite(sceneLoader)
 end
 
@@ -60,7 +96,6 @@ function BaseWorm:initializePhysics(physics)
 	self.sprite.gravityScale = 0
 	self.sprite.linearDamping = 4
 	self.sprite.angularDamping = 2
-	self.sprite.name = "baseworm"
 	self:postInitializePhysics(physics)
 end
 
@@ -157,6 +192,16 @@ function BaseWorm:attachJoint(trailing)
 	trailing.leadingJoint = jointRef
 end
 
+function BaseWorm:attachAction()
+end
+
+function BaseWorm:printWorm()
+	if self:trailing() ~= nil then
+		return self.sprite.name.."--"..self:trailing():printWorm()
+	else
+		return self.sprite.name
+	end
+end
 
 function BaseWorm:attach(next)
 	if self:isTail() then
@@ -183,39 +228,16 @@ function BaseWorm:attach(next)
 			end
 
 			self:attachJoint(next)
-			next:setShield(self.shield)
-
+			next:setSkin(next.defaultSkin)
+			if self.shielded == true then
+				next:setShield(self.shield)
+			end
 			next:reorderZ()
+			next:attachAction()
 		end
 	else
 		self:trailing():attach(next, x, y)
 	end
-end
-
-function BaseWorm:replace(replacement)
-	-- local previous = self.leading
-	-- local trailing = self.trailing
-
-	-- self:detachFromLeading()
-	-- self:detachFromTrailing()
-	-- self.sceneLoader:removeDisplayObject(self.sprite)
-
-	-- if previous ~= nil then
-	-- 	local x, y = self.sprite.x, self.sprite.y
-	-- 	previous:attach(replacement, x, y)
-	-- end
-
-	-- if trailing ~= nil and trailing.sprite ~= nil and replacement ~= nil and replacement.sprite ~= nil then 
-	-- 	trailing.sprite.x = replacement.sprite.x - trailing.sprite.width / 2
-	-- 	trailing.sprite.y = replacement.sprite.y
-	-- 	local joint = self.physics.newJoint( "pivot", trailing.sprite, replacement.sprite, trailing.sprite.x, trailing.sprite.y )
-	-- 	replacement.rearwardJoint = joint
-	-- 	trailing.forwardJoint = joint
-	-- 	replacement.trailing = trailing
-	-- 	trailing.leading = replacement
-	-- 	trailing:reorderZ()
-	-- 	trailing:setShield(replacement.shield)
-	-- end
 end
 
 function BaseWorm:reorderZ()
@@ -240,9 +262,6 @@ function BaseWorm:death(sound)
 			self.sceneLoader:playSound(snd)
 			explode(locationx, locationy)
 			self.sceneLoader:removeDisplayObject(self.sprite)
-		end
-		if self.glow ~= nil then
-			self.sceneLoader:removeDisplayObject(self.glow)
 		end
 		self.dead = true
 	end
@@ -362,43 +381,55 @@ function BaseWorm:affectedByGravity(affected)
 	end
 end
 
-function BaseWorm:addGlow(color)
-	if self.glow == nil and self.sprite ~= nil and self.sprite.x ~= nil then 
-		self.glow = display.newCircle( self.sprite.x, self.sprite.y, (self.diameter / 2) + 2)
-		self.glow:setFillColor( color[1], color[2], color[3] )
-		self.sceneLoader:addDisplayObject(self.glow)
-		self.physics.addBody( self.glow, { radius = (self.diameter / 2) + 2, density=0} )
-		self.physics.newJoint( "pivot", self.sprite, self.glow, self.sprite.x, self.sprite.y )
-		self:reorderZ()
-	end
-end	
-
-function BaseWorm:removeGlow()
-	if self.glow ~= nil then
-		self.sceneLoader:removeDisplayObject(self.glow)
-		self.glowColor = nil
-		self.glow = nil
-		self.shield = nil
-	end
-end
-
 function BaseWorm:setShield(shield)
-	if shield ~= nil then
-		if shield == "poison" then
-			self.glowColor = colors.purple
-		else
-			self.glowColor = colors.yellow
-		end
-		self.shield = shield
-		self.shielded = true
-		self:addGlow(self.glowColor)
-	else
-		self:removeGlow()
-		self.shielded = false
-		self.shield = nil
-	end
+	self:setSkin(shield)
+	self.shield = shield
+	self.shielded = true
 
 	if self:trailing() ~= nil then
 		self:trailing():setShield(shield)
+	end
+end
+
+function BaseWorm:removeShield()
+	self.shield = nil
+	self.shielded = false
+	self:skin(self.defaultSkin)
+
+	if self:trailing() ~= nil then
+		self:trailing():removeShield()
+	end
+end
+
+function BaseWorm:shieldAll(shield)
+	self:head():setShield(shield)
+end
+
+function BaseWorm:unshieldAll()
+	self:head():removeShield()
+end
+
+function BaseWorm:skin(skin)
+	self:head():skinAll(skin)
+end
+
+function BaseWorm:skinAll(skin)
+	if skin == nil and self.defaultSkin ~= nil then
+		skin = self.defaultSkin
+	end
+	if self:trailing() ~= nil then
+		self:trailing():skinAll(skin)
+	end
+	self:setSkin(skin)
+end
+
+function BaseWorm:setSkin(skin)
+	if self.sprite ~= nil and self.sprite.setFrame ~= nil then
+		if skin ~= nil then
+			self.currentSkin = skin
+		else 
+			self.currentSkin = self.defaultSkin
+		end
+		self.sprite:setFrame(self.currentSkin)
 	end
 end

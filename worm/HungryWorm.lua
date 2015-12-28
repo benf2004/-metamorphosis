@@ -2,6 +2,27 @@ require("worm.HeadWorm")
 
 HungryWorm = HeadWorm:new()
 
+function HungryWorm:initializeAnimatedSprite(imageSheet, sceneLoader)
+	self.blinkSequence = {
+        name = "blink",
+        start = 5,
+        count = 2,
+        time = 4000,
+        loopCount = 0,
+        loopDirection = "forward"
+    }
+
+    self.sprite = display.newSprite( self.wormSheet, self.blinkSequence )
+
+    -- self.sprite = display.newImageRect( "images/"..textureName..".png", self.diameter, self.diameter )
+	-- self.sprite = display.newImageRect( "images/wormhead.png", self.diameter, self.diameter )
+	self.sceneLoader = sceneLoader
+	self.sceneLoader:addDisplayObject(self.sprite)
+	self.density = 1
+	self.sprite.obj = self
+	self.sprite.xF, self.sprite.xY = 0, 0
+end
+
 function HungryWorm:initializeMotion(speed)
 	if speed > 29 then speed = 29 end
 	if speed < 0 then speed = 0 end
@@ -15,16 +36,16 @@ function HungryWorm:initializeMotion(speed)
 		self.targetFood = self.foodTruck:randomFood()
 		local x,y = 0,0
 		if self.targetFood ~= nil and self.targetFood.sprite ~= nil then
-			x,y = self.targetFood.sprite.x, self.targetFood.sprite.y
+			self.targetX,self.targetY = self.targetFood.sprite.x, self.targetFood.sprite.y
 		else
-			x = math.random(0, self.sceneLoader.screenW)
-			y = math.random(0, self.sceneLoader.screenH)
+			self.targetX = math.random(0, self.sceneLoader.screenW)
+			self.targetY = math.random(0, self.sceneLoader.screenH)
 		end
 	end
 
 	local move = function()
-		if self.targetFood ~= nil and self.targetFood.sprite ~= nil then
-			self:moveToLocation(self.targetFood.sprite.x, self.targetFood.sprite.y)
+		if self.targetX ~= nil and self.targetY ~= nil then
+			self:moveToLocation(self.targetX, self.targetY)
 		end
 	end
 

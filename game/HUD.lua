@@ -27,6 +27,17 @@ function HUD:initialize(sceneLoader)
 
 	self.updateHud = function ()
 		self.statistics.timeRemaining = self.statistics.timeRemaining - 1
+
+		if (self.statistics.timeRemaining <= 5 and self.statistics.timeRemaining >= 1) then
+			self.sceneLoader:playSound("ding")
+			local unskin = function() 
+				self.sceneLoader.head:skinAll()				
+			end
+
+			self.sceneLoader.head:skinAll(self.sceneLoader.head.frameIndex.red)
+			self.sceneLoader:runTimer(150, unskin, self.sceneLoader.head, 1)
+		end
+
 		self.statistics.wormLength = self.sceneLoader.head:lengthToEnd()
 		if (self.statistics.wormLength > currentScene.lengthObjective) then
 			self.statistics.wormLength = currentScene.lengthObjective
@@ -71,6 +82,7 @@ function HUD:removeAllDisplayObjects()
 end
 
 function HUD:lose(message)
+	self.sceneLoader.head:unshieldAll()
 	self.sceneLoader:playSound("gong")
 	self.sceneLoader.head:dieAll()
 	self.statusLabel = message
@@ -79,6 +91,7 @@ function HUD:lose(message)
 end
 
 function HUD:win()
+	self.sceneLoader.head:unshieldAll()
 	self.sceneLoader:playSound("happy")
 	self.statusLabel = "You Win!"
 	self.sceneLoader.head:burstWithHappiness()

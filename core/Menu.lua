@@ -183,7 +183,7 @@ function Menu:initializeButtons()
 			local completed = levelState and levelState.completed
 
 			if not self:isLevelUnlocked(level) then
-				locked = true
+				-- locked = true
 			end
 
 			local menuButton = button(label, x, y, width, height, menuSelected)

@@ -152,6 +152,7 @@ function SceneLoader:initializeMusic()
 	self:loadSound("click", "audio/click.wav")
 	self:loadSound("bang", "audio/rocket.wav")
 	self:loadSound("squak", "audio/squak.wav")
+	self:loadSound("ding", "audio/ding.mp3")
 end
 
 function SceneLoader:initializeFoodTruck()
