@@ -5,7 +5,6 @@
 
 settings =
 {
-	
 	orientation =
 	{
 		-- Supported values for orientation:
@@ -75,7 +74,17 @@ settings =
 	{
 		usesPermissions =
 		{
-			"android.permission.INTERNET",
+            "android.permission.INTERNET",
+            "android.permission.ACCESS_NETWORK_STATE",
 		},
 	},
+
+	plugins =
+    {
+        ["plugin.google.play.services"] =
+        {
+            publisherId = "com.coronalabs",
+            supportedPlatforms = { iphone=true, android=true }
+        },
+    },
 }

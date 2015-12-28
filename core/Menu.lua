@@ -4,6 +4,7 @@ require("game.UI")
 require("game.Colors")
 require("game.GameState")
 require("worm.MenuWorm")
+require("ads.AdManager")
 
 Menu = SceneBase:new()
 
@@ -24,12 +25,14 @@ function Menu:load()
 	self.menuWorms = {}
 	self.contents = {}
 
+	self:initializeAdvertising()
 	self:initializePhysics()
 	self:initializeBackground()
 	self:initializeButtons()
 	self:initializeFoodTruck()
 	self:initializeMenuWorm()
 	self:initializeFood()
+	self:showAdvertisement()
 end
 
 function Menu:start() 
@@ -271,4 +274,13 @@ end
 
 function Menu:openUnlockModal()
 	resetGameState()
+end
+
+function Menu:initializeAdvertising()
+	self.adManager = AdManager:new()
+	self.adManager:initialize()
+end
+
+function Menu:showAdvertisement()
+	self.adManager:showBannerAd(0, 768)
 end
