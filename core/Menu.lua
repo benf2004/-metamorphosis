@@ -22,10 +22,13 @@ Menu.starSequence = {
 function Menu:load()
 	self.columns = 5
 	self.rows = 5
+	self.adHeight = 100
+	if adsDisabled() then
+		self.adHeight = 0
+	end
 	self.menuWorms = {}
 	self.contents = {}
 
-	self:initializeAdvertising()
 	self:initializePhysics()
 	self:initializeBackground()
 	self:initializeButtons()
@@ -76,7 +79,7 @@ end
 
 function Menu:initializeFood()
 	local screenW = self.screenW
-	local screenH = self.screenH
+	local screenH = self.screenH - self.adHeight
 
 	local offsetX = screenW * 0.0675
 	local offsetY = screenH * 0.0675
@@ -136,8 +139,7 @@ function Menu:initializeButtons()
 	local rows = self.rows
 	local spacing = 10
 	
-	local adHeight = 100
-	local availableScreenH = self.screenH - adHeight
+	local availableScreenH = self.screenH - self.adHeight
 
 	local menuWidth = self.screenW * 0.75
 	local menuHeight = availableScreenH * 0.75
@@ -245,7 +247,7 @@ function Menu:initializeButtons()
 	self:addDisplayObject(instructionsButton)
 
 	local options = {
-		text = "Feeding Frenzy",
+		text = "Wormy Life",
 		x = self.centerX,
 		y = self.centerY,
 		width = instW,
@@ -278,17 +280,4 @@ end
 
 function Menu:openUnlockModal()
 	resetGameState()
-end
-
-function Menu:initializeAdvertising()
-	self.adManager = AdManager:new()
-	self.adManager:initialize()
-end
-
-function Menu:showAdvertisement()
-	self.adManager:showBannerAd(0, 768)
-end
-
-function Menu:hideAdvertisement()
-	self.adManager:hideAd()
 end

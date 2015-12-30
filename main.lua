@@ -17,6 +17,9 @@
 --global current scene properties
 currentScene = nil
 
+--global adManager
+adManager = require "ads.AdManager"
+
 -- hide the status bar
 display.setStatusBar( display.HiddenStatusBar )
 

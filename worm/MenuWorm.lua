@@ -7,8 +7,13 @@ function MenuWorm:initializeMotion(speed)
 	if speed < 0 then speed = 0 end
 	self.speed = (30 - speed)
 
+	self.adHeight = 100
+	if adsDisabled() then
+		self.adHeight = 0
+	end
+
 	local screenW = self.sceneLoader.screenW
-	local screenH = self.sceneLoader.screenH
+	local screenH = self.sceneLoader.screenH - self.adHeight
 
 	local offsetX = screenW * 0.0675
 	local offsetY = screenH * 0.0675

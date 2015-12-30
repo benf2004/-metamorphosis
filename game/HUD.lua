@@ -99,5 +99,6 @@ function HUD:win()
 end
 
 function HUD:endLevel(completed)
+	self.sceneLoader:showAdvertisement()
 	endLevel(currentLevel, completed, self.statistics.timeRemaining, self.statistics.maximumWormLength)
 end

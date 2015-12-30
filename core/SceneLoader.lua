@@ -58,6 +58,7 @@ function SceneLoader:launch()
 end
 
 function SceneLoader:start()
+	self.adManager:hideAd()
 	self:addEventListener( "touch", self.touchListener )
 	self.physics.start()
 	self:resumeAllTimers()
@@ -305,6 +306,7 @@ function SceneLoader:initializeFood()
 		local c = wormDef.count
 		local d = wormDef.delay
 		self.foodTruck:fixedFood(x, y, c, d)
+		print("hi")
 	end
 end
 

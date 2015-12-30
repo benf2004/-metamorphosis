@@ -3,6 +3,7 @@ require("Base")
 SceneBase  = Base:new()
 
 function SceneBase:initialize(scene)
+	self.adManager = adManager
 	self.scene = scene
 	self.view = scene.view
 	self.timers = {}
@@ -62,10 +63,10 @@ function SceneBase:addTimer(timerId)
 end
 
 function SceneBase:pauseTimer(timerId)
-	if timerId.paused == nil or timerId.paused == false then
+	-- if timerId.paused == nil or timerId.paused == false then
 		timer.pause(timerId)
-		timerId.paused = true		
-	end
+		-- timerId.paused = true		
+	-- end
 end
 
 function SceneBase:pauseAllTimers()
@@ -75,10 +76,10 @@ function SceneBase:pauseAllTimers()
 end
 
 function SceneBase:resumeTimer(timerId)
-	if timerId.paused then
+	-- if timerId.paused then
 		timer.resume(timerId)
-		timerId.paused = false
-	end
+		-- timerId.paused = false
+	-- end
 end
 
 function SceneBase:resumeAllTimers()
@@ -182,6 +183,23 @@ function SceneBase:unload()
 	self:removeAllGlobalEventListeners()
 	self:removeAllTimers()
 	self:removeAllDisplayObjects()
+end
+
+function SceneBase:showAdvertisement()
+	local currentTime = os.time()
+	print("Current time is ", currentTime)
+	local timeSinceLastVideoAd = currentTime - lastVideoAdTime
+	if timeSinceLastVideoAd >= timeBetweenVideoAds then
+		print("Showing a video ad.")
+		self.adManager:showVideoAd()
+	else 
+		print("Showing a banner ad.  Time remaining until video ad (seconds)", (timeBetweenVideoAds - timeSinceLastVideoAd))
+		self.adManager:showBannerAd(0, 768)
+	end
+end
+
+function SceneBase:hideAdvertisement()
+	self.adManager:hideAd()
 end
 
 

@@ -7,9 +7,19 @@ settings =
 {
 	plugins =
     {
+        ["CoronaProvider.ads.vungle"] =
+        {
+            publisherId = "com.vungle",
+        },
         ["plugin.google.play.services"] =
         {
-            publisherId = "com.coronalabs"
+            publisherId = "com.coronalabs",
+            supportedPlatforms = { android=true },
+        },
+        ["CoronaProvider.ads.iads"] =
+        {
+            publisherId = "com.coronalabs",
+            supportedPlatforms = { iphone=true },
         },
     },
     
@@ -84,6 +94,7 @@ settings =
 		{
             "android.permission.INTERNET",
             "android.permission.ACCESS_NETWORK_STATE",
+            "android.permission.WRITE_EXTERNAL_STORAGE",
 		},
 	},
 }

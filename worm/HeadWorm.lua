@@ -74,7 +74,9 @@ function HeadWorm:initializeEffect()
     	self.sprite.timeScale = timeScale
     end
     local blinkTimer = self.sceneLoader:runTimer(1000, blinkTimeSwitch, self.sprite, -1)
-	self.sprite:play()
+    if self.sprite ~= nil and self.sprite.play ~= nil then
+		self.sprite:play()
+	end
 end
 
 function HeadWorm:setSkin(frame)

@@ -5,6 +5,7 @@ local wormyStateFile = "wormyState"
 local path = system.pathForFile( wormyStateFile, gameStateLocation)
 
 local defaultGameState = {
+	adsDisabled = false,
 	Level0 = {completed = true}
 }
 
@@ -49,6 +50,11 @@ function endLevel(level, completed, timeRemaining, maximumLength)
 	levelState.averageTimeRemaining = levelState.totalTimeRemaining / levelState.totalAttempts
 	gameState[lvl] = levelState
 	saveGameState(gameState)
+end
+
+function adsDisabled()
+	local disabled = gameState.adsDisabled or false
+	return disabled
 end
 
 function resetGameState()
