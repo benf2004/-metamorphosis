@@ -32,7 +32,8 @@ BaseWorm.sheetIndex = {
 	poison = 24,
 	purple = 25,
 	shield = 26,
-	yellow = 27
+	yellow = 27,
+	clock = 28
 }
 
 BaseWorm.wormSequence = {
@@ -52,7 +53,8 @@ BaseWorm.wormSequence = {
 		BaseWorm.sheetIndex.poison,
 		BaseWorm.sheetIndex.purple,
 		BaseWorm.sheetIndex.shield,
-		BaseWorm.sheetIndex.yellow
+		BaseWorm.sheetIndex.yellow,
+		BaseWorm.sheetIndex.clock
 	}
 }
 
@@ -70,7 +72,7 @@ BaseWorm.frameIndex = {
 	blue = 11,
 	poison = 12,
 	purple = 13,
-	shield = 14,
+	shield = 14, 
 	yellow = 15,
 	clock = 16
 }

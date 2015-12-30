@@ -4,7 +4,8 @@ local level = {
 		y = 374
 	},
 	foodTruck = {
-		anchorWorm = 100	
+		standardWorm = 90
+		anchorWorm = 10	
 	},
 	angryWormSpeed = 18, -- 0 to 30
 	angryWormFireTongues = false,
