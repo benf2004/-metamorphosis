@@ -163,6 +163,6 @@ local adManager = AdManager:new()
 adManager:initialize()
 
 lastVideoAdTime = os.time()
-timeBetweenVideoAds = 1 * 60 --5 minutes
+timeBetweenVideoAds = 5 * 60 --5 minutes
 print("Video Ad Timer started at ", lastVideoAdTime)
 return adManager
