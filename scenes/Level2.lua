@@ -4,7 +4,8 @@ local level = {
 		y = 374
 	},
 	foodTruck = {
-		standardWorm = 100
+		standardWorm = 90,
+		clockWorm = 10
 	},
 	walls = {
 		{251, 0, 50, 592},
