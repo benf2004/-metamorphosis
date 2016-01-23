@@ -12,7 +12,9 @@ end
 
 function MiniFireSpout:spray(object)
 	local closure = function()
-		if object.obj.dieAll then object.obj:dieAll() end
+		if object.obj ~= nil and object.obj.dieAll ~= nil then 
+			object.obj:dieAll() 
+		end
 	end
 	self.sceneLoader:runTimer(10, closure, object.obj)
 end

@@ -192,7 +192,7 @@ function Menu:initializeButtons()
 			local completed = levelState and levelState.completed
 
 			if not self:isLevelUnlocked(level) then
-				locked = true
+				--locked = true
 			end
 
 			local menuButton = button(label, x, y, width, height, menuSelected)
@@ -208,6 +208,7 @@ function Menu:initializeButtons()
 			end
 
 			local bestTime = (levelState and levelState.bestTime) or -1
+			local levelStars = levelStars(level)
 
 			local stars = {
 				display.newSprite( self.starSheet, self.starSequence ),
@@ -219,9 +220,9 @@ function Menu:initializeButtons()
 			stars[2].x = x
 			stars[3].x = x + width * .3
 
-			if completed and bestTime >= 0 then stars[1]:setFrame(2) else stars[1].alpha = 0.3 end
-			if completed and bestTime >= 10 then stars[2]:setFrame(2)	else stars[2].alpha = 0.3 end
-			if completed and bestTime >= 20 then stars[3]:setFrame(2) else stars[3].alpha = 0.3 end
+			if levelStars >= 1 then stars[1]:setFrame(2) else stars[1].alpha = 0.3 end
+			if levelStars >= 2 then stars[2]:setFrame(2) else stars[2].alpha = 0.3 end
+			if levelStars >= 3 then stars[3]:setFrame(2) else stars[3].alpha = 0.3 end
 
 			for i = 1, #stars do
 				stars[i].y = y - height * .25
@@ -247,12 +248,12 @@ function Menu:initializeButtons()
 	self:addDisplayObject(instructionsButton)
 
 	local options = {
-		text = "Wormy Life",
+		text = "Wormy",
 		x = self.centerX,
 		y = self.centerY,
 		width = instW,
 		font = "Neon",
-		fontSize = 38,
+		fontSize = 60,
 		align = "center"
 	}
 	local label = display.newText(options)
@@ -260,13 +261,12 @@ function Menu:initializeButtons()
 	label.fill = colors.brown
 	self:addDisplayObject(label)
 
-	local unlockButton = button("Unlock Levels 1-25", (instX + instW + instW + spacing) , instY, instW, commandButtonHeight - spacing, unlockLevelPack)
+	local unlockButton = button("Free Passes "..tostring(freePassesAvailable()), (instX + instW + instW + spacing) , instY, instW, commandButtonHeight - spacing, unlockLevelPack)
 	self:addDisplayObject(unlockButton)
 end
 
 function Menu:isLevelUnlocked(level)
-	local lvl = "Level"..(level-1)
-	return (gameState[lvl] and gameState[lvl].completed)
+	return isLevelUnlocked(level)
 end
 
 function Menu:levelState(level)
@@ -275,9 +275,9 @@ function Menu:levelState(level)
 end
 
 function Menu:openInstructionModal()
-	
+	resetGameState()
 end
 
 function Menu:openUnlockModal()
-	resetGameState()
+	iapManager:doPurchase("FREE_PASS_PACK_3")
 end

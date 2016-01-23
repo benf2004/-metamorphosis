@@ -4,6 +4,8 @@ require("game.Colors")
 AnchorWorm = BaseWorm:new()
 
 function AnchorWorm:initialize( physics, sceneLoader )
+	self.defaultSkin = self.frameIndex.blue
+
 	self:initializeSprite(sceneLoader)
 	self.type = "body"
 	

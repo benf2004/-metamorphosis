@@ -4,6 +4,8 @@ require("game.Colors")
 ShieldWorm = BaseWorm:new()
 
 function ShieldWorm:initialize( physics, sceneLoader )
+	self.defaultSkin = BaseWorm.frameIndex.yellow
+
 	self:initializeSprite(sceneLoader)
 	self.type = "body"
 

@@ -1,10 +1,14 @@
 local level = {
+	title = "Fire & Fences",
 	worm = {
 		x = 100,
 		y = 374
 	},
 	foodTruck = {
-		standardWorm = 100
+		standardWorm = 85,
+		clockWorm = 5,
+		shieldWorm = 5,
+		gravityWorm = 5
 	},
 	driftingWalls = {
 		interval = 5,

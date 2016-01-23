@@ -5,7 +5,7 @@ WaterSpout = Spout:new()
 function WaterSpout:initialize(x, y, sceneLoader)
 	local width = 80
 	local height = 300
-	local power = 35
+	local power = 15
 
 	self:initializeSpout("effects/wind.pex", x, y, width, height, power, sceneLoader)
 end
@@ -16,7 +16,10 @@ function WaterSpout:spray(object)
 
 	object.constantForce = function()
 		if not (object.xF ==0 and object.yF == 0) and object.applyForce ~= nil then
-			object:applyForce(object.xF, object.yF, object.x, object.y)
+			local doApply = math.random(1, 100)
+			if (doApply < 50) then 
+				object:applyForce(object.xF, object.yF, object.x, object.y)
+			end
 		end
 	end
 

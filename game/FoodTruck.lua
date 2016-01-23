@@ -13,6 +13,7 @@ function FoodTruck:initialize( physics, level, sceneLoader )
 	self.physics = physics
 	self.level = level
 	self.sceneLoader = sceneLoader
+	self.interval = self.level.foodTruckInterval or 750
 
 	self.worms = {
 		{StandardWorm, self.level.foodTruck.standardWorm or 0},
@@ -21,8 +22,6 @@ function FoodTruck:initialize( physics, level, sceneLoader )
 		{ShieldWorm, self.level.foodTruck.shieldWorm or 0},
 		{PoisonWorm, self.level.foodTruck.poisonWorm or 0},
 		{ClockWorm, self.level.foodTruck.clockWorm or 0}
-
-
 	}
 
 	local compare = function(a,b)
@@ -39,7 +38,7 @@ function FoodTruck:makeDelivery(event)
 	local food = nil
 
 	for _,v in pairs(self.worms) do
-		if v[2] > kind then
+		if v[2] >= kind then
 			food = v[1]:new()
 			break
 		else

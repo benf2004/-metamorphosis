@@ -1,4 +1,5 @@
 local level = {
+	title = "Drifting Away",
 	worm = {
 		x = 100,
 		y = 374
@@ -6,9 +7,9 @@ local level = {
 	foodTruck = {
 		gravityWorm = 100
 	},
+	foodTruckInterval = 500,
 	secondsAllowed = 60,
-	lengthObjective = 40,
-	instructions = "Wormy needs to catch the drift to survive this level!"
+	lengthObjective = 45
 }
 
 return level

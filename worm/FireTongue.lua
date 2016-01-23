@@ -16,7 +16,9 @@ function FireTongue:spray(object)
 			if object.obj.dieAll then object.obj:dieAll() end
 		end
 	end
-	self.sceneLoader:runTimer(10, closure, {object.obj, object.obj.head, self.mate})
+	if (object.obj ~= nil and object.obj.head ~= nil and self.mate ~= nil) then 
+		self.sceneLoader:runTimer(10, closure, {object.obj, object.obj.head, self.mate})
+	end
 end
 
 function FireTongue:unspray(object)

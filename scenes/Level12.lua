@@ -1,4 +1,5 @@
 local level = {
+	title = "Feeding Frenzy",
 	worm = {
 		x = 100,
 		y = 374

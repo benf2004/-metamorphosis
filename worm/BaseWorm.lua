@@ -85,7 +85,6 @@ function BaseWorm:animateSprite(sceneLoader)
 	self.sprite.obj = self
 	self.sprite.xF, self.sprite.xY = 0, 0
 	self.sprite.name = "baseworm"
-	self.defaultSkin = self.frameIndex.dots
 	self:setSkin(self.defaultSkin)
 end
 
@@ -257,7 +256,9 @@ function BaseWorm:reorderZ()
 end
 
 function BaseWorm:die(sound)
-	self:death(sound)
+	if not self.shielded then
+		self:death(sound)
+	end
 end
 
 function BaseWorm:death(sound)
@@ -277,7 +278,7 @@ function BaseWorm:death(sound)
 end
 
 function BaseWorm:dieAll()
-	if self:trailing() ~= nil then
+	if self:trailing() ~= nil and not self.shielded then
 		self:trailing():dieAll()
 	end
 	self:die()
@@ -406,7 +407,7 @@ end
 function BaseWorm:removeShield()
 	self.shield = nil
 	self.shielded = false
-	self:skin(self.defaultSkin)
+	self:setSkin()
 
 	if self:trailing() ~= nil then
 		self:trailing():removeShield()
@@ -426,9 +427,6 @@ function BaseWorm:skin(skin)
 end
 
 function BaseWorm:skinAll(skin)
-	if skin == nil and self.defaultSkin ~= nil then
-		skin = self.defaultSkin
-	end
 	if self:trailing() ~= nil then
 		self:trailing():skinAll(skin)
 	end

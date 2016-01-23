@@ -1,4 +1,5 @@
 local level = {
+	title = "Thorns",
 	worm = {
 		x = 100,
 		y = 374
@@ -20,8 +21,7 @@ local level = {
 		{612, 409}
 	},	
 	secondsAllowed = 60,
-	lengthObjective = 40,
-	instructions = "Beware of the prickly thorns!\nThey're not good for Wormy's skin!"
+	lengthObjective = 40
 }
 
 return level

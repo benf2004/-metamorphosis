@@ -3,10 +3,11 @@ require("worm.BaseWorm")
 GravityWorm = BaseWorm:new()
 
 function GravityWorm:initialize( physics, sceneLoader )
+	self.defaultSkin = BaseWorm.frameIndex.red
+
 	self:initializeSprite(sceneLoader)
 	self.type = "body"
 	
-	self.defaultSkin = self.frameIndex.red
 	self:setSkin(self.frameIndex.gravity)
 
 	self:initializePhysics( physics )

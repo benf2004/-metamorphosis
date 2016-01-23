@@ -1,4 +1,5 @@
 local level = {
+	title = "Fast Flyers",
 	worm = {
 		x = 100,
 		y = 374
@@ -18,8 +19,7 @@ local level = {
 		maxWidth = 900
 	},
 	secondsAllowed = 60,
-	lengthObjective = 30,
-	instructions = "The ninjas are still here!"
+	lengthObjective = 30
 }
 
 return level

@@ -1,4 +1,5 @@
 local level = {
+	title = "Lightning",
 	worm = {
 		x = 100,
 		y = 374

@@ -1,10 +1,12 @@
 local level = {
+	title = "Monkey Trap",
 	worm = {
 		x = 100,
 		y = 374
 	},
 	foodTruck = {
-		standardWorm = 100
+		standardWorm = 90,
+		clockWorm = 10
 	},
 	standardFood = {
 		{x=512, y=768-100, count=45, delay=1000},
@@ -27,16 +29,3 @@ local level = {
 }
 
 return level
-
---width 50
-
---three-quarter = 768
---half-width = 512
---quarter = 256
-
-
---three-quarter = 576
---halfheight = 384
---quarterheight = 192
---x = quarterWidth
---y = quarterHeight to three-quarter-height

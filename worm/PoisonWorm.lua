@@ -4,10 +4,12 @@ require("game.Colors")
 PoisonWorm = BaseWorm:new()
 
 function PoisonWorm:initialize( physics, sceneLoader )
+	self.defaultSkin = BaseWorm.frameIndex.purple
+
 	self:initializeSprite(sceneLoader)
 	self.type = "body"
 
-	self.shieldSkin = self.frameIndex.purple
+	self.shieldSkin = BaseWorm.frameIndex.purple
 	self:setSkin(self.frameIndex.poison)
 
 	self:initializePhysics( physics )

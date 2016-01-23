@@ -14,12 +14,12 @@ SceneModal.starSequence = {
 }
 
 function SceneModal:initializeContent()
-	self:levelLine()
+	self:starLine()
 	self:bottomLine()
 	-- self:sceneInstructions()
 	self:goButton()
-	self:homeButton()
-	self:unlockButton()
+	-- self:homeButton()
+	-- self:unlockButton()
 end
 
 function SceneModal:initializeCloseButton(closeAction)
@@ -28,12 +28,12 @@ end
 function SceneModal:homeButton()
 	local x = self.centerX - self.width / 3 - 5
 	local y = self.centerY + self.height / 2 - 33 - 5
-	local w = self.width / 3 - 20
-	local h = 75 - 20
+	local w = 55 --self.width / 3 - 20
+	local h = 55
 
-	-- local home = homeButton("Menu", x, y, w, h, "Desyrel", 24)
+	local home = homeButton(x, y, w, h, self.parent.sceneLoader)
 	
-	-- self:addDisplayObject(home)
+	self:addDisplayObject(home)
 end
 
 function SceneModal:unlockButton()
@@ -58,45 +58,43 @@ function SceneModal:initializePopup(w, h)
 end
 
 function SceneModal:starLine()
-	
+	local x = self.centerX
+	local y = self.centerY
+	local width = self.width
+	local height = self.height
+	local levelStars = levelStars(currentLevel)
+	local stars = {
+		display.newSprite( self.starSheet, self.starSequence ),
+		display.newSprite( self.starSheet, self.starSequence ),
+		display.newSprite( self.starSheet, self.starSequence )
+	}
+
+	stars[1].x = x - width * .3
+	stars[2].x = x
+	stars[3].x = x + width * .3
+
+	if levelStars >= 1 then stars[1]:setFrame(2) else stars[1].alpha = 0.3 end
+	if levelStars >= 2 then stars[2]:setFrame(2)	else stars[2].alpha = 0.3 end
+	if levelStars >= 3 then stars[3]:setFrame(2) else stars[3].alpha = 0.3 end
+
+	for i = 1, #stars do
+		stars[i].y = y - height * .5 + (75 / 2)
+		stars[i].width = 50
+		stars[i].height = 50
+		self:addDisplayObject(stars[i])
+	end
 end
 
 function SceneModal:levelLine()
-	local label = label("Level "..tostring(currentLevel), self.centerX, self.centerY - self.popup.height / 2 + 40, "Desyrel", 50)
+	local label = label("Level "..tostring(currentLevel), self.centerX, self.centerY - self.popup.height / 2 + 40, "Desyrel", 40)
 	label.fill = colors.brown
 	self:addDisplayObject(label)
 end
 
 function SceneModal:bottomLine()
-	local label = label("Wormy", self.centerX, self.centerY + self.popup.height / 2 - 33, "Neon", 50)
+	local title = currentScene.title
+	local label = label("Level "..currentLevel.." - "..title, self.centerX, self.centerY + self.popup.height / 2 - 33, "Desyrel", 40)
 	label.fill = colors.brown
-	self:addDisplayObject(label)
-end
-
-function SceneModal:sceneInstructions()
-	local instruction = currentScene.instructions or 
-		"Wormy is hungry!\nDrag him to his food!\nQuick! Before time runs out!"
-
-	local countdown = currentScene.countdown or 5000
-
-	local width = self.popup.width - 60
-	local options = {
-		text = instruction,
-		x = self.centerX,
-		y = self.centerY,
-		width = width,
-		font = self:getFont(),
-		fontSize = 30,
-		align = "center"
-	}
-	local label = display.newText( options)
-	label.y = self.centerY - (self.popup.height / 2) + (label.height / 2) + 30
-	label.fill = colors.black
-
-	self.instFrame = display.newRoundedRect( label.x, label.y, label.width + 15, label.height + 15, 10 )
-	self.instFrame.fill = colors.yellow
-
-	self:addDisplayObject(self.instFrame)
 	self:addDisplayObject(label)
 end
 

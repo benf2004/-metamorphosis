@@ -22,6 +22,7 @@ function SceneLoader:load()
 	self.currentScene = currentScene
 	self:initializePhysics()
 	self:initializeBackground()
+	self:initializeSkin()
 	self:initializeLightning()
 	self:initializeMusic()
 	self:initializeFoodTruck()
@@ -137,6 +138,23 @@ function SceneLoader:initializeBackground()
 	self:addDisplayObject(background)
 end
 
+function SceneLoader:initializeSkin()
+	local threeStars = threeStars()
+	if threeStars >= 10 then
+		self.defaultSkin = BaseWorm.frameIndex.wild
+	elseif threeStars >=8 then
+		self.defaultSkin = BaseWorm.frameIndex.yingyang
+	elseif threeStars >=6 then
+		self.defaultSkin = BaseWorm.frameIndex.pieChart
+	elseif threeStars >=4 then
+		self.defaultSkin = BaseWorm.frameIndex.stripes
+	elseif threeStars >=2 then
+		self.defaultSkin = BaseWorm.frameIndex.dots
+	else
+		self.defaultSkin = BaseWorm.frameIndex.green
+	end
+end
+
 function SceneLoader:initializeLightning()
 	if currentScene.sceneEffect == "lightning" then
 		self.lightning = Lightning:new()
@@ -162,7 +180,7 @@ function SceneLoader:initializeFoodTruck()
 	self.makeDelivery = function() 
 		self.foodTruck:makeDelivery() 
 	end
-	self.foodTruckTimer = self:runTimer(750, self.makeDelivery, self.foodTruck, -1)
+	self.foodTruckTimer = self:runTimer(self.foodTruck.interval, self.makeDelivery, self.foodTruck, -1)
 	self:pauseTimer(self.foodTruckTimer)
 end
 

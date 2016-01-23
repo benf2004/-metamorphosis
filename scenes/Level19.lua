@@ -1,11 +1,16 @@
 local level = {
+	title = "Fire Maze",
 	worm = {
 		x = 410,
 		y = 200
 	},
 	foodTruck = {
-		standardWorm = 100
+		standardWorm = 85,
+		clockWorm = 5,
+		shieldWorm = 5,
+		gravityWorm = 5
 	},
+	foodTruckInterval = 500,
 	walls = {
 		{56, 359, 400, 50},
 		{568, 359, 400, 50},

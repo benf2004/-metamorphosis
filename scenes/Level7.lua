@@ -1,12 +1,16 @@
 local level = {
+	title = "Hedges",
 	worm = {
 		x = 100,
 		y = 374
 	},
 	foodTruck = {
-		standardWorm = 50,
-		gravityWorm = 50
+		clockWorm = 5,
+		gravityWorm = 85,
+		shieldWorm = 5,
+		poisonWorm = 5
 	},
+	foodTruckInterval=500,
 	activators = {
 		{52, 120},
 		{154, 120},
@@ -20,8 +24,7 @@ local level = {
 		{1000, 120}
 	},
 	secondsAllowed = 60,
-	lengthObjective = 40,
-	instructions = "Ouch! Ouch! Ouch!  Too many thorns!"
+	lengthObjective = 45
 }
 
 return level 

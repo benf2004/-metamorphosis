@@ -19,6 +19,7 @@ currentScene = nil
 
 --global adManager
 adManager = require "ads.AdManager"
+iapManager = require "iap.IAPManager"
 
 -- hide the status bar
 display.setStatusBar( display.HiddenStatusBar )

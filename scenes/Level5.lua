@@ -1,11 +1,12 @@
 local level = {
+	title = "Fences",
 	worm = {
 		x = 100,
 		y = 374
 	},
 	foodTruck = {
-		shieldWorm = 25,
-		standardWorm = 75
+		shieldWorm = 10,
+		standardWorm = 90
 	},
 	driftingWalls = {
 		interval = 5,
@@ -13,8 +14,7 @@ local level = {
 		maxWidth = 900
 	},
 	secondsAllowed = 60,
-	lengthObjective = 30,
-	instructions = "Don't get carried away!  The fence builders are coming!"
+	lengthObjective = 35
 }
 
 return level

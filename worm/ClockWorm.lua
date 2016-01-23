@@ -3,7 +3,9 @@ require("game.Colors")
 
 ClockWorm = BaseWorm:new()
 
-function ClockWorm:initialize( physics, sceneLoader )
+function ClockWorm:initialize( physics, sceneLoader )	
+	self.defaultSkin = sceneLoader.defaultSkin
+
 	self:initializeSprite(sceneLoader)
 	self.type = "body"
 	
@@ -14,5 +16,8 @@ function ClockWorm:initialize( physics, sceneLoader )
 end
 
 function ClockWorm:attachAction()
-	self.sceneLoader.hud.statistics.timeRemaining = self.sceneLoader.hud.statistics.timeRemaining + 3
+	if not self.isUsed then 
+		self.sceneLoader.hud.statistics.timeRemaining = self.sceneLoader.hud.statistics.timeRemaining + 3
+	end
+	self.isUsed = true
 end

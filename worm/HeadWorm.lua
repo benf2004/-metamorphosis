@@ -89,21 +89,25 @@ function HeadWorm:pause()
 end
 
 function HeadWorm:die(sound)
-	if self.sprite ~= nil and self.sprite.removeEventListener ~= nil then
-		self.sprite:removeEventListener( "collision", self.sprite )
+	if not self.shielded then 
+		-- if self.sprite ~= nil and self.sprite.removeEventListener ~= nil then
+		-- 	self.sprite:removeEventListener( "collision", self.sprite )
+		-- end
+		self:death(sound)
 	end
-	self:death(sound)
 end
 
 function HeadWorm:dieAll()
-	if self:trailing() ~= nil then
-		self:trailing():dieAll()
+	if not self.shielded then
+		if self:trailing() ~= nil then
+			self:trailing():dieAll()
+		end
+		self:die("squak")
 	end
-	self:die("squak")
 end
 
 function HeadWorm:activate()
-	if self.shield == nil then
+	if not self.shielded then
 		self:dieAll()
 	end
 end

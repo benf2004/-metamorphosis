@@ -7,6 +7,12 @@ function Base:new( o )
 	return o
 end
 
+function Base:invertTable(t)
+  local u = { }
+  for k, v in pairs(t) do u[v] = k end
+  return u
+end
+
 function Base:printTable(toPrint)
 	local t = toPrint
     local print_r_cache={}

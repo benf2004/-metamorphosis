@@ -1,4 +1,5 @@
 local level = {
+	title = "Pinch",
 	worm = {
 		x = 100,
 		y = 374
