@@ -3,7 +3,7 @@ require("worm.BaseWorm")
 GravityWorm = BaseWorm:new()
 
 function GravityWorm:initialize( physics, sceneLoader )
-	self.defaultSkin = BaseWorm.frameIndex.red
+	self.defaultSkin = sceneLoader.defaultSkin
 
 	self:initializeSprite(sceneLoader)
 	self.type = "body"
@@ -22,4 +22,10 @@ function GravityWorm:activate()
 	if not self.shielded then
 		self:die()
 	end
+end
+
+function GravityWorm:attachAction()
+	if self.sprite ~= nil then
+		self.sprite.gravityScale = 1
+	end	
 end

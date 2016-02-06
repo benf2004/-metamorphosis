@@ -8,7 +8,6 @@ function scene:show( event )
 		local parent = event.parent
 		self.modal = parent.modal
 		self.modal:initialize(self)
-		print("calling load")
 		self.modal:load(parent)
 	end
 end

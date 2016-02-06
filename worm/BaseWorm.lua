@@ -438,7 +438,7 @@ function BaseWorm:setSkin(skin)
 		if skin ~= nil then
 			self.currentSkin = skin
 		else 
-			self.currentSkin = self.defaultSkin
+			self.currentSkin = self.defaultSkin or 1
 		end
 		self.sprite:setFrame(self.currentSkin)
 	end

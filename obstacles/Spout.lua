@@ -31,9 +31,6 @@ function Spout:initializeSpout(effect, x, y, width, height, power, sceneLoader)
 	self.sceneLoader:addDisplayObject(self.emitter)
 	self.emitter:stop()
 
-	--initialize stack
-	-- self.stack = {}
-
 	--initialize forces
 	self.xF, self.yF = self:sprayForce()
 end
@@ -42,16 +39,15 @@ local function collide(sensor, event)
 	local self = sensor.obj
 	local other = event.other
 	if event.phase == "began" then
-		-- self:addToStack(other)
 		self:spray(other)
 	elseif event.phase == "ended" then
 		self:unspray(other)
-		-- self:removeFromStack(other)
 	end
 end
 
 function Spout:on()
 	self.physics.addBody(self.sensor, "kinematic", {isSensor=true, shape=self.edges})
+	self.sensor.hasBody = true
 	self.sensor.collision = collide
 	if self.sensor.addEventListener ~= nil then
 		self.sensor:addEventListener( "collision", self.sensor )
@@ -60,35 +56,15 @@ function Spout:on()
 end
 
 function Spout:off()
-	-- self:clearStack()
-	self.physics.removeBody(self.sensor)
-	self.sensor.collision = nil
-	if self.sensor.removeEventListener ~= nil then
-		self.sensor:removeEventListener( "collision", self.sensor )
+	if self.sensor.hasBody then
+		self.physics.removeBody(self.sensor)
+		self.sensor.collision = nil
+		self.sensor.hasBody = false
+	end
+	if self.emitter ~= nil then 
 		self.emitter:stop()
 	end
 end
-
--- function Spout:addToStack(object)
--- 	table.insert(self.stack, object)
--- end
-
--- function Spout:removeFromStack(object)
--- 	for i,element in ipairs(self.stack) do
--- 		if element == object then
--- 			table.remove(self.stack, i)
--- 		end
--- 	end
--- end
-
--- function Spout:clearStack()
--- 	for i=#self.stack, 1, -1 do	
--- 		local event = {}
--- 		event.other = self.stack[i]
--- 		event.phase = "ended"
--- 		self.sensor:collision(event)
--- 	end
--- end
 
 function Spout:sprayForce()
 	local angle = self.sensor.rotation

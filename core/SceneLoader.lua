@@ -32,7 +32,6 @@ function SceneLoader:load()
 	self:initializeActivators()
 	self:initializeFlyingActivators()
 	self:initializeWalls()
-	self:initializeSafetyWall()
 	self:initializeWaterCanons()
 	self:initializeFireSpout()
 	self:initializeMiniFireSpout()
@@ -56,6 +55,11 @@ function SceneLoader:launch()
 	else
 		self:openModal()
 	end
+end
+
+function SceneLoader:confirmConsumeFreePass(passLevel)
+	local level = passLevel or currentLevel
+	self:openModal("ConfirmConsumePass")
 end
 
 function SceneLoader:start()
@@ -94,13 +98,29 @@ end
 function SceneLoader:restart()
 	currentScene.restarting = true
 	self:unload()
+	self.hud:cancelEndLevelModal()
 	self.hud:removeAllDisplayObjects()
 	local sceneLoader = SceneLoader:new()
 	self.scene:moveToScene(sceneLoader)
 end
 
+function SceneLoader:moveToNextLevel()
+	self:unload()
+	self.hud:cancelEndLevelModal()
+	self.hud:removeAllDisplayObjects()
+
+	currentLevel = currentLevel + 1
+	currentScene = require( "scenes.Level" .. currentLevel)
+	local lvl = "Level"..(currentLevel)
+	currentScene.levelState = gameState[lvl]
+	local sceneLoader = SceneLoader:new()
+	self:hideAdvertisement()
+	self.scene:moveToScene(sceneLoader)	
+end
+
 function SceneLoader:menu()
 	self:unload()
+	self.hud:cancelEndLevelModal()
 	self.hud:removeAllDisplayObjects()
 	local menu = Menu:new()
 	self.scene:moveToScene(menu)
@@ -140,15 +160,15 @@ end
 
 function SceneLoader:initializeSkin()
 	local threeStars = threeStars()
-	if threeStars >= 10 then
+	if threeStars >= 15 then
 		self.defaultSkin = BaseWorm.frameIndex.wild
-	elseif threeStars >=8 then
+	elseif threeStars >=12 then
 		self.defaultSkin = BaseWorm.frameIndex.yingyang
-	elseif threeStars >=6 then
+	elseif threeStars >=9 then
 		self.defaultSkin = BaseWorm.frameIndex.pieChart
-	elseif threeStars >=4 then
+	elseif threeStars >=6 then
 		self.defaultSkin = BaseWorm.frameIndex.stripes
-	elseif threeStars >=2 then
+	elseif threeStars >=3 then
 		self.defaultSkin = BaseWorm.frameIndex.dots
 	else
 		self.defaultSkin = BaseWorm.frameIndex.green
@@ -164,7 +184,7 @@ end
 
 function SceneLoader:initializeMusic()
 	self:loadAudio("background", "audio/background1.mp3")
-	self:loadAudio("stormyBackground", "audio/background2.mp3")
+	-- self:loadAudio("stormyBackground", "audio/background2.mp3")
 	self:loadAudio("happy", "audio/happy.mp3")
 	self:loadAudio("gong", "audio/gong.wav")
 	self:loadSound("pop", "audio/pop3.wav")
@@ -296,24 +316,6 @@ function SceneLoader:initializeWalls()
  			wallDefinition[4], 
  			self.physics, self)
 	end
-end
-
-function SceneLoader:initializeSafetyWall()
-	-- local safetyWalls = {
-	-- 	{-100, -100, 1224, 50},
-	-- 	{-100, -100, 50, 1068},
-	-- 	{-100, 1068, 1224, 50},
-	-- 	{1224, -100, 50, 1068}
-	-- }
-	-- for i, wallDefinition in ipairs(safetyWalls) do
- --  		local wall = Wall:new()
- --  		wall:initialize(
- --  			wallDefinition[1],
- -- 			wallDefinition[2],
- -- 			wallDefinition[3],
- -- 			wallDefinition[4], 
- -- 			self.physics, self)
-	-- end
 end
 
 function SceneLoader:initializeFood()

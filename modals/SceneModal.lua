@@ -16,8 +16,16 @@ SceneModal.starSequence = {
 function SceneModal:initializeContent()
 	self:starLine()
 	self:bottomLine()
-	-- self:sceneInstructions()
-	self:goButton()
+	self:homeButton()
+	if currentLevel < 25 then
+		self:nextButton()
+	end
+
+	if isLevelUnlocked(currentLevel) then
+		self:goButton()
+	else
+		self:lockButton()
+	end
 	-- self:homeButton()
 	-- self:unlockButton()
 end
@@ -98,17 +106,60 @@ function SceneModal:bottomLine()
 	self:addDisplayObject(label)
 end
 
-function SceneModal:goButton()
-	local width, height = 80,80
-	local posX = self.centerX --self.popup.x + (self.popup.width / 2) - 40
-	local posY = self.popup.y + (self.popup.height / 5)
-	local goButton = display.newImageRect( "images/go.png", width, height )
-	goButton.x = posX
-	goButton.y = posY
-	self:addDisplayObject(goButton)
+function SceneModal:homeButton()
+	local width, height = 90,75
+	local yOffset = 65
+	local posX = self.centerX - 120 - 50
+	local posY = self.centerY + yOffset
 
-	local closeModal = function() self.parent:closeModal() end
-	goButton:addEventListener( "touch", closeModal )
+	local button = homeButton(posX, posY, width, height, self.parent.sceneLoader)
+	self:addDisplayObject(button)
+
+	local label = label("Home", posX, posY + (height / 2) + 15, "Desyrel", 22)
+	label.fill = colors.black
+	self:addDisplayObject(label)
+end
+
+function SceneModal:goButton()
+	local width, height = 90,75
+	local yOffset = 65
+	local posX = self.centerX --self.popup.x + (self.popup.width / 2) - 40
+	local posY = self.centerY + yOffset
+
+	local button = goButton(posX, posY, width, height, self.parent.sceneLoader)
+	self:addDisplayObject(button)
+
+	local label = label("Start", posX, posY + (height / 2) + 15, "Desyrel", 22)
+	label.fill = colors.black
+	self:addDisplayObject(label)
+end
+
+function SceneModal:nextButton()
+	local width, height = 90,75
+	local yOffset = 65
+	local posX = self.centerX + 120 + 50
+	local posY = self.centerY + yOffset
+
+	local button = nextButton(posX, posY, width, height, self.parent.sceneLoader)
+	self:addDisplayObject(button)
+
+	local label = label("Next Level", posX, posY + (height / 2) + 15, "Desyrel", 22)
+	label.fill = colors.black
+	self:addDisplayObject(label)
+end
+
+function SceneModal:lockButton()
+	local width, height = 90,75
+	local yOffset = 65
+	local posX = self.centerX
+	local posY = self.centerY + yOffset
+
+	local button = lockButton(posX, posY, width, height, self.parent.sceneLoader)
+	self:addDisplayObject(button)
+
+	local label = label("Locked", posX, posY + (height / 2) + 15, "Desyrel", 22)
+	label.fill = colors.black
+	self:addDisplayObject(label)
 end
 
 function SceneModal:getFont()

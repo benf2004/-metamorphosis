@@ -44,15 +44,18 @@ function SceneBase:runTimer(delay, listener, targets, iterations)
 			if params.iterations > 0 then
 				params.iterations = params.iterations - 1
 				if params.iterations == 0 then
+					event.source.removed = true
 					self:removeTimer(event.source)
 				end
 			end
 		else
+			event.source.removed = true
 			self:removeTimer(event.source)
 		end
 	end
 
 	local timerId = timer.performWithDelay( delay, onTimer, iterations )
+	timerId.paused = false
 	timerId.params = {targets = targets, iterations = iterations}
 	self:addTimer(timerId)
 	return timerId
@@ -63,10 +66,10 @@ function SceneBase:addTimer(timerId)
 end
 
 function SceneBase:pauseTimer(timerId)
-	-- if timerId.paused == nil or timerId.paused == false then
+	if not timerId.paused and not timerId.removed then
 		timer.pause(timerId)
-		-- timerId.paused = true		
-	-- end
+		timerId.paused = true		
+	end
 end
 
 function SceneBase:pauseAllTimers()
@@ -76,10 +79,10 @@ function SceneBase:pauseAllTimers()
 end
 
 function SceneBase:resumeTimer(timerId)
-	-- if timerId.paused then
+	if timerId.paused and not timerId.removed then
 		timer.resume(timerId)
-		-- timerId.paused = false
-	-- end
+		timerId.paused = false
+	end
 end
 
 function SceneBase:resumeAllTimers()
@@ -92,6 +95,7 @@ function SceneBase:removeTimer(timerId)
 	timer.cancel( timerId )
 	for i=#self.timers, 1, -1 do
 		if self.timers[i] == timerId then
+			timerId.removed = true
 			table.remove( self.timers, i )
 		end
 	end
@@ -117,7 +121,9 @@ function SceneBase:loadSound( name, audioFile )
 end
 
 function SceneBase:playSound(name)
-	audio.play(self.audio[name])
+	if self.audio[name] ~= nil then
+		audio.play(self.audio[name])
+	end
 end
 
 function SceneBase:loadAudio( name, audioFile )
@@ -126,6 +132,7 @@ end
 
 function SceneBase:playAudio( name, loops)
 	audio.play(self.audio[name], { channel=30, loops=-1 })
+	-- audio.rewind ( 30 )
 end
 
 function SceneBase:pauseAllMusic()
@@ -169,8 +176,12 @@ function SceneBase:removeAllGlobalEventListeners( )
 	end
 end
 
-function SceneBase:openModal()
-	self.scene:openModal()
+function SceneBase:openModal(modalType)
+	self.scene:openModal(modalType)
+end
+
+function SceneBase:closeModal()
+	self.scene:closeModal()
 end
 
 function SceneBase:load() end
@@ -187,13 +198,10 @@ end
 
 function SceneBase:showAdvertisement()
 	local currentTime = os.time()
-	print("Current time is ", currentTime)
 	local timeSinceLastVideoAd = currentTime - lastVideoAdTime
 	if timeSinceLastVideoAd >= timeBetweenVideoAds then
-		print("Showing a video ad.")
 		self.adManager:showVideoAd()
 	else 
-		print("Showing a banner ad.  Time remaining until video ad (seconds)", (timeBetweenVideoAds - timeSinceLastVideoAd))
 		self.adManager:showBannerAd(0, 768)
 	end
 end

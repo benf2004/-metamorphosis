@@ -117,7 +117,7 @@ function levelStars(level)
 	local bestTime = levelState.bestTime or 0
 
 	local stars = 0
-	if completed then stars = stars + 1 end
+	if completed and bestTime > 0 then stars = stars + 1 end
 	if completed and bestTime >= 10 then stars = stars + 1 end
 	if completed and bestTime >= 20 then stars = stars + 1 end
 	return stars

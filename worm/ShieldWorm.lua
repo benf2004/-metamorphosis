@@ -4,7 +4,7 @@ require("game.Colors")
 ShieldWorm = BaseWorm:new()
 
 function ShieldWorm:initialize( physics, sceneLoader )
-	self.defaultSkin = BaseWorm.frameIndex.yellow
+	self.defaultSkin = sceneLoader.defaultSkin
 
 	self:initializeSprite(sceneLoader)
 	self.type = "body"
@@ -17,7 +17,7 @@ function ShieldWorm:initialize( physics, sceneLoader )
 end
 
 function ShieldWorm:attachAction()
-	if not self.shielded and not self.anchor and self.sprite and self.sprite.x and self.sprite.y then 
+	if not self.isUsed and not self.shielded and not self.anchor and self.sprite and self.sprite.x and self.sprite.y then 
 		self:shieldAll(self.shieldSkin)
 
 		local destroyShield = function()
@@ -26,4 +26,5 @@ function ShieldWorm:attachAction()
 
 		self.sceneLoader:runTimer(5000, destroyShield, self, 1)
 	end
+	self.isUsed = true	
 end

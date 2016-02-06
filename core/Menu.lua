@@ -192,7 +192,7 @@ function Menu:initializeButtons()
 			local completed = levelState and levelState.completed
 
 			if not self:isLevelUnlocked(level) then
-				--locked = true
+				locked = true
 			end
 
 			local menuButton = button(label, x, y, width, height, menuSelected)
@@ -248,12 +248,12 @@ function Menu:initializeButtons()
 	self:addDisplayObject(instructionsButton)
 
 	local options = {
-		text = "Wormy",
+		text = "Mr. Worm",
 		x = self.centerX,
 		y = self.centerY,
 		width = instW,
 		font = "Neon",
-		fontSize = 60,
+		fontSize = 48,
 		align = "center"
 	}
 	local label = display.newText(options)

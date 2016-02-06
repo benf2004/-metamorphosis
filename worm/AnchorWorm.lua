@@ -4,7 +4,7 @@ require("game.Colors")
 AnchorWorm = BaseWorm:new()
 
 function AnchorWorm:initialize( physics, sceneLoader )
-	self.defaultSkin = self.frameIndex.blue
+	self.defaultSkin = sceneLoader.defaultSkin
 
 	self:initializeSprite(sceneLoader)
 	self.type = "body"
@@ -17,7 +17,7 @@ function AnchorWorm:initialize( physics, sceneLoader )
 end
 
 function AnchorWorm:attachAction()
-	if not self.shielded and not self.anchor and self.sprite and self.sprite.x and self.sprite.y then 
+	if not self.isUsed and not self.shielded and not self.anchor and self.sprite and self.sprite.x and self.sprite.y then 
 		self.anchor = display.newCircle( self.sprite.x, self.sprite.y, 2 )
 		self.anchor:setFillColor( 0, 0, 0, 0)
 		self.sceneLoader:addDisplayObject(self.anchor)
@@ -35,6 +35,7 @@ function AnchorWorm:attachAction()
 			end
 		end
 
-		self.sceneLoader:runTimer(5000, destroyAnchor, self.anchor, 1)
+		self.sceneLoader:runTimer(5000, destroyAnchor, self.anchor, 1)	
 	end
+	self.isUsed = true
 end

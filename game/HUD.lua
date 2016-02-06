@@ -9,14 +9,6 @@ function HUD:initialize(sceneLoader)
 
 	self.sceneLoader = sceneLoader
 
-	-- local restartClosure = function() self.sceneLoader:restart() end
-	-- local reset = button("Reset", (self.sceneLoader.screenW - 50), 25, 100, 50, restartClosure)
-	-- self:addDisplayObject(reset)
-
-	-- local menuClosure = function() self.sceneLoader:menu() end
-	-- local menu = button("Menu", (self.sceneLoader.screenW - 160), 25, 100, 50, menuClosure)
-	-- self:addDisplayObject(menu)
-
 	local restartButton = restartButton((self.sceneLoader.screenW - 40), 25, 60, 50, self.sceneLoader)
 	self:addDisplayObject(restartButton)
 
@@ -27,11 +19,6 @@ function HUD:initialize(sceneLoader)
 	self.statistics.wormLength = self.sceneLoader.head:lengthToEnd()
 	self.statistics.timeRemaining = currentScene.secondsAllowed
 	self.startingStars = levelStars(currentLevel)
-
-	-- local lengthLabel = label(tostring(self.statistics.wormLength.." / "..currentScene.lengthObjective), 50, 25, "Desyrel", 30, self.view)
-	-- self:addDisplayObject(lengthLabel)
-	-- local timerLabel = label(tostring(self.statistics.timeRemaining), 160, 25, "Desyrel", 30, self.view)
-	-- self:addDisplayObject(timerLabel)
 
 	local objBox = objectiveBox((self.sceneLoader.screenW - 345), 25, 145, 50, "Desyrel", 25, self.statistics.wormLength, currentScene.lengthObjective, self.sceneLoader.defaultSkin)
 	self:addDisplayObject(objBox)
@@ -57,26 +44,24 @@ function HUD:initialize(sceneLoader)
 			self.statistics.wormLength = currentScene.lengthObjective
 		end
 		self.statistics.maximumWormLength = math.max(self.statistics.wormLength or (self.statistics.maximumWormLength or 0))
-		-- lengthLabel.text = self.statistics.wormLength.." / "..currentScene.lengthObjective
 		objBox.setLength(self.statistics.wormLength)
-		-- timerLabel.text = self.statistics.timeRemaining
 		timeBox.setTime(self.statistics.timeRemaining)
 
 		self.statusLabel = nil
 		if self.statistics.wormLength >= currentScene.lengthObjective then
 			self:win()
 		elseif self.statistics.timeRemaining <= 0 then
-			self:lose("Times up!")
+			self:lose("Time's Up!")
 		elseif self.sceneLoader.head:lengthToEnd() < 3 then
-			self:lose("You lose!")
+			self:lose("You Lose!")
 		elseif self.sceneLoader.head.sprite.y <= -250 or self.sceneLoader.head.sprite.x <= -250 then
-			self:lose("You lose!")
+			self:lose("You Lose!")
 		end
 
 		if self.statusLabel ~= nil then
-			local resultLabel = label(self.statusLabel, self.sceneLoader.screenW/2, self.sceneLoader.screenH/2, "Desyrel", 72, self.sceneLoader.view)
+			self.resultLabel = label(self.statusLabel, self.sceneLoader.screenW/2, self.sceneLoader.screenH/2, "Desyrel", 72, self.sceneLoader.view)
 			self.sceneLoader:pause()
-			self:addDisplayObject(resultLabel)
+			self:addDisplayObject(self.resultLabel)
 		end
 	end
 end
@@ -117,4 +102,16 @@ end
 function HUD:endLevel(completed)
 	self.sceneLoader:showAdvertisement()
 	endLevel(currentLevel, completed, self.statistics.timeRemaining, self.statistics.maximumWormLength, self.startingStars)
+	local endLevelModalLaunch = function()
+		self.endLevelModalTimer = nil
+		self:removeDisplayObject(self.resultLabel)
+		self.sceneLoader:openModal("EndModal")
+	end
+	self.endLevelModalTimer = timer.performWithDelay( 2000, endLevelModalLaunch )
+end
+
+function HUD:cancelEndLevelModal()
+	if self.endLevelModalTimer ~= nil then
+		timer.cancel( self.endLevelModalTimer )
+	end
 end

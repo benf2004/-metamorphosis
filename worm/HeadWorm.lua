@@ -65,6 +65,7 @@ function HeadWorm:initialize(x, y, physics, foodTruck, sceneLoader)
 
 	self.sprite.collision = onLocalCollision
 	self.sprite:addEventListener( "collision", self.sprite )
+	
 	self:initializeEffect()
 end
 
@@ -90,9 +91,6 @@ end
 
 function HeadWorm:die(sound)
 	if not self.shielded then 
-		-- if self.sprite ~= nil and self.sprite.removeEventListener ~= nil then
-		-- 	self.sprite:removeEventListener( "collision", self.sprite )
-		-- end
 		self:death(sound)
 	end
 end

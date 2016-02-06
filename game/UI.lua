@@ -3,14 +3,14 @@ local widget = require( "widget" )
 local commonIconOptions = {
 	width = 64,
 	height = 64,
-	numFrames = 3
+	numFrames = 8
 }
 
 local commonIconSheet = graphics.newImageSheet( "images/gameicons.png", commonIconOptions )
 
 local commonIconSequence = {
 	name = "Icons",
-	frames = {1, 2, 3}
+	frames = {1, 2, 3, 4, 5, 6, 7, 8}
 }
 
 local wormIconOptions = {
@@ -62,59 +62,95 @@ function label(label, x, y, font, fontSize, displayGroup)
 	return displayLabel
 end
 
-function homeButton(x, y, w, h, sceneLoader)
-	local homeGroup = display.newGroup()
+function gameButton(x, y, w, h, iconIndex, action)
+	local buttonGroup = display.newGroup()
+	local button = display.newRoundedRect(x, y, w, h, 10 )
+	button.fill = {colors.brown[1], colors.brown[2], colors.brown[3], 0.75}
+	button.strokeWidth = 4
+	button.stroke = colors.black
+	local icon = display.newSprite( commonIconSheet, commonIconSequence )
+	icon:setFrame(iconIndex)
+	icon.x = x
+	icon.y = y
+	icon.width = h - 20
+	icon.height = h - 20
 
-	local homeButton = display.newRoundedRect( x, y, w, h, 10 )
-	homeButton.fill = {colors.brown[1], colors.brown[2], colors.brown[3], 0.75}
-	homeButton.stroke = colors.black
-	homeButton.strokeWidth = 4
+	buttonGroup:insert(button)
+	buttonGroup:insert(icon)
 
-	local homeIcon = display.newSprite( commonIconSheet, commonIconSequence )
-	homeIcon.x = x
-	homeIcon.y = y
-	homeIcon.width = h - 20
-	homeIcon.height = h - 20
-
-	homeGroup:insert(homeButton)
-	homeGroup:insert(homeIcon)
-
-	local function onRelease( event ) 
-		if ( event.phase == "ended" ) then
-			sceneLoader:menu()
+	local function onRelease(event)
+		if (event.phase == "ended") then
+			action()
 		end
 	end
-	
-	homeGroup:addEventListener( "touch", onRelease )
-	return homeGroup
+
+	buttonGroup:addEventListener( "touch", onRelease )
+	return buttonGroup
+end
+
+
+function homeButton(x, y, w, h, sceneLoader)
+	local action = function()
+		sceneLoader:menu()
+	end
+
+	return gameButton(x, y, w, h, 1, action)
 end
 
 function restartButton(x, y, w, h, sceneLoader)
-	local restartGroup = display.newGroup()
+	local action = function()
+		sceneLoader:restart()
+	end
 
-	local restartButton = display.newRoundedRect( x, y, w, h, 10 )
-	restartButton.fill = {colors.brown[1], colors.brown[2], colors.brown[3], 0.75}
-	restartButton.stroke = colors.black
-	restartButton.strokeWidth = 4
+	return gameButton(x, y, w, h, 2, action)
+end
 
-	local restartIcon = display.newSprite( commonIconSheet, commonIconSequence )
-	restartIcon:setFrame(2)
-	restartIcon.x = x
-	restartIcon.y = y
-	restartIcon.width = h - 20
-	restartIcon.height = h - 20
+function goButton(x, y, w, h, sceneLoader)
+	local action = function()
+		sceneLoader:restart()
+	end
 
-	restartGroup:insert(restartButton)
-	restartGroup:insert(restartIcon)
+	return gameButton(x, y, w, h, 4, action)
+end
 
-	local function onRelease( event ) 
-		if ( event.phase == "ended" ) then
-			sceneLoader:restart()
+
+function nextButton(x, y, w, h, sceneLoader)
+	local action = function()
+		sceneLoader:moveToNextLevel()
+	end
+
+	return gameButton(x, y, w, h, 8, action)
+end
+	
+function lockButton(x, y, w, h, sceneLoader)
+	local action = function()
+		if (freePassesAvailable() > 0) then
+			print("Going to consume a free pass.")
+			sceneLoader:confirmConsumeFreePass(currentLevel)
+		else
+			print("Going to purchase free passes.")
+			sceneLoader:confirmConsumeFreePass(currentLevel)
 		end
 	end
-	
-	restartGroup:addEventListener( "touch", onRelease )
-	return restartGroup
+
+	return gameButton(x, y, w, h, 5, action)
+end
+
+function confirmConsumePassButton(x, y, w, h, sceneLoader)
+	local action = function()
+		consumeFreePassOnLevel(currentLevel - 1)
+		sceneLoader:restart()
+	end
+
+	return gameButton(x, y, w, h, 6, action)
+end
+
+function cancelButton(x, y, w, h, sceneLoader)
+	local action = function()
+		sceneLoader:openModal()
+	end
+
+	return gameButton(x, y, w, h, 7, action)
 end
 
 function timeRemainingBox(x, y, w, h, font, fontSize, startTime)
@@ -226,4 +262,59 @@ function objectiveBox(x, y, w, h, font, fontSize, length, objective, wormIndex)
 	objGroup:insert(objGroup.label)
 
 	return objGroup
+end
+
+function keyBox(x, y, w, h)
+	local group = display.newGroup()
+	local iconW = (h - 20)
+	local padding = 5
+	local iconX = x - (w / 2) + iconW - padding
+	local equalsX = iconX + (iconW / 2) + 17
+	local textX = equalsX + 25
+
+	local font = "Desyrel"
+	local fontSize = 24
+
+	local equalsOptions = {
+		text = " = ",
+		x = equalsX,
+		y = y,
+		font = font,
+		fontSize = fontSize
+	}
+	group.equals = display.newText( equalsOptions )
+	group.equals:setFillColor(colors.black[1], colors.black[2], colors.black[3])
+
+	local labelOptions = {
+		text = tostring(freePassesAvailable()),
+		x = textX,
+		y = y,
+		font = font,
+		fontSize = fontSize
+	}
+
+	group.label = display.newText( labelOptions )
+	group.label:setFillColor(colors.black[1], colors.black[2], colors.black[3])
+
+	group.box = display.newRect(x, y, w, h)
+	group.box.fill = {colors.brown[1], colors.brown[2], colors.brown[3], 0.75}
+	group.box.stroke = colors.black
+	group.box.strokeWidth = 4
+
+	group.setRemaining = function(remaining)
+		objGroup.label.text = tostring(remaining)
+	end
+
+	group.image = display.newImage( "images/key.png" )
+	group.image.x = iconX
+	group.image.y = y
+	group.image.width = iconW
+	group.image.height = iconW
+	
+	group:insert(group.box)
+	group:insert(group.image)
+	group:insert(group.equals)
+	group:insert(group.label)
+
+	return group
 end

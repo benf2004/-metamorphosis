@@ -1,5 +1,7 @@
 require("core.ModalLaunch")
 require("modals.SceneModal")
+require("modals.EndModal")
+require("modals.ConfirmConsumePass")
 
 local composer = require( "composer" )
 local scene = composer.newScene()
@@ -17,7 +19,6 @@ function scene:show( event )
     	self.sceneLoader:load()
     elseif ( phase == "did" ) then
         self.sceneLoader:launch()
-    	-- self.sceneLoader:start()
     end
 end
 
@@ -51,10 +52,16 @@ function scene:moveToScene( sceneLoader )
 	composer.gotoScene( "core.CutScene", options )
 end
 
-function scene:openModal( )
+function scene:openModal( modal )
+    local modalType = modal or "SceneModal"
     self.sceneLoader:pause()
-    self.modal = SceneModal:new()
-    print("Made a modal")
+    if ( modalType == "EndModal" ) then
+        self.modal = EndModal:new()
+    elseif (modalType == "SceneModal") then
+        self.modal = SceneModal:new()
+    elseif (modalType == "ConfirmConsumePass") then
+        self.modal = ConfirmConsumePass:new()
+    end
     composer.showOverlay( "core.ModalLaunch" )
 end
 

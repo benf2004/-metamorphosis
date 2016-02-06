@@ -121,7 +121,7 @@ function AdManager:loadVungle(sceneLoader)
 end
 
 function AdManager:showBannerAd(x, y)
-	if not adsDisabled() then
+	if not adsDisabled() and self.adProvider ~= nil then
 		print("Attempting to show a banner ad.") 
 		self.adProvider:setCurrentProvider( self.adProviderName )
 		local targetingParams = { tagForChildDirectedTreatment = true }
@@ -132,7 +132,7 @@ function AdManager:showBannerAd(x, y)
 end
 
 function AdManager:showInterstitial()
-	if not adsDisabled() then 
+	if not adsDisabled() and self.adProvider ~= nil then 
 		print("Attempting to show an interstitial ad.") 
 		self.adProvider:setCurrentProvider( self.adProviderName )
 		local targetingParams = { tagForChildDirectedTreatment = true }
@@ -143,7 +143,7 @@ function AdManager:showInterstitial()
 end
 
 function AdManager:showVideoAd()
-	if not adsDisabled() then
+	if not adsDisabled() and self.adProvider ~= nil then
 		print("Attempting to show a video ad.") 
 		lastVideoAdTime = os.time()
 		self.adProvider:setCurrentProvider( self.videoAdProviderName )
