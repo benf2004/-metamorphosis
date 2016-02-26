@@ -119,21 +119,29 @@ function nextButton(x, y, w, h, sceneLoader)
 		sceneLoader:moveToNextLevel()
 	end
 
-	return gameButton(x, y, w, h, 8, action)
+	return gameButton(x, y, w, h, 6, action)
 end
 	
 function lockButton(x, y, w, h, sceneLoader)
 	local action = function()
 		if (freePassesAvailable() > 0) then
-			print("Going to consume a free pass.")
 			sceneLoader:confirmConsumeFreePass(currentLevel)
 		else
-			print("Going to purchase free passes.")
-			sceneLoader:confirmConsumeFreePass(currentLevel)
+			sceneLoader:confirmPurchaseFreePass(currentLevel)
 		end
 	end
 
 	return gameButton(x, y, w, h, 5, action)
+end
+
+function purchaseFreePassButton(x, y, w, h, passCount, price, sceneLoader)
+	local action = function()
+		iapManager:doPurchase("FREE_PASS_PACK_"..passCount)
+		sceneLoader:openModal()
+	end
+
+	local btn = button(price, x, y, w, h, action)
+	return btn
 end
 
 function confirmConsumePassButton(x, y, w, h, sceneLoader)
@@ -142,7 +150,7 @@ function confirmConsumePassButton(x, y, w, h, sceneLoader)
 		sceneLoader:restart()
 	end
 
-	return gameButton(x, y, w, h, 6, action)
+	return gameButton(x, y, w, h, 8, action)
 end
 
 function cancelButton(x, y, w, h, sceneLoader)

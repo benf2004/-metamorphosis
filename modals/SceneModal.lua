@@ -22,12 +22,12 @@ function SceneModal:initializeContent()
 	end
 
 	if isLevelUnlocked(currentLevel) then
+		self.isLocked = false
 		self:goButton()
 	else
+		self.isLocked = true
 		self:lockButton()
 	end
-	-- self:homeButton()
-	-- self:unlockButton()
 end
 
 function SceneModal:initializeCloseButton(closeAction)

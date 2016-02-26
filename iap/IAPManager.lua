@@ -69,7 +69,7 @@ function IAPManager:initializeSimulator()
 			title = "Free Pass 10 Pack",
 			price = 2.99,
 			localizedPrice = "$2.99",
-			productIdentifier = "FREE_PASS_PACK_3",
+			productIdentifier = "FREE_PASS_PACK_10",
 			description = "A free pass allows you to move past a level that you're stuck on.  This purchase includes 10 free passes.  Ads are disabled with any purchase."
 		})
 		table.insert(result.products, {
@@ -77,7 +77,7 @@ function IAPManager:initializeSimulator()
 			title = "Free Pass 20 Pack",
 			price = 4.99,
 			localizedPrice = "$4.99",
-			productIdentifier = "FREE_PASS_PACK_3",
+			productIdentifier = "FREE_PASS_PACK_20",
 			description = "A free pass allows you to move past a level that you're stuck on.  This purchase includes 20 free passes.  Ads are disabled with any purchase."
 		})
 		cb(result)
@@ -172,6 +172,17 @@ end
 function IAPManager:getProductList()
 	if (self.productDescriptions == nil) then return {}
 	else return self.productDescriptions end
+end
+
+function IAPManager:getProductPrice(productIdentifier)
+	local products = self.productDescriptions or {}
+	local i = self.invertedProducts[productIdentifier]
+	local pi = self.productMap[i]
+	for index,value in ipairs(products) do
+		if value.productIdentifier == pi then
+			return value.localizedPrice
+		end
+	end
 end
 
 local iapManager = IAPManager:new()

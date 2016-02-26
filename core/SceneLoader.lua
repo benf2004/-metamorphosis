@@ -62,6 +62,11 @@ function SceneLoader:confirmConsumeFreePass(passLevel)
 	self:openModal("ConfirmConsumePass")
 end
 
+function SceneLoader:confirmPurchaseFreePass(passLevel)
+	local level = passLevel or currentLevel
+	self:openModal("ConfirmPurchasePass")
+end
+
 function SceneLoader:start()
 	self.adManager:hideAd()
 	self:addEventListener( "touch", self.touchListener )

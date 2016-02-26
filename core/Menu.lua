@@ -19,6 +19,19 @@ Menu.starSequence = {
 	frames = {1, 2}
 }
 
+local commonIconOptions = {
+	width = 64,
+	height = 64,
+	numFrames = 8
+}
+
+local commonIconSheet = graphics.newImageSheet( "images/gameicons.png", commonIconOptions )
+
+local commonIconSequence = {
+	name = "Icons",
+	frames = {1, 2, 3, 4, 5, 6, 7, 8}
+}
+
 function Menu:load()
 	self.columns = 5
 	self.rows = 5
@@ -162,7 +175,7 @@ function Menu:initializeButtons()
 	local instY = (rows * (height + spacing)) + spacing + upperY + ((commandButtonHeight - spacing) / 2)
 
 	local menuSelected = function(event)
-		if not event.target.locked then
+		-- if not event.target.locked then
 			self:pause()
 			currentLevel = event.target.level
 			currentScene = require( "scenes.Level" .. currentLevel)
@@ -171,11 +184,11 @@ function Menu:initializeButtons()
 			self:hideAdvertisement()
 			self.scene:moveToScene(sceneLoader)
 			return true
-		else
-			lockedLevel = event.target.level
-			self:openUnlockModal()
-			return false
-		end
+		-- else
+		-- 	lockedLevel = event.target.level
+		-- 	self:openUnlockModal()
+		-- 	return false
+		-- end
 	end
 
 	for i=0, columns-1 do
@@ -199,12 +212,22 @@ function Menu:initializeButtons()
 			self:addDisplayObject(menuButton)
 
 			if locked == true then
-				local diameter = math.min(width, height) * .35
-				imageIcon = display.newImageRect( "images/padlock.png", diameter, diameter )
-				imageIcon.anchorX, imageIcon.anchorY = 0, 0
-				imageIcon.x = x + (width * .2)
-				imageIcon.y = y + (height * .1)
-				self:addDisplayObject(imageIcon)
+				local h = math.min(width, height) * .35
+				local icon = display.newSprite( commonIconSheet, commonIconSequence )
+				icon:setFrame(5)
+				icon.x = x + (width * .2) + 16
+				icon.y = y + (height * .1) + 8
+				icon.width = h
+				icon.height = h
+				icon:setFillColor( colors.yellow[1], colors.yellow[2], colors.yellow[3], 0.7 )
+				self:addDisplayObject(icon)
+
+				-- local diameter = math.min(width, height) * .35
+				-- imageIcon = display.newImageRect( "images/padlock.png", diameter, diameter )
+				-- imageIcon.anchorX, imageIcon.anchorY = 0, 0
+				-- imageIcon.x = x + (width * .2)
+				-- imageIcon.y = y + (height * .1)
+				-- self:addDisplayObject(imageIcon)
 			end
 
 			local bestTime = (levelState and levelState.bestTime) or -1
@@ -262,6 +285,7 @@ function Menu:initializeButtons()
 	self:addDisplayObject(label)
 
 	local unlockButton = button("Free Passes "..tostring(freePassesAvailable()), (instX + instW + instW + spacing) , instY, instW, commandButtonHeight - spacing, unlockLevelPack)
+	-- local unlockButton = keyBox((instX + instW + instW + spacing) , instY, instW, commandButtonHeight - spacing)
 	self:addDisplayObject(unlockButton)
 end
 

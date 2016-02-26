@@ -24,7 +24,7 @@ function ConfirmConsumePass:initializeQuestion()
 	local question = "Use a free pass to unlock Level "..tostring(currentLevel).."?"
 	local x = self.centerX
 	local y = self.centerY - self.height * .25
-	local fontSize = 24
+	local fontSize = 36
 	local font = "Desyrel"
 
 	local question = label(question, x, y, font, fontSize)

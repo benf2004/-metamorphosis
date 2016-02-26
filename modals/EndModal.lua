@@ -7,7 +7,9 @@ function EndModal:initializeContent()
 	self:bottomLine()
 	self:restartButton()
 	self:homeButton()
-	self:nextButton()
+	if currentLevel < 25 then
+		self:nextButton()
+	end
 end
 
 function EndModal:restartButton()

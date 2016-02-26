@@ -27,7 +27,7 @@ function AdManager:initialize(sceneLoader)
 		if ( system.getInfo( "platformName" ) == "Android" ) then
 			self:loadAdMob(sceneLoader)
 			self:loadVungle(sceneLoader)
-		else 
+		elseif ( system.getInfo( "platformName" ) == "iPhone OS" ) then 
 			self:loadiAds(sceneLoader)
 			self:loadVungle(sceneLoader)
 		end
