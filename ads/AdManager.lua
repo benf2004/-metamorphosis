@@ -23,14 +23,14 @@ AdManager.vungleIds = {
 function AdManager:initialize(sceneLoader)
 	self.adsDisabled = adsDisabled()
 	if not self.adsDisabled then
-		self.adProvider = require("ads")
-		if ( system.getInfo( "platformName" ) == "Android" ) then
-			self:loadAdMob(sceneLoader)
-			self:loadVungle(sceneLoader)
-		elseif ( system.getInfo( "platformName" ) == "iPhone OS" ) then 
-			self:loadiAds(sceneLoader)
-			self:loadVungle(sceneLoader)
-		end
+		-- self.adProvider = require("ads")
+		-- if ( system.getInfo( "platformName" ) == "Android" ) then
+		-- 	self:loadAdMob(sceneLoader)
+		-- 	self:loadVungle(sceneLoader)
+		-- elseif ( system.getInfo( "platformName" ) == "iPhone OS" ) then 
+		-- 	self:loadiAds(sceneLoader)
+		-- 	self:loadVungle(sceneLoader)
+		-- end
 	end
 end
 
