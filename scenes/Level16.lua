@@ -1,5 +1,5 @@
 local level = {
-	title = "More Fire",
+	title = "Pinwheel",
 	worm = {
 		x = 100,
 		y = 374

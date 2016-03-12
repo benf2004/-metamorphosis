@@ -67,6 +67,11 @@ function SceneLoader:confirmPurchaseFreePass(passLevel)
 	self:openModal("ConfirmPurchasePass")
 end
 
+function SceneLoader:prepareForMenu()
+	self.hud:cancelEndLevelModal()
+	self.hud:removeAllDisplayObjects()
+end
+
 function SceneLoader:start()
 	self.adManager:hideAd()
 	self:addEventListener( "touch", self.touchListener )
@@ -121,14 +126,6 @@ function SceneLoader:moveToNextLevel()
 	local sceneLoader = SceneLoader:new()
 	self:hideAdvertisement()
 	self.scene:moveToScene(sceneLoader)	
-end
-
-function SceneLoader:menu()
-	self:unload()
-	self.hud:cancelEndLevelModal()
-	self.hud:removeAllDisplayObjects()
-	local menu = Menu:new()
-	self.scene:moveToScene(menu)
 end
 
 function SceneLoader:initializePhysics()

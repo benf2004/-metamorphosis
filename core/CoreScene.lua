@@ -3,6 +3,7 @@ require("modals.SceneModal")
 require("modals.EndModal")
 require("modals.ConfirmConsumePass")
 require("modals.ConfirmPurchasePass")
+require("modals.InstructionModal")
 
 local composer = require( "composer" )
 local scene = composer.newScene()
@@ -64,6 +65,8 @@ function scene:openModal( modal )
         self.modal = ConfirmConsumePass:new()
     elseif (modalType == "ConfirmPurchasePass") then
         self.modal = ConfirmPurchasePass:new()
+    elseif (modalType == "Instructions") then
+        self.modal = InstructionModal:new()
     end
     composer.showOverlay( "core.ModalLaunch" )
 end

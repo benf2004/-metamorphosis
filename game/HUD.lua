@@ -23,7 +23,7 @@ function HUD:initialize(sceneLoader)
 	local objBox = objectiveBox((self.sceneLoader.screenW - 345), 25, 145, 50, "Desyrel", 25, self.statistics.wormLength, currentScene.lengthObjective, self.sceneLoader.defaultSkin)
 	self:addDisplayObject(objBox)
 
-	local timeBox = timeRemainingBox((self.sceneLoader.screenW - 205), 25, 100, 50, "Desyrel", 25, self.statistics.timeRemaining)
+	local timeBox = timeRemainingBox((self.sceneLoader.screenW - 205), 25, 120, 50, "Desyrel", 25, self.statistics.timeRemaining)
 	self:addDisplayObject(timeBox)
 
 	self.updateHud = function ()

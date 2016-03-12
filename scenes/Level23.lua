@@ -1,5 +1,5 @@
 local level = {
-	title = "Fast Flyers",
+	title = "Ricochet",
 	worm = {
 		x = 100,
 		y = 374
