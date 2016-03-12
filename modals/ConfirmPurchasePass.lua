@@ -21,7 +21,7 @@ function ConfirmPurchasePass:initializePopup(w, h)
 	innerFrame.fill = colors.brown
 	self:addDisplayObject(innerFrame)
 
-	local bannerFrame = display.newRect( self.centerX, self.centerY - 65, self.width, 65)
+	local bannerFrame = display.newRect( self.centerX, self.centerY - 70, self.width, 65)
 	bannerFrame.fill = colors.darkbrown
 	self:addDisplayObject(bannerFrame)	
 end
