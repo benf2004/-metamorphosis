@@ -1,5 +1,5 @@
 local level = {
-	title = "Fire Trap",
+	title = "Fire in the Night",
 	worm = {
 		x = 100,
 		y = 374,
@@ -21,11 +21,6 @@ local level = {
 	 {x = 889, y = 128, rotation = 315, rotate = true},
 	 {x = 156, y = 128, rotation = 360, rotate = true},
 	 {x = 156, y = 612, rotation = 45, rotate = true} 
-
-
-
-
-
 	},
 	secondsAllowed = 60,
 	lengthObjective = 25,

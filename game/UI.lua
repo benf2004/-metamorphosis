@@ -62,6 +62,24 @@ function label(label, x, y, font, fontSize, displayGroup)
 	return displayLabel
 end
 
+function emptyButton(x, y, w, h, action)
+	local buttonGroup = display.newGroup()
+	local button = display.newRoundedRect(x, y, w, h, 10 )
+	button.fill = {colors.brown[1], colors.brown[2], colors.brown[3], 1.0}
+	button.strokeWidth = 4
+	button.stroke = colors.black
+
+	buttonGroup:insert(button)
+	local function onRelease(event)
+		-- if (event.phase == "ended") then
+			return action()
+		-- end
+	end
+
+	buttonGroup:addEventListener( "tap", onRelease )
+	return buttonGroup
+end
+
 function gameButton(x, y, w, h, iconIndex, action)
 	local buttonGroup = display.newGroup()
 	local button = display.newRoundedRect(x, y, w, h, 10 )
@@ -79,12 +97,12 @@ function gameButton(x, y, w, h, iconIndex, action)
 	buttonGroup:insert(icon)
 
 	local function onRelease(event)
-		if (event.phase == "ended") then
-			action()
-		end
+		-- if (event.phase == "ended") then
+			return action()
+		-- end
 	end
 
-	buttonGroup:addEventListener( "touch", onRelease )
+	buttonGroup:addEventListener( "tap", onRelease )
 	return buttonGroup
 end
 
@@ -135,9 +153,16 @@ function lockButton(x, y, w, h, sceneLoader)
 end
 
 function purchaseFreePassButton(x, y, w, h, passCount, price, sceneLoader)
+	local openMenu = currentLevel == "Menu"
 	local action = function()
 		iapManager:doPurchase("FREE_PASS_PACK_"..passCount)
-		sceneLoader:openModal()
+		if openMenu then
+			sceneLoader:menu()
+			return true
+		else
+			sceneLoader:openModal()
+			return true
+		end
 	end
 
 	local btn = button(price, x, y, w, h, action)
@@ -154,20 +179,37 @@ function confirmConsumePassButton(x, y, w, h, sceneLoader)
 end
 
 function cancelButton(x, y, w, h, sceneLoader)
+	local openMenu = currentLevel == "Menu"
 	local action = function()
-		sceneLoader:openModal()
+		if openMenu then
+			sceneLoader:menu()
+			return true
+		else
+			sceneLoader:openModal()
+			return true
+		end
 	end
 
 	return gameButton(x, y, w, h, 7, action)
 end
 
-function timeRemainingBox(x, y, w, h, font, fontSize, startTime)
+function timeRemainingBox(x, y, w, h, font, fontSize, startTime, noBorder)
 	local timeGroup = display.newGroup()
 	timeGroup.originX = x
 
+	local iconW = (h - 20)
+	local padding = 5
+	local iconX = x - (w / 2) + iconW - padding
+	local equalsX = iconX + (iconW / 2) + 17
+	local textX = equalsX + 30
+
+	local strokeWidth = 4
+
+	if noBorder then strokeWidth = 0 end
+
 	local equalsOptions = {
 		text = " = ",
-		x = x,
+		x = equalsX,
 		y = y,
 		font = font,
 		fontSize = fontSize
@@ -177,7 +219,7 @@ function timeRemainingBox(x, y, w, h, font, fontSize, startTime)
 
 	local labelOptions = {
 		text = tostring(startTime),
-		x = x + 25,
+		x = textX,
 		y = y,
 		font = font,
 		fontSize = fontSize
@@ -188,7 +230,7 @@ function timeRemainingBox(x, y, w, h, font, fontSize, startTime)
 	timeGroup.timeBox = display.newRect(x, y, w, h)
 	timeGroup.timeBox.fill = {colors.brown[1], colors.brown[2], colors.brown[3], 0.75}
 	timeGroup.timeBox.stroke = colors.black
-	timeGroup.timeBox.strokeWidth = 4
+	timeGroup.timeBox.strokeWidth = strokeWidth
 
 	timeGroup.setTime = function(newTime)
 		timeGroup.label.text = tostring(newTime)
@@ -207,9 +249,9 @@ function timeRemainingBox(x, y, w, h, font, fontSize, startTime)
 
 	timeGroup.timeIcon = display.newSprite( commonIconSheet, commonIconSequence )
 	timeGroup.timeIcon:setFrame(3)
-	timeGroup.timeIcon.x = x - 25
+	timeGroup.timeIcon.x = iconX
 	timeGroup.timeIcon.y = y
-	timeGroup.timeIcon.width = h - 20
+	timeGroup.timeIcon.width = iconW
 	timeGroup.timeIcon.height = h - 20
 
 	timeGroup:insert(timeGroup.timeBox)
@@ -220,13 +262,21 @@ function timeRemainingBox(x, y, w, h, font, fontSize, startTime)
 	return timeGroup
 end
 
-function objectiveBox(x, y, w, h, font, fontSize, length, objective, wormIndex)
+function objectiveBox(x, y, w, h, font, fontSize, length, objective, wormIndex, noBorder)
 	local objGroup = display.newGroup()
 	local iconW = (h - 20)
 	local padding = 5
 	local iconX = x - (w / 2) + iconW - padding
 	local equalsX = iconX + (iconW / 2) + 17
 	local textX = equalsX + 45
+
+	if length == nil then
+		textX = equalsX + 30
+	end
+
+	local strokeWidth = 4
+
+	if noBorder then strokeWidth = 0 end
 
 	local equalsOptions = {
 		text = " = ",
@@ -238,8 +288,14 @@ function objectiveBox(x, y, w, h, font, fontSize, length, objective, wormIndex)
 	objGroup.equals = display.newText( equalsOptions )
 	objGroup.equals:setFillColor(colors.black[1], colors.black[2], colors.black[3])
 
+	if (length ~= nil) then
+		lengthObjective = tostring(length).."/"..tostring(objective)
+	else
+		lengthObjective = tostring(objective)
+	end
+
 	local labelOptions = {
-		text = tostring(length).."/"..tostring(objective),
+		text = lengthObjective,
 		x = textX,
 		y = y,
 		font = font,
@@ -251,7 +307,7 @@ function objectiveBox(x, y, w, h, font, fontSize, length, objective, wormIndex)
 	objGroup.box = display.newRect(x, y, w, h)
 	objGroup.box.fill = {colors.brown[1], colors.brown[2], colors.brown[3], 0.75}
 	objGroup.box.stroke = colors.black
-	objGroup.box.strokeWidth = 4
+	objGroup.box.strokeWidth = strokeWidth
 
 	objGroup.setLength = function(newLength)
 		objGroup.label.text = tostring(newLength).."/"..tostring(objective)
@@ -272,7 +328,7 @@ function objectiveBox(x, y, w, h, font, fontSize, length, objective, wormIndex)
 	return objGroup
 end
 
-function keyBox(x, y, w, h)
+function keyBox(x, y, w, h, action)
 	local group = display.newGroup()
 	local iconW = (h - 20)
 	local padding = 5
@@ -304,10 +360,68 @@ function keyBox(x, y, w, h)
 	group.label = display.newText( labelOptions )
 	group.label:setFillColor(colors.black[1], colors.black[2], colors.black[3])
 
-	group.box = display.newRect(x, y, w, h)
-	group.box.fill = {colors.brown[1], colors.brown[2], colors.brown[3], 0.75}
-	group.box.stroke = colors.black
-	group.box.strokeWidth = 4
+	if action ~= nil then 
+		group.box = gameButton(x, y, w, h, 5, action)
+	else 
+		group.box = display.newRect(x, y, w, h)
+		group.box.fill = {colors.brown[1], colors.brown[2], colors.brown[3], 0.75}
+		group.box.stroke = colors.black
+		group.box.strokeWidth = 4
+	end
+
+	group.setRemaining = function(remaining)
+		objGroup.label.text = tostring(remaining)
+	end
+
+	group.image = display.newImage( "images/key.png" )
+	group.image.x = iconX
+	group.image.y = y
+	group.image.width = iconW
+	group.image.height = iconW
+	
+	group:insert(group.box)
+	group:insert(group.image)
+	group:insert(group.equals)
+	group:insert(group.label)
+
+	return group
+end
+
+function keyButton(x, y, w, h, action)
+	local group = display.newGroup()
+	local iconW = (h - 20)
+	local padding = 5
+	local iconX = x - (iconW) + padding + 20
+	
+	local equalsX = x + 20
+	local textX = equalsX + 25
+
+	local font = "Desyrel"
+	local fontSize = 24
+
+	local equalsOptions = {
+		text = " = ",
+		x = equalsX,
+		y = y,
+		font = font,
+		fontSize = fontSize
+	}
+	group.equals = display.newText( equalsOptions )
+	group.equals:setFillColor(colors.black[1], colors.black[2], colors.black[3])
+
+	local labelOptions = {
+		text = tostring(freePassesAvailable()),
+		x = textX,
+		y = y,
+		font = font,
+		fontSize = fontSize
+	}
+
+	group.label = display.newText( labelOptions )
+	group.label:setFillColor(colors.black[1], colors.black[2], colors.black[3])
+
+	group.box = emptyButton(x, y, w, h, action)
+	-- group.box.fill = {colors.brown[1], colors.brown[2], colors.brown[3], 1.0}
 
 	group.setRemaining = function(remaining)
 		objGroup.label.text = tostring(remaining)

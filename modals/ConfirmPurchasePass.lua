@@ -20,27 +20,31 @@ function ConfirmPurchasePass:initializePopup(w, h)
 	local innerFrame = display.newRect( self.centerX, self.centerY, self.width, self.height - 35 )
 	innerFrame.fill = colors.brown
 	self:addDisplayObject(innerFrame)
+
+	local bannerFrame = display.newRect( self.centerX, self.centerY - 70, self.width, 65)
+	bannerFrame.fill = colors.darkbrown
+	self:addDisplayObject(bannerFrame)	
 end
 
 function ConfirmPurchasePass:initializeCloseButton(closeAction)
 end
 
 function ConfirmPurchasePass:initializeQuestion()
-	local question = "Do you want to buy free passes?"
+	local question = "Buy more free passes?"
 	local x = self.centerX
-	local y = self.centerY - self.height * .25
+	local y = self.centerY - self.height * .25 - 20
 	local fontSize = 36
 	local font = "Desyrel"
 
 	local question = label(question, x, y, font, fontSize)
-	question.fill = colors.black
+	question.fill = colors.brown
 	self:addDisplayObject(question)
 end
 
 function ConfirmPurchasePass:initialize3Button()
 	local price = iapManager:getProductPrice("FREE_PASS_PACK_3")
 	local width, height = 100,75
-	local yOffset = 30
+	local yOffset = 23
 	local posX = self.centerX - width * 2
 	local posY = self.centerY + yOffset
 
@@ -56,7 +60,7 @@ end
 function ConfirmPurchasePass:initialize10Button()
 	local price = iapManager:getProductPrice("FREE_PASS_PACK_10")
 	local width, height = 100,75
-	local yOffset = 30
+	local yOffset = 23
 	local posX = self.centerX - width / 1.5
 	local posY = self.centerY + yOffset
 
@@ -72,7 +76,7 @@ end
 function ConfirmPurchasePass:initialize20Button()
 	local price = iapManager:getProductPrice("FREE_PASS_PACK_20")
 	local width, height = 100,75
-	local yOffset = 30
+	local yOffset = 23
 	local posX = self.centerX + width / 1.5
 	local posY = self.centerY + yOffset
 
@@ -87,7 +91,7 @@ end
 
 function ConfirmPurchasePass:initializeNoButton()
 	local width, height = 100,75
-	local yOffset = 30
+	local yOffset = 23
 	local posX = self.centerX + width * 2
 	local posY = self.centerY + yOffset
 

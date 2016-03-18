@@ -15,6 +15,7 @@ SceneModal.starSequence = {
 
 function SceneModal:initializeContent()
 	self:starLine()
+	self:goal()
 	self:bottomLine()
 	self:homeButton()
 	if currentLevel < 25 then
@@ -33,34 +34,17 @@ end
 function SceneModal:initializeCloseButton(closeAction)
 end
 
-function SceneModal:homeButton()
-	local x = self.centerX - self.width / 3 - 5
-	local y = self.centerY + self.height / 2 - 33 - 5
-	local w = 55 --self.width / 3 - 20
-	local h = 55
-
-	local home = homeButton(x, y, w, h, self.parent.sceneLoader)
-	
-	self:addDisplayObject(home)
-end
-
-function SceneModal:unlockButton()
-	local x = self.centerX + self.width / 3 + 5
-	local y = self.centerY + self.height / 2 - 33 - 5
-	local w = self.width / 3 - 20
-	local h = 75 - 20
-	local instructionsButton = button("Unlock Levels", x, y, w, h, instructionsSelected)
-	self:addDisplayObject(instructionsButton)
-end	
-
 function SceneModal:initializePopup(w, h)
 	self.width = w or display.contentWidth * .55
-	self.height = h or display.contentHeight * .55
+	self.height = h or display.contentHeight * .45
+	self.buttonOffset = 30
 	self.popup = display.newRoundedRect( self.centerX, self.centerY, self.width, self.height, 20 )
 	self.popup.fill = colors.darkbrown
 	self:addDisplayObject(self.popup)
 
-	local innerFrame = display.newRect( self.centerX, self.centerY, self.width, self.height - 150 )
+	local innerFrameHeight = self.height - 150
+	local innerFramePosition = self.centerY
+	local innerFrame = display.newRect( self.centerX, innerFramePosition, self.width, innerFrameHeight )
 	innerFrame.fill = colors.brown
 	self:addDisplayObject(innerFrame)
 end
@@ -108,7 +92,7 @@ end
 
 function SceneModal:homeButton()
 	local width, height = 90,75
-	local yOffset = 65
+	local yOffset = self.buttonOffset
 	local posX = self.centerX - 120 - 50
 	local posY = self.centerY + yOffset
 
@@ -122,7 +106,7 @@ end
 
 function SceneModal:goButton()
 	local width, height = 90,75
-	local yOffset = 65
+	local yOffset = self.buttonOffset
 	local posX = self.centerX --self.popup.x + (self.popup.width / 2) - 40
 	local posY = self.centerY + yOffset
 
@@ -136,7 +120,7 @@ end
 
 function SceneModal:nextButton()
 	local width, height = 90,75
-	local yOffset = 65
+	local yOffset = self.buttonOffset
 	local posX = self.centerX + 120 + 50
 	local posY = self.centerY + yOffset
 
@@ -150,7 +134,7 @@ end
 
 function SceneModal:lockButton()
 	local width, height = 90,75
-	local yOffset = 65
+	local yOffset = self.buttonOffset
 	local posX = self.centerX
 	local posY = self.centerY + yOffset
 
@@ -173,4 +157,38 @@ function SceneModal:getFont()
 	end
 	font = font or native.systemFontBold
 	return font
+end
+
+function SceneModal:goal()
+	local lengthObjective = currentScene.lengthObjective
+	local secondsAllowed = currentScene.secondsAllowed
+	local skin = self.parent.sceneLoader.defaultSkin
+
+	local xOffset = -self.width / 7
+	local yOffset = -55
+	local posX = self.centerX + xOffset
+	local posY = self.centerY + yOffset
+
+	local width = 125
+	local height = 52
+	local textHeight = 32
+	local textOffset = height / 2 + textHeight + 3
+
+	local objBox = objectiveBox(posX, posY, width, height, "Desyrel", 32, nil, lengthObjective, skin, true)
+	self:addDisplayObject(objBox)
+
+	-- local line1Label = label("Move the worm with your finger.", self.centerX, posY - textOffset - textHeight, "Desyrel", textHeight)
+	-- line1Label.fill = colors.black
+	-- self:addDisplayObject(line1Label)
+
+	-- local line2Label = label("Eat until you reach your goal.", self.centerX, posY - textOffset, "Desyrel", textHeight)
+	-- line2Label.fill = colors.brown
+	-- self:addDisplayObject(line2Label)
+
+	local inLabel = label("in", self.centerX, self.centerY + yOffset, "Desyrel", 32)
+	inLabel.fill = colors.brown
+	self:addDisplayObject(inLabel)
+
+	local timeBox = timeRemainingBox(self.centerX - xOffset, posY, width, height, "Desyrel", 32, secondsAllowed, true)
+	self:addDisplayObject(timeBox)
 end

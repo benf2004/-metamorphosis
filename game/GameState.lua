@@ -1,4 +1,5 @@
 local json = require( "json" )
+local crypto = require( "crypto" )
 
 local gameStateLocation = system.DocumentsDirectory
 local wormyStateFile = "wormyState"
@@ -11,23 +12,62 @@ local defaultGameState = {
 	Level0 = {completed = true}
 }
 
+-- WARNING!  Don't change this method ever.  
+-- Add a version 2 method to calculate the signature differently
+-- Always use this function to validate version 1 signatures.
+function signatureV1(table)
+	local key = "aced8d55-3fe8-4eae-8401-2166c3a96bee"
+	for i=1,25 do
+		local lvl = "Level"..i
+		local levelState = table[lvl] or {}
+		local completed = 0
+		if levelState.completed then completed = 1 end
+		local bestTime = levelState.bestTime or 0
+		key = key..tostring(completed)..tostring(bestTime)
+	end
+	local adsDisabled = 0
+	if table.adsDisabled then adsDisabled = 1 end
+	local freePasses = table.freePasses or 0
+	key = key..adsDisabled..freePasses
+	local signature = crypto.digest( crypto.sha256, key )
+	return signature
+end
+
 function loadGameState()
 	local file = io.open( path, "r" )
 	if file then
 		local contents = file:read( "*a" )
 		local aTable = json.decode(contents)
 		io.close( file )
-		return aTable
+
+		local state = aTable.gameState or {}
+		local sig = aTable.signature or {}
+		local hash = signatureV1(state)
+		if hash == sig then
+			return aTable.gameState
+		else
+			print "Invalid signature in file."
+			return defaultGameState
+		end
 	else
 		return defaultGameState
 	end
 end
 
 function saveGameState(gameState)
-	local jsonEncoded = json.encode( gameState )
+	local hash = signatureV1(gameState)
+
+	local fileContainer = {
+		gameState = gameState,
+		signature = hash,
+		version = 1
+	}
+
+	local fileJson = json.encode(fileContainer)
+	
 	local file = io.open( path, "w" )
 	if file then
-		file:write(jsonEncoded)
+		file:write(fileJson)
 		io.close(file)
 		return true
 	else
@@ -97,6 +137,18 @@ function addFreePasses(count)
 	local freePasses = gameState.freePasses or 0
 	gameState.freePasses = freePasses + count
 	saveGameState(gameState)
+end
+
+function levelState(level)
+	local lvl = "Level"..level
+	local levelState = gameState[lvl] or {}
+	return {
+		completed = levelState.completed or false,
+		bestTime = levelState.bestTime or 0,
+		totalAttempts = levelState.totalAttempts or 0,
+		maximumLength = levelState.maximumLength or 0,
+		averageTimeRemaining = levelState.averageTimeRemaining or 0
+	}
 end
 
 function isLevelUnlocked(level)

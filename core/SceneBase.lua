@@ -210,4 +210,14 @@ function SceneBase:hideAdvertisement()
 	self.adManager:hideAd()
 end
 
+function SceneBase:prepareForMenu()
+end
+
+function SceneBase:menu()
+	self:unload()
+	self:prepareForMenu()
+	local menu = Menu:new()
+	self.scene:moveToScene(menu)
+end
+
 

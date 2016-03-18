@@ -33,6 +33,7 @@ local commonIconSequence = {
 }
 
 function Menu:load()
+	currentLevel = "Menu"
 	self.columns = 5
 	self.rows = 5
 	self.adHeight = 100
@@ -170,12 +171,12 @@ function Menu:initializeButtons()
 	local width = ((menuWidth - (spacing * (columns+1))) / columns)
 	local height = (((menuHeight - commandButtonHeight - adHeight) - (spacing * (rows+1))) / rows)
 
-	local instW = (menuWidth - (spacing * 3)) / 3
+	local instW = (menuWidth - (spacing * 3.5)) / 3.5
 	local instX = spacing + (instW / 2) + upperX
 	local instY = (rows * (height + spacing)) + spacing + upperY + ((commandButtonHeight - spacing) / 2)
 
 	local menuSelected = function(event)
-		-- if not event.target.locked then
+		if not self.buttonsLocked then
 			self:pause()
 			currentLevel = event.target.level
 			currentScene = require( "scenes.Level" .. currentLevel)
@@ -184,11 +185,9 @@ function Menu:initializeButtons()
 			self:hideAdvertisement()
 			self.scene:moveToScene(sceneLoader)
 			return true
-		-- else
-		-- 	lockedLevel = event.target.level
-		-- 	self:openUnlockModal()
-		-- 	return false
-		-- end
+		else
+			return false
+		end
 	end
 
 	for i=0, columns-1 do
@@ -271,12 +270,12 @@ function Menu:initializeButtons()
 	self:addDisplayObject(instructionsButton)
 
 	local options = {
-		text = "Mr. Worm",
+		text = gameName,
 		x = self.centerX,
 		y = self.centerY,
-		width = instW,
+		width = instW * 2,
 		font = "Neon",
-		fontSize = 48,
+		fontSize = 40,
 		align = "center"
 	}
 	local label = display.newText(options)
@@ -284,8 +283,8 @@ function Menu:initializeButtons()
 	label.fill = colors.brown
 	self:addDisplayObject(label)
 
-	local unlockButton = button("Free Passes "..tostring(freePassesAvailable()), (instX + instW + instW + spacing) , instY, instW, commandButtonHeight - spacing, unlockLevelPack)
-	-- local unlockButton = keyBox((instX + instW + instW + spacing) , instY, instW, commandButtonHeight - spacing)
+	-- local unlockButton = button("Free Passes "..tostring(freePassesAvailable()), (instX + (instW * 2.5) + spacing) , instY, instW, commandButtonHeight - spacing, unlockLevelPack)
+	local unlockButton = keyButton((instX + (instW * 2.5) + spacing) , instY, instW, commandButtonHeight - spacing, unlockLevelPack)
 	self:addDisplayObject(unlockButton)
 end
 
@@ -298,10 +297,17 @@ function Menu:levelState(level)
 	return gameState[lvl]
 end
 
+function Menu:lockButtonsAndOpenModal(modal)
+	self.buttonsLocked = true
+	self:openModal(modal)
+end
+
 function Menu:openInstructionModal()
-	resetGameState()
+	-- resetGameState()
+	self:lockButtonsAndOpenModal("Instructions")
 end
 
 function Menu:openUnlockModal()
-	iapManager:doPurchase("FREE_PASS_PACK_3")
+	-- iapManager:doPurchase("FREE_PASS_PACK_3")
+	self:lockButtonsAndOpenModal("ConfirmPurchasePass")
 end
