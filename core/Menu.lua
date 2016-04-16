@@ -275,7 +275,7 @@ function Menu:initializeButtons()
 		y = self.centerY,
 		width = instW * 2,
 		font = "Neon",
-		fontSize = 40,
+		fontSize = 36,
 		align = "center"
 	}
 	local label = display.newText(options)

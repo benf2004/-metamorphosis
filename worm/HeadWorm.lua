@@ -156,7 +156,7 @@ function HeadWorm:consume( wormNode )
 	wormNode.sceneLoader:removeDisplayObject(wormNode.sprite)
 
 	self.foodTruck:consumeFood(wormNode)
-	self.sceneLoader:playSound("click")
+	-- self.sceneLoader:playSound("click")
 
 	self:digest(wormNode, self.displayGroup, self.foodTruck)
 end

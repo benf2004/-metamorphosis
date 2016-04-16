@@ -4,20 +4,14 @@ require "game.GameState"
 AdManager  = Base:new()
 
 AdManager.admobIds = {
-	androidBannerAppId = "ca-app-pub-1210803108734891/9132873369",
-	androidInterstitial = "ca-app-pub-1210803108734891/1609606566",
-	iosBannerAppId = "ca-app-pub-1210803108734891/9272474169",
-	iosInterstitial = "ca-app-pub-1210803108734891/6179406969",
+	androidBannerAppId = "ca-app-pub-8810482214895944/4137215912",
+	androidInterstitial = "ca-app-pub-8810482214895944/5613949119",
+	iosBannerAppId = "ca-app-pub-8810482214895944/7375263518",
+	iosInterstitial = "ca-app-pub-8810482214895944/1328729919",
 }
 
-AdManager.iAdsIds = {
-	iosBannerAppId = "org.finchfamily.wormy",
-	iosInterstitial = "org.finchfamily.wormy"
-}
-
-AdManager.vungleIds = {
-	androidVideo = "5682c9c16073d2f323000018",
-	iosVideo = "5682c9c16073d2f323000018"
+AdManager.coronaAds = {
+	appId = "cedf82a2-c058-4d3a-ab56-d5a2e895b8f3",
 }
 
 function AdManager:initialize(sceneLoader)
@@ -25,35 +19,29 @@ function AdManager:initialize(sceneLoader)
 	if not self.adsDisabled then
 		 self.adProvider = require("ads")
 		 if ( system.getInfo( "platformName" ) == "Android" ) then
+		 	-- self:loadCoronaAds(sceneLoader)
 		 	self:loadAdMob(sceneLoader)
-		 	self:loadVungle(sceneLoader)
 		 elseif ( system.getInfo( "platformName" ) == "iPhone OS" ) then 
-		 	self:loadiAds(sceneLoader)
-		 	self:loadVungle(sceneLoader)
+		 	-- self:loadCoronaAds(sceneLoader)
+		 	self:loadAdMob(sceneLoader)
 		 end
 	end
 end
 
-function AdManager:loadiAds(sceneLoader)
-	self.bannerAppId = self.iAdsIds.iosBannerAppId
-	self.interstitialAppId = self.iAdsIds.iosInterstitial
+function AdManager:loadCoronaAds(sceneLoader)
+	self.coronaAds = require( "plugin.coronaAds" )
+	self.bannerPlacement = "bottom-banner-320x50"
+	self.interstitialPlacement = "interstitial-1"
 
-	local function adListener( event)
-		local msg = event.response
-		local adType = event.type
-	    print( "Message from the ads library: ", msg )
-
-	    if ( event.isError ) then
-	        print( "Error, no ad received.")
-	    else
-	        print( "Ad type:", adType)
-	    end
+	local function adListener( event )
+		if ( event.phase == "init" ) then
+			self.adProvider = "coronaAds"
+			self.coronaAdsInitialized = true
+			print( "Corona ads successfully initialized.")
+		end
 	end
 
-	self.adPluginName = "iads"
-	self.adProviderName = "iads"
-
-	self.adProvider.init(self.adPluginName, self.bannerAppId, adListener)
+	self.adProvider.init(self.coronaAds.appId, adListener)
 end
 
 function AdManager:loadAdMob(sceneLoader) 
@@ -82,46 +70,11 @@ function AdManager:loadAdMob(sceneLoader)
 	self.adProvider.init(self.adProviderName, self.bannerAppId, adListener)
 end
 
-function AdManager:loadVungle(sceneLoader)
-	if ( system.getInfo( "platformName" ) == "Android" ) then
-		self.videoAppId = self.vungleIds.androidVideo
-	else 
-		self.videoAppId = self.vungleIds.iosVideo
-	end
-
-	local function adListener( event )
-		local msg = event.response
-		print( "Message from the ads library: ", msg )
-		if ( event.type == "adStart" and event.isError ) then
-	    	-- Ad has not finished caching and will not play
-	    	print( "Vungle ad not loaded yet.")
-    		self.adProvider.hide()
-    		self:showInterstitial()
-	  	end
-	  	if ( event.type == "adStart" and not event.isError ) then
-	   		-- Ad will play
-	   		print( "Vungle ad playing.")
-	  	end
-	  	if ( event.type == "cachedAdAvailable" ) then
-	    	-- Ad has finished caching and is ready to play
-	    	print( "Vungle video ad cached.")
-	  	end
-	  	if ( event.type == "adView" ) then
-	    	-- An ad has completed
-	    	print( "Vungle video ad completed.")
-	  	end
-	  	if ( event.type == "adEnd" ) then
-	    	print(" Vungle video ad ended.")
-	  	end
-	end
-
-	self.videoAdProviderName = "vungle"
-
-	self.adProvider.init(self.videoAdProviderName, self.bannerAppId, adListener)
-end
-
 function AdManager:showBannerAd(x, y)
-	if not adsDisabled() and self.adProvider ~= nil then
+	if not adsDisabled() and self.coronaAdsInitialized then 
+		print("Attempting to show a corona banner ad.")
+		self.coronaAds.show(self.bannerPlacement, false)
+	elseif not adsDisabled() and self.adProvider ~= nil then
 		print("Attempting to show a banner ad.") 
 		self.adProvider:setCurrentProvider( self.adProviderName )
 		local targetingParams = { tagForChildDirectedTreatment = true }
@@ -132,7 +85,11 @@ function AdManager:showBannerAd(x, y)
 end
 
 function AdManager:showInterstitial()
-	if not adsDisabled() and self.adProvider ~= nil then 
+	lastInterstitialAdTime = os.time()
+	if not adsDisabled() and self.coronaAdsInitialized then
+		print("Attempting to show a corona interstitial.")
+		self.coronaAds(self.interstitialPlacement, true)
+	elseif not adsDisabled() and self.adProvider ~= nil then 
 		print("Attempting to show an interstitial ad.") 
 		self.adProvider:setCurrentProvider( self.adProviderName )
 		local targetingParams = { tagForChildDirectedTreatment = true }
@@ -142,19 +99,10 @@ function AdManager:showInterstitial()
 	end
 end
 
-function AdManager:showVideoAd()
-	if not adsDisabled() and self.adProvider ~= nil then
-		print("Attempting to show a video ad.") 
-		lastVideoAdTime = os.time()
-		self.adProvider:setCurrentProvider( self.videoAdProviderName )
-		self.adProvider.show( "interstitial", { targetingOptions=targetingParams, appId=self.videoAppId } )
-	else 
-		print("Ads are disabled.")
-	end
-end
-
 function AdManager:hideAd()
-	if not adsDisabled() and self.adProvider ~= nil then 
+	if not adsDisabled and self.coronaAdsInitialized then
+		self.coronaAds.hide()
+	elseif not adsDisabled() and self.adProvider ~= nil then 
 		self.adProvider.hide()
 	end
 end
@@ -162,7 +110,7 @@ end
 local adManager = AdManager:new()
 adManager:initialize()
 
-lastVideoAdTime = os.time()
-timeBetweenVideoAds = 5 * 60 --5 minutes
-print("Video Ad Timer started at ", lastVideoAdTime)
+lastInterstitialAdTime = os.time()
+timeBetweenInterstitialAds = 3 * 60 --3 minutes
+print("Interstitial Ad Timer started at ", lastInterstitialAdTime)
 return adManager

@@ -10,6 +10,7 @@ IAPManager.products = {
 }
 
 function IAPManager:initialize()
+	self.productListLoaded = false
 	self.invertedProducts = self:invertTable(self.products)
 
 	if ( system.getInfo( "platformName" ) == "iPhone OS" ) then
@@ -32,9 +33,9 @@ end
 function IAPManager:initializeIOS()
 	self.store = require( "store" )
 	self.productMap = {
-		"org.finchfamily.wormy.freePassPack3",
-		"org.finchfamily.wormy.freePassPack10",
-		"org.finchfamily.wormy.freePassPack20",
+		"biz.mamabird.squirmywormy.freePassPack3",
+		"biz.mamabird.squirmywormy.freePassPack10",
+		"biz.mamabird.squirmywormy.freePassPack20",
 	}
 	self.invertedProductMap = self:invertTable(self.productMap)
 
@@ -127,7 +128,8 @@ function IAPManager:initializeCallbacks(storeName)
 	self.allowInAppPurchase = self.store.canMakePurchases
 end
 
-function IAPManager:doPurchase(productName)
+function IAPManager:doPurchase(productName, afterPurchaseAction)
+	self.afterPurchaseAction = afterPurchaseAction
 	if self.allowInAppPurchase then
 		local i = self.invertedProducts[productName]
 		local productIdentifier = self.productMap[i]
@@ -150,6 +152,10 @@ function IAPManager:handlePurchased(productIdentifier)
 	elseif product == "FREE_PASS_PACK_20" then
 		addFreePasses(20)
 	end
+
+	if self.afterPurchaseAction ~= nil then
+		self.afterPurchaseAction()
+	end
 end
 
 function IAPManager:doLoadProductList()
@@ -160,13 +166,14 @@ function IAPManager:doLoadProductList()
 		end
 		table.sort(self.productDescriptions, sortFunction)
 		self:printTable(self.productDescriptions)
+		self.productListLoaded = true
 	end
 
 	self.store.loadProducts(self.productMap, listener)
 end
 
-function IAPManager:allowInAppPurchase()
-	return self.allowInAppPurchase
+function IAPManager:doesAllowInAppPurchase()
+	return self.allowInAppPurchase and self.productListLoaded
 end
 
 function IAPManager:getProductList()

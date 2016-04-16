@@ -7,21 +7,16 @@ settings =
 {
 	plugins =
     {
-        ["CoronaProvider.ads.vungle"] =
-        {
-            publisherId = "com.vungle",
-            supportedPlatforms = { iphone=true, android=true }
-        },
         ["plugin.google.play.services"] =
         {
             publisherId = "com.coronalabs",
-            supportedPlatforms = { android=true },
+            supportedPlatforms = { iphone=true, android=true },
         },
-        ["CoronaProvider.ads.iads"] =
+        ["plugin.coronaAds"] =
         {
             publisherId = "com.coronalabs",
-            supportedPlatforms = { iphone=true },
-        },
+            supportedPlatforms = { iphone=true, android=true }
+        }
     },
     
 	orientation =
@@ -72,6 +67,10 @@ settings =
                 "Icon-Small@2x.png",
                 "Icon-Small@3x.png",
 			},
+
+			NSAppTransportSecurity = { NSAllowsArbitraryLoads=true },
+            NSLocationAlwaysUsageDescription = { "" },
+            NSLocationWhenInUseUsageDescription = { "" },
 
 			--[[
 			-- iOS app URL schemes:

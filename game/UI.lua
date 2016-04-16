@@ -155,14 +155,17 @@ end
 function purchaseFreePassButton(x, y, w, h, passCount, price, sceneLoader)
 	local openMenu = currentLevel == "Menu"
 	local action = function()
-		iapManager:doPurchase("FREE_PASS_PACK_"..passCount)
-		if openMenu then
-			sceneLoader:menu()
-			return true
-		else
-			sceneLoader:openModal()
-			return true
+		local afterPurchaseAction = function()
+			if openMenu then
+				sceneLoader:menu()
+				return true
+			else
+				sceneLoader:openModal()
+				return true
+			end
 		end
+
+		iapManager:doPurchase("FREE_PASS_PACK_"..passCount, afterPurchaseAction)
 	end
 
 	local btn = button(price, x, y, w, h, action)

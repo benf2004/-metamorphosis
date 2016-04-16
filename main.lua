@@ -16,7 +16,7 @@
 
 --global current scene properties
 currentScene = nil
-gameName = "Wiggle Worm"
+gameName = "Squirmy Wormy"
 
 --global adManager
 adManager = require "ads.AdManager"

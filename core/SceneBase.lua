@@ -198,9 +198,9 @@ end
 
 function SceneBase:showAdvertisement()
 	local currentTime = os.time()
-	local timeSinceLastVideoAd = currentTime - lastVideoAdTime
-	if timeSinceLastVideoAd >= timeBetweenVideoAds then
-		self.adManager:showVideoAd()
+	local timeSinceLastInterstitialAd = currentTime - lastInterstitialAdTime
+	if timeSinceLastInterstitialAd >= timeBetweenInterstitialAds then
+		self.adManager:showInterstitial()
 	else 
 		self.adManager:showBannerAd(0, 768)
 	end
