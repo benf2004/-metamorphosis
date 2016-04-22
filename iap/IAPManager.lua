@@ -46,6 +46,23 @@ function IAPManager:initializeIOS()
 	self:initializeCallbacks("apple")
 end
 
+function IAPManager:initializeAndroid()
+	self.store = require( "plugin.google.iap.v3" )
+	self.productMap = {
+		"biz.mamabird.squirmywormy.freepass3pack",
+		"biz.mamabird.squirmywormy.freepass10pack",
+		"biz.mamabird.squirmywormy.freepass20pack",
+	}
+	self.invertedProductMap = self:invertTable(self.productMap)
+
+	self.executePurchase = function(productId)
+		self.store.purchase(productId)
+	end
+	self.allowInAppPurchase = true
+
+	self:initializeCallbacks("google")
+}
+
 function IAPManager:initializeSimulator()
 	self.store = {}
 	self.store.init = function(storeName, cb)
@@ -159,6 +176,7 @@ function IAPManager:handlePurchased(productIdentifier)
 end
 
 function IAPManager:doLoadProductList()
+	--TODO ... need to confirm the product list returned from Google store.
 	local listener = function(event)
 		self.productDescriptions = event.products
 		local sortFunction = function(a, b)
