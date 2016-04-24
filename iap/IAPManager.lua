@@ -61,7 +61,7 @@ function IAPManager:initializeAndroid()
 	self.allowInAppPurchase = true
 
 	self:initializeCallbacks("google")
-}
+end
 
 function IAPManager:initializeSimulator()
 	self.store = {}
