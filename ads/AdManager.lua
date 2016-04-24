@@ -10,9 +10,9 @@ AdManager.admobIds = {
 	iosInterstitial = "ca-app-pub-8810482214895944/1328729919",
 }
 
-AdManager.coronaAds = {
-	appId = "cedf82a2-c058-4d3a-ab56-d5a2e895b8f3",
-}
+--AdManager.coronaAds = {
+--	appId = "cedf82a2-c058-4d3a-ab56-d5a2e895b8f3",
+--}
 
 function AdManager:initialize(sceneLoader)
 	self.adsDisabled = adsDisabled()
@@ -28,21 +28,21 @@ function AdManager:initialize(sceneLoader)
 	end
 end
 
-function AdManager:loadCoronaAds(sceneLoader)
-	self.coronaAds = require( "plugin.coronaAds" )
-	self.bannerPlacement = "bottom-banner-320x50"
-	self.interstitialPlacement = "interstitial-1"
+-- function AdManager:loadCoronaAds(sceneLoader)
+-- 	self.coronaAds = require( "plugin.coronaAds" )
+-- 	self.bannerPlacement = "bottom-banner-320x50"
+-- 	self.interstitialPlacement = "interstitial-1"
 
-	local function adListener( event )
-		if ( event.phase == "init" ) then
-			self.adProvider = "coronaAds"
-			self.coronaAdsInitialized = true
-			print( "Corona ads successfully initialized.")
-		end
-	end
+-- 	local function adListener( event )
+-- 		if ( event.phase == "init" ) then
+-- 			self.adProvider = "coronaAds"
+-- 			self.coronaAdsInitialized = true
+-- 			print( "Corona ads successfully initialized.")
+-- 		end
+-- 	end
 
-	self.adProvider.init(self.coronaAds.appId, adListener)
-end
+-- 	self.adProvider.init(self.coronaAds.appId, adListener)
+-- end
 
 function AdManager:loadAdMob(sceneLoader) 
 	if ( system.getInfo( "platformName" ) == "Android" ) then

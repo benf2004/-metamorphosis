@@ -16,6 +16,9 @@ function IAPManager:initialize()
 	if ( system.getInfo( "platformName" ) == "iPhone OS" ) then
 		self.allowInAppPurchase = true
 		self:initializeIOS()
+	elseif ( system.getInfo( "platformName" ) == "Android" ) then
+		self.allowInAppPurchase = true
+		self:initializeAndroid()
 	elseif (system.getInfo( "platformName" ) == "Mac OS X" ) then
 		self.allowInAppPurchase = true
 		self:initializeSimulator()
