@@ -12,11 +12,6 @@ settings =
             publisherId = "com.coronalabs",
             supportedPlatforms = { iphone=true, android=true },
         },
-        ["plugin.coronaAds"] =
-        {
-            publisherId = "com.coronalabs",
-            supportedPlatforms = { iphone=true, android=true }
-        },
         ["plugin.google.iap.v3"] =
         {
             publisherId = "com.coronalabs",
