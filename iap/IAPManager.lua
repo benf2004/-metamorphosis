@@ -18,6 +18,7 @@ function IAPManager:initialize()
 		self:initializeIOS()
 	elseif ( system.getInfo( "platformName" ) == "Android" ) then
 		self.allowInAppPurchase = true
+		print("Going to initialize Android.")
 		self:initializeAndroid()
 	elseif (system.getInfo( "platformName" ) == "Mac OS X" ) then
 		self.allowInAppPurchase = true
@@ -46,6 +47,20 @@ function IAPManager:initializeIOS()
 		self.store.purchase({productId})
 	end
 
+	self.loadProducts = function(event)
+		print("Got a product list table.")
+		self:printTable(event)
+		self.productDescriptions = event.products
+		local sortFunction = function(a, b)
+			return a.price < b.price
+		end
+		table.sort(self.productDescriptions, sortFunction)
+		self:printTable(self.productDescriptions)
+		if #self.productDescriptions > 0 then
+			self.productListLoaded = true
+		end
+	end
+
 	self:initializeCallbacks("apple")
 end
 
@@ -63,6 +78,21 @@ function IAPManager:initializeAndroid()
 	end
 	self.allowInAppPurchase = true
 
+	self.loadProducts = function(event)
+		print("Got a product list table.")
+		self:printTable(event)
+		self.productDescriptions = event.products
+		local sortFunction = function(a, b)
+			return a.priceAmountMicros < b.priceAmountMicros
+		end
+		table.sort(self.productDescriptions, sortFunction)
+		self:printTable(self.productDescriptions)
+		if #self.productDescriptions > 0 then
+			self.productListLoaded = true
+		end
+	end
+
+	print("Getting ready to initialize callbacks.")
 	self:initializeCallbacks("google")
 end
 
@@ -117,6 +147,20 @@ function IAPManager:initializeSimulator()
 		self.store.callback(event)
 	end
 
+	self.loadProducts = function(event)
+		print("Got a product list table.")
+		self:printTable(event)
+		self.productDescriptions = event.products
+		local sortFunction = function(a, b)
+			return a.price < b.price
+		end
+		table.sort(self.productDescriptions, sortFunction)
+		self:printTable(self.productDescriptions)
+		if #self.productDescriptions > 0 then
+			self.productListLoaded = true
+		end
+	end
+
 	self:initializeCallbacks("simulator")
 end
 
@@ -143,7 +187,7 @@ function IAPManager:initializeCallbacks(storeName)
 
 		self.store.finishTransaction( event.transaction )	
 	end
-
+	print("Initializing store")
 	self.store.init( storeName, handleStoreCallbacks )
 	self.allowInAppPurchase = self.store.canMakePurchases
 end
@@ -179,18 +223,8 @@ function IAPManager:handlePurchased(productIdentifier)
 end
 
 function IAPManager:doLoadProductList()
-	--TODO ... need to confirm the product list returned from Google store.
-	local listener = function(event)
-		self.productDescriptions = event.products
-		local sortFunction = function(a, b)
-			return a.price < b.price
-		end
-		table.sort(self.productDescriptions, sortFunction)
-		self:printTable(self.productDescriptions)
-		self.productListLoaded = true
-	end
-
-	self.store.loadProducts(self.productMap, listener)
+	print("Getting ready to load the product list.")
+	self.store.loadProducts(self.productMap, self.loadProducts)
 end
 
 function IAPManager:doesAllowInAppPurchase()

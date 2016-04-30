@@ -17,16 +17,16 @@
 --adding this for screen captureability
 --comment out for production build
 -- hit 'c' to capture your screen
--- local function cap(event)
---     if event.keyName== "c" and event.phase == "up" then
---         local screenCap = display.captureScreen( true )
---         display.remove (screenCap)
---         screenCap = nil
---     end
---     return true
--- end
+local function cap(event)
+    if event.keyName== "c" and event.phase == "up" then
+        local screenCap = display.captureScreen( true )
+        display.remove (screenCap)
+        screenCap = nil
+    end
+    return true
+end
  
--- Runtime:addEventListener("key",cap)
+Runtime:addEventListener("key",cap)
 -- hit 'c' to capture your screen
 
 --global current scene properties

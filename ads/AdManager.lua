@@ -4,8 +4,8 @@ require "game.GameState"
 AdManager  = Base:new()
 
 AdManager.admobIds = {
-	androidBannerAppId = "ca-app-pub-8810482214895944/4137215912",
-	androidInterstitial = "ca-app-pub-8810482214895944/5613949119",
+	androidBannerAppId = "ca-app-pub-8810482214895944/6131555915",
+	androidInterstitial = "ca-app-pub-8810482214895944/7608289119",
 	iosBannerAppId = "ca-app-pub-8810482214895944/7375263518",
 	iosInterstitial = "ca-app-pub-8810482214895944/1328729919",
 }

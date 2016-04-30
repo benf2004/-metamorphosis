@@ -328,7 +328,6 @@ function SceneLoader:initializeFood()
 		local c = wormDef.count
 		local d = wormDef.delay
 		self.foodTruck:fixedFood(x, y, c, d)
-		print("hi")
 	end
 end
 
