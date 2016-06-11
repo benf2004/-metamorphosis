@@ -7,6 +7,7 @@ local path = system.pathForFile( wormyStateFile, gameStateLocation)
 
 local defaultGameState = {
 	adsDisabled = false,
+	useJoystick = false,
 	freePasses = 2,
 	unlocked = {},
 	Level0 = {completed = true}
@@ -187,5 +188,15 @@ end
 
 function resetGameState()
 	gameState = defaultGameState
+	saveGameState(gameState)
+end
+
+function useJoystick()
+	local useJoystickOption = gameState.useJoystick or false
+	return useJoystickOption
+end
+
+function setUseJoystick(useJoystickOption)
+	gameState.useJoystick = useJoystickOption
 	saveGameState(gameState)
 end

@@ -268,9 +268,10 @@ function BaseWorm:death(sound)
 		self:detachFromTrailing()
 		if self.sprite ~= nil then
 			local locationx, locationy = self.sprite.x, self.sprite.y
+			local cx, cy = self.sceneLoader:cameraCoordinates(locationx, locationy)
 			local snd = sound or "bang"
 			self.sceneLoader:playSound(snd)
-			explode(locationx, locationy)
+			explode(cx, cy)
 			self.sceneLoader:removeDisplayObject(self.sprite)
 		end
 		self.dead = true
@@ -293,8 +294,9 @@ function BaseWorm:burstWithHappiness()
 	self:detachFromTrailing()
 	if self.sprite ~= nil then
 		local locationx, locationy = self.sprite.x, self.sprite.y
+		local cx, cy = self.sceneLoader:cameraCoordinates(locationx, locationy)
 		-- heartSwirl(locationx, locationy)
-		heartExplosion(locationx, locationy)
+		heartExplosion(cx, cy)
 		self.sceneLoader:removeDisplayObject(self.sprite)
 	end
 	if self.glow ~= nil then

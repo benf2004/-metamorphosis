@@ -1,5 +1,6 @@
 require("core.SceneBase")
 require("core.SceneLoader")
+require("core.ZoneLoader")
 require("game.UI")
 require("game.Colors")
 require("game.GameState")
@@ -50,6 +51,8 @@ function Menu:load()
 	self:initializeMenuWorm()
 	self:initializeFood()
 	self:showAdvertisement()
+
+	setUseJoystick(true)
 end
 
 function Menu:start() 
@@ -181,7 +184,12 @@ function Menu:initializeButtons()
 			currentLevel = event.target.level
 			currentScene = require( "scenes.Level" .. currentLevel)
 			currentScene.levelState = self:levelState(currentLevel)
-			local sceneLoader = SceneLoader:new()
+			local sceneLoader 
+			if singlePlayer then
+				sceneLoader = SceneLoader:new()
+			else
+				sceneLoader = ZoneLoader:new()
+			end
 			self:hideAdvertisement()
 			self.scene:moveToScene(sceneLoader)
 			return true

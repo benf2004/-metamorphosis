@@ -54,7 +54,7 @@ function HUD:initialize(sceneLoader)
 			self:lose("Time's Up!")
 		elseif self.sceneLoader.head:lengthToEnd() < 3 then
 			self:lose("You Lose!")
-		elseif self.sceneLoader.head.sprite.y <= -250 or self.sceneLoader.head.sprite.x <= -250 then
+		elseif singlePlayer and (self.sceneLoader.head.sprite.y <= -250 or self.sceneLoader.head.sprite.x <= -250) then
 			self:lose("You Lose!")
 		end
 

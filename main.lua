@@ -33,6 +33,8 @@ Runtime:addEventListener("key",cap)
 currentScene = nil
 gameName = "Squirmy Wormy"
 
+singlePlayer = false
+
 --global adManager
 adManager = require "ads.AdManager"
 iapManager = require "iap.IAPManager"

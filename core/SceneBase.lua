@@ -160,6 +160,15 @@ function SceneBase:resetAllMusic()
 	end
 end
 
+function SceneBase:moveCamera(dx, dy)
+	self.view.x = self.view.x + dx
+	self.view.y = self.view.y + dy
+	self:extendBackground()
+end
+
+function SceneBase:extendBackground()
+end
+
 function SceneBase:addGlobalEventListener( event, funct )
 	local tuple = {event, funct}
 	table.insert(self.globalListeners, tuple)

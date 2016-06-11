@@ -20,6 +20,7 @@ SceneLoader  = SceneBase:new()
 
 function SceneLoader:load()
 	self.currentScene = currentScene
+	self:initializeJoystick()
 	self:initializePhysics()
 	self:initializeBackground()
 	self:initializeSkin()
@@ -128,6 +129,10 @@ function SceneLoader:moveToNextLevel()
 	self.scene:moveToScene(sceneLoader)	
 end
 
+function SceneLoader:initializeJoystick()
+	self.useJoystick = useJoystick()
+end
+
 function SceneLoader:initializePhysics()
 	self.physics = require( "physics" )
 	-- self.physics.setDrawMode("hybrid")
@@ -139,11 +144,8 @@ function SceneLoader:initializePhysics()
 				self.touchTarget = event.target.obj
 			end
 		elseif ( event.phase == "moved" ) then
-			-- if self.touchTarget ~= nil and self.touchTarget.moveToLocation ~= nil then
-			-- 	self.touchTarget:moveToLocation(event.x, event.y)
-			-- else
-				self.head:moveToLocation(event.x, event.y)
-			-- end
+			local x, y = self.view:contentToLocal(event.x, event.y)
+			self.head:moveToLocation(x, y)
 		elseif (event.phase == "ended" or event.phase == "cancelled") then
 			self.touchTarget = nil
     	end
@@ -151,14 +153,113 @@ function SceneLoader:initializePhysics()
     end
 end
 
+-- 
+-- This section sets up a tiled background.
+-- 
 function SceneLoader:initializeBackground()
-	local background = display.newImageRect( "images/Background.png", self.screenW, self.screenH )
+	self.tilesFilled = {}
+	self:createBackground(0, 0)
+
+	local scrollFunction = function()
+		local bottomScrollBound = self.screenH * .75
+		local topScrollBound = self.screenH * .25
+		local leftScrollBound = self.screenW * .75
+		local rightScrollBound = self.screenW * .25
+		if (self.head ~= nil and self.head.sprite ~= nil and self.head.sprite.x ~= nil) then
+			local cx, cy = self.view:localToContent(self.head.sprite.x, self.head.sprite.y)
+			local dx, dy = 0, 0
+
+			if (cx > leftScrollBound) then
+				dx = (cx - leftScrollBound) * -1
+			elseif (cx < rightScrollBound) then
+				dx = (cx - rightScrollBound) * -1
+			end
+
+			if (cy > bottomScrollBound) then
+				dy = (cy - bottomScrollBound) * -1
+			elseif (cy < topScrollBound) then
+				dy = (cy - topScrollBound) * -1
+			end
+			self:moveCamera(dx, dy)
+		end
+	end
+	if not singlePlayer then 
+		self.scrollTimer = self:runTimer(10, scrollFunction, self.view, -1)
+		self:pauseTimer(self.scrollTimer)
+	end
+end
+
+function SceneLoader:extendBackground()
+	local cx, cy = self.view:contentToLocal(0, 0)
+	
+	local left = math.floor(cx / display.contentWidth)
+	local right = left + 1
+	local top = math.floor(cy / display.contentHeight)
+	local bottom = top + 1
+
+	local topLeft = self:createBackgroundKey(left, top)
+	local topRight = self:createBackgroundKey(right, top)
+	local bottomLeft = self:createBackgroundKey(left, bottom)
+	local bottomRight = self:createBackgroundKey(right, bottom)
+
+	--fill the top left
+	if self.tilesFilled[topLeft] == nil then
+		self:createBackground(left, top)
+	end
+
+	-- fill the top right
+	if self.tilesFilled[topRight] == nil then
+		self:createBackground(right, top)
+	end
+
+	--fill the bottom left
+	if self.tilesFilled[bottomLeft] == nil then
+		self:createBackground(left, bottom)
+	end
+
+	--fill the bottom right
+	if self.tilesFilled[bottomRight] == nil then
+		self:createBackground(right, bottom)
+	end
+end
+
+function SceneLoader:createBackgroundKey(x, y)
+	return "("..x..","..y..")"
+end
+
+function SceneLoader:createBackground(x, y)
+	local key = self:createBackgroundKey(x, y)
+
+	local bx = x * display.contentWidth
+	local by = y * display.contentHeight
+
+	local background = display.newImageRect( "images/Background.png", display.contentWidth, display.contentHeight )
 	background.anchorX = 0
 	background.anchorY = 0
-	background:setFillColor( 1 )
+	background.x, background.y = bx, by
+
+	self.tilesFilled[key] = true
 
 	self:addDisplayObject(background)
+	background:toBack()
 end
+
+function SceneLoader:cameraCoordinates(x, y)
+	if (x ~= nil and y ~= nil and self.view ~= nil) then
+		return self.view:localToContent(x, y)
+	else 
+		return 0, 0
+	end
+end
+
+-- function SceneLoader:initializeBackground()
+-- 	local background = display.newImageRect( "images/Background.png", self.screenW, self.screenH )
+-- 	background.anchorX = 0
+-- 	background.anchorY = 0
+-- 	background:setFillColor( 1 )
+
+-- 	self:addDisplayObject(background)
+-- end
 
 function SceneLoader:initializeSkin()
 	local threeStars = threeStars()
@@ -206,6 +307,10 @@ function SceneLoader:initializeFoodTruck()
 	self:pauseTimer(self.foodTruckTimer)
 end
 
+function SceneLoader:offsetPosition(x, y)
+	return x, y
+end
+
 function SceneLoader:initializeWorm()
 	if currentScene.sceneEffect == "midnight" then
 		self.head = FlashlightWorm:new()
@@ -223,7 +328,7 @@ function SceneLoader:initializeHungryWorms()
 	local speed = currentScene.hungryWormSpeed or 20
 	for i, hungryWormDefinition in ipairs(hungryWormsDefinitions) do
 		local hungryWorm = HungryWorm:new()
-		local x, y = hungryWormDefinition[1], hungryWormDefinition[2]
+		local x, y = self:offsetPosition(hungryWormDefinition[1], hungryWormDefinition[2])
 		hungryWorm:initialize(x, y, self.physics, self.foodTruck, self)
 		hungryWorm:initializeMotion(speed)
 		table.insert(self.hungryWorms, hungryWorm)
@@ -236,7 +341,7 @@ function SceneLoader:initializeAngryWorms()
 	local speed = currentScene.angryWormSpeed or 20
 	for i, angryWormDefinition in ipairs(angryWormsDefinitions) do
 		local angryWorm = AngryWorm:new()
-		local x, y = angryWormDefinition[1], angryWormDefinition[2]
+		local x, y = self:offsetPosition(angryWormDefinition[1], angryWormDefinition[2])
 		angryWorm:initialize(x, y, self.physics, self.foodTruck, self)
 		angryWorm:initializeMotion(speed, self.head)
 		table.insert(self.angryWorms, angryWorm)
@@ -247,7 +352,8 @@ function SceneLoader:initializeActivators()
 	local activators = currentScene.activators or {}
 	for i, activatorDefinition in ipairs(activators) do
 		local activator = Activator:new()
-		activator:initializeSprite(activatorDefinition[1], activatorDefinition[2], self)
+		local x, y = self:offsetPosition(activatorDefinition[1], activatorDefinition[2])
+		activator:initializeSprite(x, y, self)
 		activator:initializePhysics(self.physics)
 	end
 end
@@ -263,7 +369,7 @@ function SceneLoader:initializeWaterCanons()
 	self.spouts = self.spouts or {}
 	local waterCanons = currentScene.waterCanons or {}
 	for i, waterCanonDefinition in ipairs(waterCanons) do
-		local x, y = waterCanonDefinition.x, waterCanonDefinition.y
+		local x, y = self:offsetPosition(waterCanonDefinition.x, waterCanonDefinition.y)
 		local rotation = waterCanonDefinition.rotation or 0
 		local rotating = waterCanonDefinition.rotate or false
 		local waterCanon = WaterCanon:new()
@@ -279,7 +385,7 @@ function SceneLoader:initializeFireSpout()
 	self.spouts = self.spouts or {}
 	local fireSpouts = currentScene.fireSpouts or {}
 	for i, fireSpoutDefinition in ipairs(fireSpouts) do
-		local x, y = fireSpoutDefinition.x, fireSpoutDefinition.y
+		local x, y = self:offsetPosition(fireSpoutDefinition.x, fireSpoutDefinition.y)
 		local rotation = fireSpoutDefinition.rotation or 0
 		local rotating = fireSpoutDefinition.rotate or false
 		local fireSpout = FireSpout:new()
@@ -295,7 +401,7 @@ function SceneLoader:initializeMiniFireSpout()
 	self.spouts = self.spouts or {}
 	local fireSpouts = currentScene.miniFireSpouts or {}
 	for i, fireSpoutDefinition in ipairs(fireSpouts) do
-		local x, y = fireSpoutDefinition.x, fireSpoutDefinition.y
+		local x, y = self:offsetPosition(fireSpoutDefinition.x, fireSpoutDefinition.y)
 		local rotation = fireSpoutDefinition.rotation or 0
 		local rotating = fireSpoutDefinition.rotate or false
 		local fireSpout = MiniFireSpout:new()
@@ -311,9 +417,10 @@ function SceneLoader:initializeWalls()
 	local walls = currentScene.walls or {}
 	for i, wallDefinition in ipairs(walls) do
   		local wall = Wall:new()
+  		local x, y = self:offsetPosition(wallDefinition[1], wallDefinition[2])
+  		print("X:"..x..", Y:"..y)
   		wall:initialize(
-  			wallDefinition[1],
- 			wallDefinition[2],
+  			x, y,
  			wallDefinition[3],
  			wallDefinition[4], 
  			self.physics, self)
@@ -323,8 +430,7 @@ end
 function SceneLoader:initializeFood()
 	local standardWorms = currentScene.standardFood or {}
 	for i, wormDef in ipairs(standardWorms) do
-		local x = wormDef.x
-		local y = wormDef.y
+		local x, y = self:offsetPosition(wormDef.x, wormDef.y)
 		local c = wormDef.count
 		local d = wormDef.delay
 		self.foodTruck:fixedFood(x, y, c, d)
