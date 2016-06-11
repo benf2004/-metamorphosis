@@ -5,7 +5,7 @@ local level = {
 		y = 374
 	},
 	foodTruck = {
-		ninjaWorm = 100
+		fireWorm = 100
 	},
 	walls = {
 		{1000, 0, 35, 592},

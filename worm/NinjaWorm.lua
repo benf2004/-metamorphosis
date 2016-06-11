@@ -14,7 +14,7 @@ function NinjaWorm:initialize( physics, sceneLoader )
 	self:setSkin(self.frameIndex.poison)
 
 	self:initializePhysics( physics )
-	self.velocity = 10
+	self.velocity = 20
 	self.sprite.name = "NinjaWorm"
 end
 
