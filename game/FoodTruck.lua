@@ -6,6 +6,7 @@ require("worm.ShieldWorm")
 require("worm.PoisonWorm")
 require("worm.ClockWorm")
 require("worm.NinjaWorm")
+require("worm.FireWorm")
 
 FoodTruck  = Base:new()
 local contents = {}
@@ -23,7 +24,8 @@ function FoodTruck:initialize( physics, level, sceneLoader )
 		{ShieldWorm, self.level.foodTruck.shieldWorm or 0},
 		{PoisonWorm, self.level.foodTruck.poisonWorm or 0},
 		{ClockWorm, self.level.foodTruck.clockWorm or 0},
-		{NinjaWorm, self.level.foodTruck.ninjaWorm or 0}
+		{NinjaWorm, self.level.foodTruck.ninjaWorm or 0},
+		{FireWorm, self.level.foodTruck.fireWorm or 0}
 	}
 
 	local compare = function(a,b)
