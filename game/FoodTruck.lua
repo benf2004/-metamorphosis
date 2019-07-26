@@ -11,21 +11,22 @@ require("worm.FireWorm")
 FoodTruck  = Base:new()
 local contents = {}
 
-function FoodTruck:initialize( physics, level, sceneLoader )
+function FoodTruck:initialize( physics, config, sceneLoader, offsetX, offsetY )
+	self.offsetX = offsetX or 0
+	self.offsetY = offsetY or 0
 	self.physics = physics
-	self.level = level
 	self.sceneLoader = sceneLoader
-	self.interval = self.level.foodTruckInterval or 750
+	self.interval = config.interval or 3000
 
 	self.worms = {
-		{StandardWorm, self.level.foodTruck.standardWorm or 0},
-		{GravityWorm, self.level.foodTruck.gravityWorm or 0},
-		{AnchorWorm, self.level.foodTruck.anchorWorm or 0},
-		{ShieldWorm, self.level.foodTruck.shieldWorm or 0},
-		{PoisonWorm, self.level.foodTruck.poisonWorm or 0},
-		{ClockWorm, self.level.foodTruck.clockWorm or 0},
-		{NinjaWorm, self.level.foodTruck.ninjaWorm or 0},
-		{FireWorm, self.level.foodTruck.fireWorm or 0}
+		{StandardWorm, config.standardWorm or 0},
+		{GravityWorm, config.gravityWorm or 0},
+		{AnchorWorm, config.anchorWorm or 0},
+		{ShieldWorm, config.shieldWorm or 0},
+		{PoisonWorm, config.poisonWorm or 0},
+		{ClockWorm, config.clockWorm or 0},
+		{NinjaWorm, config.ninjaWorm or 0},
+		{FireWorm, config.fireWorm or 0}
 	}
 
 	local compare = function(a,b)
@@ -36,8 +37,9 @@ function FoodTruck:initialize( physics, level, sceneLoader )
 end
 
 function FoodTruck:makeDelivery(event)
-	local x = math.random(0, display.contentWidth)
-	local y = math.random(0, display.contentHeight)
+	local x = math.random(0, display.contentWidth) + self.offsetX
+	local y = math.random(0, display.contentHeight) + self.offsetY
+
 	local kind = math.random(1, 100)
 	local food = nil
 
@@ -58,6 +60,7 @@ function FoodTruck:makeDelivery(event)
 	food.sprite.x = x
 	food.sprite.y = y
 	table.insert(contents, food)
+	return food
 end
 
 function FoodTruck:randomFood(attempt)
@@ -77,6 +80,14 @@ function FoodTruck:randomFood(attempt)
 	end
 end
 
+function FoodTruck:remoteFood(oid, x, y)
+	local food = StandardWorm:new()
+	food:initialize( self.physics, self.sceneLoader )
+	food.sprite.x = x
+	food.sprite.y = y
+	table.insert(contents, food)
+end
+
 function FoodTruck:fixedFood(x, y, count, delay)
 	local f = function()
 		for i=0, count do
@@ -88,8 +99,8 @@ function FoodTruck:fixedFood(x, y, count, delay)
 				dx = math.random(0, 5)
 				dy = math.random(0, 5)
 			end
-			food.sprite.x = x + dx
-			food.sprite.y = y + dy
+			food.sprite.x = x + dx + self.offsetX
+			food.sprite.y = y + dy + self.offsetY
 			table.insert(contents, food)
 		end
 	end

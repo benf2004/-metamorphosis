@@ -1,8 +1,8 @@
-require("Base")
+require("core.DynamicObject")
 require("effects.Effects")
 require("game.Colors")
 
-BaseWorm  = Base:new({diameter=32})
+BaseWorm  = DynamicObject:new({diameter=32})
 
 BaseWorm.sheetOptions = {
 	width = 32,
@@ -80,8 +80,10 @@ BaseWorm.frameIndex = {
 function BaseWorm:animateSprite(sceneLoader)
 	self.sprite = display.newSprite( self.wormSheet, self.wormSequence )
 	self.sceneLoader = sceneLoader
+	self.sceneLoader:addBaseObject(self)
 	self.sceneLoader:addDisplayObject(self.sprite)
 	self.density = 1
+	self.sprite.targetable = true
 	self.sprite.obj = self
 	self.sprite.xF, self.sprite.xY = 0, 0
 	self.sprite.name = "baseworm"
@@ -198,16 +200,15 @@ function BaseWorm:attachAction()
 end
 
 function BaseWorm:printWorm()
+	local oid = self:getOid()
 	if self:trailing() ~= nil then
 		if self.shielded then
-			return self.sprite.name.."(S)-"..self.trailing():printWorm()
+			return self.sprite.name.."|"..oid.."(S)-"..self.trailing():printWorm()
 		else 
-			return self.sprite.name.."--"..self:trailing():printWorm()
+			return self.sprite.name.."|"..oid.."--"..self:trailing():printWorm()
 		end
 	else
-		if self.shielded then
-			return self.sprite.name
-		end
+		return self.sprite.name.."|"..oid
 	end
 end
 
@@ -242,6 +243,7 @@ function BaseWorm:attach(next)
 			end
 			next:reorderZ()
 			next:attachAction()
+
 		end
 	else
 		self:trailing():attach(next, x, y)
@@ -272,6 +274,7 @@ function BaseWorm:death(sound)
 			local snd = sound or "bang"
 			self.sceneLoader:playSound(snd)
 			explode(cx, cy)
+			self.sceneLoader:removeBaseObject(self)
 			self.sceneLoader:removeDisplayObject(self.sprite)
 		end
 		self.dead = true
@@ -297,9 +300,11 @@ function BaseWorm:burstWithHappiness()
 		local cx, cy = self.sceneLoader:cameraCoordinates(locationx, locationy)
 		-- heartSwirl(locationx, locationy)
 		heartExplosion(cx, cy)
+		self.sceneLoader:removeBaseObject(self)
 		self.sceneLoader:removeDisplayObject(self.sprite)
 	end
 	if self.glow ~= nil then
+		self.sceneLoader:removeBaseObject(self)
 		self.sceneLoader:removeDisplayObject(self.glow)
 	end
 	self.dead = true
@@ -443,5 +448,29 @@ function BaseWorm:setSkin(skin)
 			self.currentSkin = self.defaultSkin or 1
 		end
 		self.sprite:setFrame(self.currentSkin)
+	end
+end
+
+function BaseWorm:wormState()
+	local state = {
+		o = self:getOid(),
+		n = self.sprite.name,
+		x = math.round(self.sprite.x),
+		y = math.round(self.sprite.y),
+	}
+
+	if self:trailing() ~= nil then
+		local allStates = self:trailing():wormState()
+		table.insert(allStates, state)
+		return allStates
+	else
+		return {state}
+	end
+end
+
+function BaseWorm:reposition(x, y) 
+	if self.sprite and self.sprite ~= nil then
+		self.sprite.x = x
+		self.sprite.y = y
 	end
 end

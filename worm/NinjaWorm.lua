@@ -15,14 +15,15 @@ function NinjaWorm:initialize( physics, sceneLoader )
 
 	self:initializePhysics( physics )
 	self.velocity = 20
-	self.sprite.name = "NinjaWorm"
+	self.sprite.name = "ninjaWorm"
 end
 
 function NinjaWorm:attachAction()
-	local wx = self.sceneLoader.head.sprite.x
-	local wy = self.sceneLoader.head.sprite.y
-	local nx = self.sceneLoader.head:trailing().sprite.x
-	local ny = self.sceneLoader.head:trailing().sprite.y
+	local head = self:head()
+	local wx = head.sprite.x
+	local wy = head.sprite.y
+	local nx = head:trailing().sprite.x
+	local ny = head:trailing().sprite.y
 
 	local d = self.diameter + 10
 	local dx = wx-nx
@@ -56,10 +57,8 @@ function NinjaWorm:attachAction()
 		targety = y + cy
 	end
 
-	
-
 	local flyingActivator = FlyingActivator:new()
 	flyingActivator:initializeSprite(x, y, self.sceneLoader)
-	flyingActivator:initializePhysics(self.sceneLoader.physics, self.sceneLoader.head, self.velocity, targetx, targety)
+	flyingActivator:initializePhysics(self.sceneLoader.physics, head, self.velocity, targetx, targety)
 	self.isUsed = true	
 end	

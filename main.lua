@@ -29,6 +29,8 @@ end
 Runtime:addEventListener("key",cap)
 -- hit 'c' to capture your screen
 
+math.randomseed( os.time() )
+
 --global current scene properties
 currentScene = nil
 gameName = "Squirmy Wormy"
@@ -53,3 +55,5 @@ local options = {
 	}
 }
 composer.gotoScene( "core.CoreScene", options )
+
+-- require("server.ServerTest")

@@ -1,6 +1,6 @@
 require("core.SceneBase")
 require("core.SceneLoader")
-require("core.ZoneLoader")
+require("core.ServerSceneLoader")
 require("game.UI")
 require("game.Colors")
 require("game.GameState")
@@ -79,7 +79,7 @@ end
 
 function Menu:initializeFoodTruck()
 	self.foodTruck = FoodTruck:new()
-	self.foodTruck:initialize(physics, {foodTruck={}}, self)
+	self.foodTruck:initialize(physics, {}, self)
 end
 
 function Menu:initializeMenuWorm()
@@ -188,7 +188,7 @@ function Menu:initializeButtons()
 			if singlePlayer then
 				sceneLoader = SceneLoader:new()
 			else
-				sceneLoader = ZoneLoader:new()
+				sceneLoader = ServerSceneLoader:new()
 			end
 			self:hideAdvertisement()
 			self.scene:moveToScene(sceneLoader)

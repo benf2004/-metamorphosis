@@ -6,8 +6,6 @@ Wall  = Base:new()
 function Wall:initialize(x, y, width, height, physics, sceneLoader)
 	self.sceneLoader = sceneLoader
 
-	print("Adding a wall at"..x..","..y)
-
 	local leftCapCenterX, leftCapCenterY = nil, nil
 	local rightCapCenterX, rightCapCenterY = nil, nil
 	local boxCenterX, boxCenterY = nil, nil

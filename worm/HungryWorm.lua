@@ -1,6 +1,6 @@
-require("worm.HeadWorm")
+require("worm.SmartWorm")
 
-HungryWorm = HeadWorm:new()
+HungryWorm = SmartWorm:new()
 
 function HungryWorm:initializeAnimatedSprite(imageSheet, sceneLoader)
 	self.blinkSequence = {
@@ -41,6 +41,7 @@ function HungryWorm:initializeMotion(speed)
 			self.targetX = math.random(0, self.sceneLoader.screenW)
 			self.targetY = math.random(0, self.sceneLoader.screenH)
 		end
+		self:findPathToTarget()
 	end
 
 	local move = function()
@@ -64,11 +65,11 @@ function HungryWorm:destroy()
 	self.dead = true
 end
 
-function HungryWorm:moveToLocation(x, y)
-	if (x ~= nil and y ~= nil and self.sprite ~= nil and self.sprite.x ~= nil and self.sprite.y ~= nil) then 
-		local dt = self.speed / display.fps
-		local dx = x - self.sprite.x
-		local dy = y - self.sprite.y
-		self.sprite:setLinearVelocity( dx/dt, dy/dt )
-	end
-end
+-- function HungryWorm:moveToLocation(x, y)
+-- 	if (x ~= nil and y ~= nil and self.sprite ~= nil and self.sprite.x ~= nil and self.sprite.y ~= nil) then 
+-- 		local dt = self.speed / display.fps
+-- 		local dx = x - self.sprite.x
+-- 		local dy = y - self.sprite.y
+-- 		self.sprite:setLinearVelocity( dx/dt, dy/dt )
+-- 	end
+-- end

@@ -5,6 +5,7 @@ require("game.Colors")
 require("game.UI")
 require("worm.HeadWorm")
 require("worm.HungryWorm")
+require("worm.SmartWorm")
 require("worm.AngryWorm")
 require("worm.FlashlightWorm")
 require("obstacles.Wall")
@@ -41,6 +42,7 @@ function SceneLoader:load()
 	self:initializeGravity()
 	self:initializeJointCheck()
 	self:initializeFood()
+	print("Initializing a screen.")
 end
 
 function SceneLoader:launch()
@@ -299,7 +301,7 @@ end
 
 function SceneLoader:initializeFoodTruck()
 	self.foodTruck = FoodTruck:new()
-	self.foodTruck:initialize(physics, currentScene, self)
+	self.foodTruck:initialize(physics, currentScene.foodTruck, self)
 	self.makeDelivery = function() 
 		self.foodTruck:makeDelivery() 
 	end
@@ -361,7 +363,7 @@ end
 function SceneLoader:initializeFlyingActivators()
 	if currentScene.flyingActivators then 
 		self.flyingActivatorTruck = FlyingActivatorTruck:new()
-		self.flyingActivatorTruck:initialize(currentScene, self)
+		self.flyingActivatorTruck:initialize(currentScene.flyingActivators, self)
 	end
 end
 

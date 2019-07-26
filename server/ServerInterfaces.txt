@@ -1,0 +1,48 @@
+****************************
+**		Get Zone
+****************************
+
+Input:
+{
+	x : The Zone X
+	y : The Zone Y
+}
+
+Output:
+{
+	zonePosition : {
+		zone = {
+			x = zonex,
+			y = zoney
+		},
+		offset = {
+			x = zx,
+			y = zy
+		}
+	}
+	obstacles : {
+		walls : [{
+			x = x,
+			y = y,
+			width = width,
+			height = height
+		}]
+	}
+}
+
+****************************
+**		Post Worm
+****************************
+
+Input:
+{
+	name : Name
+	length : Length
+	segments : [
+		{
+			type : Type
+			x : x
+			y : y
+		}
+	]
+}

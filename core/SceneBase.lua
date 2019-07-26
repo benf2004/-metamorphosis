@@ -13,6 +13,20 @@ function SceneBase:initialize(scene)
 	self.screenH = display.contentHeight
 	self.centerX = self.screenW / 2
 	self.centerY = self.screenH / 2
+	self.allObjects = {}
+end
+
+function SceneBase:addBaseObject(baseObject)
+	local oid = baseObject:getOid()
+	self.allObjects[oid] = baseObject
+end
+
+function SceneBase:removeBaseObject(oid)
+	self.allObjects[oid] = nil
+end
+
+function SceneBase:getBaseObject(oid)
+	return self.allObjects[oid]
 end
 
 function SceneBase:addDisplayObject(displayObject)

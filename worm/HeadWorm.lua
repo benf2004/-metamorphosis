@@ -47,26 +47,32 @@ function HeadWorm:initializeAnimatedSprite(imageSheet, sceneLoader)
     -- self.sprite = display.newImageRect( "images/"..textureName..".png", self.diameter, self.diameter )
 	-- self.sprite = display.newImageRect( "images/wormhead.png", self.diameter, self.diameter )
 	self.sceneLoader = sceneLoader
+	self.sceneLoader:addBaseObject(self)
 	self.sceneLoader:addDisplayObject(self.sprite)
 	self.density = 1
 	self.sprite.obj = self
 	self.sprite.xF, self.sprite.xY = 0, 0
 end
 
-function HeadWorm:initialize(x, y, physics, foodTruck, sceneLoader)
+function HeadWorm:initialize(x, y, physics, foodTruck, sceneLoader, oids)
 	self:initializeAnimatedSprite("BlinkSheet", sceneLoader)
 	self.sprite.x, self.sprite.y = x, y
 	self.type = "head"
 	self.sprite.name = "head"
 
+	if oids ~= nil then
+		self.oid = oids[1]
+	end
+
 	self.foodTruck = foodTruck
 	self:initializePhysics(physics)
-	self:initializeNeck()
+	self:initializeNeck(oids)
 
 	self.sprite.collision = onLocalCollision
 	self.sprite:addEventListener( "collision", self.sprite )
 	
 	self:initializeEffect()
+	self:initializeJoint()
 end
 
 function HeadWorm:initializeEffect()
@@ -110,11 +116,22 @@ function HeadWorm:activate()
 	end
 end
 
-function HeadWorm:initializeMotion()
+function HeadWorm:initializeJoint()
 	self.targetJoint = physics.newJoint( "touch", self.sprite, self.sprite.x, self.sprite.y )
 	self.targetJoint.dampingRatio = 1
 	self.targetJoint.freqency = 1
 	self.targetJoint.maxForce = 3000
+end
+
+function HeadWorm:initializeMotion()
+end
+
+function HeadWorm:xy()
+	if (self.sprite and self.sprite.x) then
+		return self.sprite.x, self.sprite.y
+	else 
+		return 0, 0
+	end
 end
 
 function HeadWorm:destroy()
@@ -139,14 +156,27 @@ function HeadWorm:moveToLocation(x, y)
 	end
 end
 
-function HeadWorm:initializeNeck( )
+function HeadWorm:getTarget()
+	if self.targetJoint and self.targetJoint.getTarget then 
+		return self.targetJoint:getTarget() 
+	else
+		return nil
+	end
+end
+
+function HeadWorm:initializeNeck( oids )
 	for i=1,neckLength do
 		local neck = NeckWorm:new()
+		if oids ~= nil then
+			neck.oid = oids[i+1]
+		end
 		self:attach(neck)
 	end
 end
 
 function HeadWorm:consume( wormNode )
+	wormNode.consumed = true
+
 	local prev = wormNode.leading
 	local next = wormNode.trailing
 
@@ -154,8 +184,8 @@ function HeadWorm:consume( wormNode )
 	wormNode:detachFromTrailing()
 
 	wormNode.sceneLoader:removeDisplayObject(wormNode.sprite)
-
-	self.foodTruck:consumeFood(wormNode)
+	wormNode.sceneLoader:consumeFood(food)
+	FoodTruck:consumeFood(wormNode)
 	-- self.sceneLoader:playSound("click")
 
 	self:digest(wormNode, self.displayGroup, self.foodTruck)

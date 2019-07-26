@@ -24,9 +24,9 @@ end
 
 FlyingActivatorTruck = Base:new()
 
-function FlyingActivatorTruck:initialize(level, sceneLoader)
-	self.velocity = level.flyingActivators.velocity
-	self.frequency = level.flyingActivators.frequency
+function FlyingActivatorTruck:initialize(config, sceneLoader)
+	self.velocity = config.velocity or 0.75
+	self.frequency = config.frequency or 2000
 	self.sceneLoader = sceneLoader
 
 	local closure = function() self:deliver() end

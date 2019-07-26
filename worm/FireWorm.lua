@@ -17,15 +17,16 @@ end
 function FireWorm:attachAction()
 	if self.sprite ~= nil then
 		if self.fireTongue == nil then
+			local head = self:head()
 			self.fireTongue = FireTongue:new()
-			local wx = self.sceneLoader.head.sprite.x
-			local wy = self.sceneLoader.head.sprite.y
+			local wx = head.sprite.x
+			local wy = head.sprite.y
 			self.fireTongue:initialize(wx, wy, self.sceneLoader)
-			self.fireTongue:pairWithWorm(self.sceneLoader.head.sprite)
+			self.fireTongue:pairWithWorm(head.sprite)
 			self.fireTongue:lashOnce()
 			local synchronizeTongue = function()
 				if self.sceneLoader.head.sprite then
-					self.fireTongue:pairWithWorm(self.sceneLoader.head.sprite)
+					self.fireTongue:pairWithWorm(head.sprite)
 				end
 			end
 			self.sceneLoader:addGlobalEventListener( "enterFrame", synchronizeTongue )
