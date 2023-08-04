@@ -17,14 +17,14 @@ AdManager.admobIds = {
 function AdManager:initialize(sceneLoader)
 	self.adsDisabled = adsDisabled()
 	if not self.adsDisabled then
-		 self.adProvider = require("ads")
-		 if ( system.getInfo( "platformName" ) == "Android" ) then
+		 -- self.adProvider = require("ads")
+		 -- if ( system.getInfo( "platformName" ) == "Android" ) then
 		 	-- self:loadCoronaAds(sceneLoader)
-		 	self:loadAdMob(sceneLoader)
-		 elseif ( system.getInfo( "platformName" ) == "iPhone OS" ) then 
+		-- 	self:loadAdMob(sceneLoader)
+		 -- elseif ( system.getInfo( "platformName" ) == "iPhone OS" ) then
 		 	-- self:loadCoronaAds(sceneLoader)
-		 	self:loadAdMob(sceneLoader)
-		 end
+		 	-- self:loadAdMob(sceneLoader)
+		 -- end
 	end
 end
 
