@@ -5,7 +5,7 @@ local level = {
 		y = 374
 	},
 	foodTruck = {
-		standardWorm = 100
+		fireWorm = 100
 	},
 	secondsAllowed = 60,
 	stars = {60, 50, 40},

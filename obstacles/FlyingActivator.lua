@@ -2,7 +2,7 @@ require("obstacles.Activator")
 
 FlyingActivator = Activator:new()
 
-function FlyingActivator:initializePhysics(physics, wormHead, velocity)
+function FlyingActivator:initializePhysics(physics, wormHead, velocity, targetx, targety)
 	if wormHead.sprite ~= nil and wormHead.sprite.x ~= nil then
 		physics.addBody( self.sprite, { radius = (self.diameter / 2), density=self.density, friction=0.0, bounce=0.0})
 		self.physics = physics
@@ -10,6 +10,11 @@ function FlyingActivator:initializePhysics(physics, wormHead, velocity)
 
 		local dx = (wormHead.sprite.x - self.sprite.x) * velocity
 		local dy = (wormHead.sprite.y - self.sprite.y) * velocity
+
+		if targetx ~= nil then 
+			dx = (targetx - self.sprite.x) * velocity
+			dy = (targety - self.sprite.y) * velocity
+		end
 
 		self.sprite.gravityScale = 0
 		self.sprite:setLinearVelocity( dx, dy )

@@ -45,3 +45,10 @@ function FireTongue:lashIn()
 	local closure = function() self:lashOut() end
 	self.sceneLoader:runTimer(inTime, closure, self)
 end
+
+function FireTongue:lashOnce()
+	local inTime = 2500
+	self:on()
+	local closure = function() self:off() end
+	self.sceneLoader:runTimer(inTime, closure, self)
+end
